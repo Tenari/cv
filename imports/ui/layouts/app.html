@@ -1,0 +1,33 @@
+<template name="app">
+  <div id="nav">
+    {{#if currentUser}}
+      <div class="btns-group-vertical">
+        <a href="#" class="js-user-menu btn-secondary">
+          {{#if userMenuOpen}}
+            <span class="icon-arrow-up"></span>
+            {{else}}
+            <span class="icon-arrow-down"></span>
+          {{/if}}
+
+          {{emailLocalPart}}
+        </a>
+        {{#if userMenuOpen}}
+          <a class="js-logout btn-secondary">Logout</a>
+        {{/if}}
+      </div>
+    {{else}}
+      <div class="btns-group">
+        <a href="{{pathFor 'signin'}}" class="btn-secondary">Login</a>
+        <a href="{{pathFor 'join'}}" class="btn-secondary">Signup</a>
+      </div>
+    {{/if}}
+  </div>
+
+  <div id="content">
+    {{#if Template.subscriptionsReady}}
+      {{> Template.dynamic template=main}}
+    {{else}}
+      {{> loading}}
+    {{/if}}
+  </div>
+</template>
