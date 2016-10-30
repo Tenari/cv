@@ -3,16 +3,16 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import to load these templates
 import '../../ui/layouts/app.js';
-import '../../ui/pages/sales.js';
+import '../../ui/pages/root.js';
 import '../../ui/pages/not-found.js';
 
 // Import to override accounts templates
-//import '../../ui/accounts/accounts-templates.js';
+import '../../ui/components/accounts.js';
 
 FlowRouter.route('/', {
   name: 'App.home',
   action() {
-    BlazeLayout.render('app', { main: 'salesPage' });
+    BlazeLayout.render('app', { main: 'rootPage' });
   },
 });
 

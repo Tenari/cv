@@ -1,0 +1,17 @@
+{
+  "name": "rome", 
+  "width": 15, 
+  "height": 10,
+  "map": [
+     [{"type":"door", "data": {"name": "tokyo", "x": 1, "y": 3}}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "tree"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"tree"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "tree"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"tree"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}]
+   ]
+}

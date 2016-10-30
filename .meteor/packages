@@ -23,7 +23,11 @@ insecure@1.0.7                # Allow all DB writes from clients (for prototypin
 kadira:flow-router
 kadira:blaze-layout
 zimme:active-route
-softwarerero:accounts-t9n
 arillo:flow-router-helpers
 accounts-password
 less
+useraccounts:core
+accounts-facebook
+useraccounts:flow-routing
+useraccounts:unstyled
+aldeed:simple-schema
