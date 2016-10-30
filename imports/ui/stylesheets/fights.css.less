@@ -1,0 +1,341 @@
+@import './game.css.less';
+
+.directionals{
+  position:absolute;
+  z-index:10;
+  text-align:center;
+}
+.third-level{
+  position:absolute;
+  z-index:3;
+}
+
+.fight-background{
+  position:absolute;
+  z-index:2;
+  width:100%;
+  height:100%;
+  background: #b1d372; /* Old browsers */
+  background: -moz-linear-gradient(left,  #b1d372 22%, #95d330 46%, #80c217 56%, #92b74d 81%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right top, color-stop(22%,#b1d372), color-stop(46%,#95d330), color-stop(56%,#80c217), color-stop(81%,#92b74d)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(left,  #b1d372 22%,#95d330 46%,#80c217 56%,#92b74d 81%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(left,  #b1d372 22%,#95d330 46%,#80c217 56%,#92b74d 81%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(left,  #b1d372 22%,#95d330 46%,#80c217 56%,#92b74d 81%); /* IE10+ */
+  background: linear-gradient(to right,  #b1d372 22%,#95d330 46%,#80c217 56%,#92b74d 81%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b1d372', endColorstr='#92b74d',GradientType=1 ); /* IE6-9 */
+
+  .top-left;
+  .top-right;
+  .bottom-left;
+  .bottom-right;
+}
+
+/* fight controls */
+.fight-controls{
+  .third-level;
+  bottom:0;
+  height:30%;
+  width:100%;
+  border-top-color: #528BA3;
+  border-top-style: solid;
+  border-top-width: 2px;
+  background: rgb(213,255,255);
+
+  .bottom-right;
+  .bottom-left;
+}
+.fight-history{
+  position:absolute;
+  top:0;
+  height:100%;
+  width:238px;
+  border-right-color: #528BA3;
+  border-right-style: solid;
+  border-right-width: 2px;
+  text-align:center;
+  ul {
+    overflow:auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+.fight-next{
+  position:absolute;
+  top:0;
+  right:240px;
+  height:100%;
+  width:238px;
+  border-right-color: #528BA3;
+  border-right-style: solid;
+  border-right-width: 2px;
+  text-align:center;
+  display: flex;
+  .fight-target, .fight-style {
+    width: 50%;
+    .fight-option {
+      cursor: pointer;
+      &:hover {
+        color: red;
+      }
+      &.selected {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+.fight-misc{
+  position:absolute;
+  top:0;
+  right:0;
+  height:100%;
+  width:237px;
+}
+
+/* Directional buttons */
+.fight-north{
+  .directionals;
+  top:0;
+  left:329px;
+  width:60px;
+}
+.fight-south{
+  .directionals;
+  bottom:0;
+  left:329px;
+  width:60px;
+}
+.fight-east{
+  .directionals;
+  right:0;
+  top:200px;
+  height:60px;
+  width:20px;
+}
+.fight-west{
+  .directionals;
+  left:0;
+  top:200px;
+  height:60px;
+  width:20px;
+}
+/* Command Line */
+body form#command-line {
+  position:relative;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top: 20px;
+  height:30px;
+  width:480px;
+  input.fight-cmd-ln{
+    display:block;
+    height:24px;
+    width:100%;
+    border:3px solid #BBB;
+    background-color:black;
+    font-size:20px;
+    color:white;
+    font-weight:bold;
+  }
+  .btn.cmd-ln{
+    position:absolute;
+    top:4px;
+    right:0;
+  }
+}
+/* Avatar containers */
+.fight-enemy-container{
+  position:absolute;
+  right:0;
+  width:50%;
+  height:70%;
+}
+.fight-self-container{
+  position:absolute;
+  left:0;
+  width:50%;
+  height:70%;
+}
+.big-char{
+  .third-level;
+  width:128px;
+  height:128px;
+  right:120px;
+  top:40px;
+  background-repeat:no-repeat;
+  background-size:128px;
+  
+}
+.big-char.bottom{
+  .big-char;
+  top:180px !important;
+}
+/* HP bodies */
+.fight-hp{
+  height:145px;
+  width:46px;
+}
+.fight-enemy-hp{
+  .third-level;
+  right:35px;
+  bottom:10px;
+}
+.fight-self-hp{
+  .third-level;
+  left:15px;
+  top:10px;
+}
+
+
+
+.enter-stats{
+  position:absolute;
+  z-index:0;
+  background-color:#FFF;
+  top:0;
+  left:0;
+  width:50%;
+  height:486px;
+}
+.stat-view-bkgd{
+  position:relative;
+  z-index:2;
+  background-color:#D5D5F7;
+  width:100%;
+  height:100%;
+  .top-right;
+  .top-left;
+  .bottom-right;
+  .bottom-left;
+}
+.stat-top-row{
+  .g-row;
+  
+  position:absolute;
+  z-index:3;
+  top:0px;
+  width:100%;
+  
+  text-align:center;
+  line-height:42px;
+  font-size:40px;
+}
+.stat-jewel{
+  position:absolute;
+  right:10px;
+  top:5px;
+  height:40px;
+  width:40px;
+  background-repeat:no-repeat;
+  background-size:40px;
+}
+.stat-visual{
+  position:absolute;
+  z-index:3;
+  left:0;
+  top:60px;
+  height:420px;
+  width:33%;
+}
+.stat-hp-container{
+  position:absolute;
+  z-index:4;
+  right:10px;
+  top:0;
+  height:240px;
+  width:75px;
+  background-repeat:no-repeat;
+  background-size:75px 240px;
+  .fight-hp {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+.stat-hp-text {
+  height:40px;
+  margin-top:10px;
+  margin-left:20px;
+  font-size:20px;
+  line-height:21px;
+}
+.stat-energy-bar-container{
+  height:20px;
+  margin-top:10px;
+  margin-left:20px;
+  border:1px solid black;
+}
+.stat-energy-bar {
+  background-color:blue;
+  height:100%;
+}
+.energy-spacer{
+  height:15px;
+  margin-top:45px;
+  margin-left:15px;
+  font-size:14px;
+  line-height:14px;
+}
+#money-img{
+  padding:15px;
+}
+#endurance-img{
+  padding-top:15px;
+  padding-left:40px;
+  padding-bottom:15px;
+}
+.stat-img-heading{
+  display:inline;
+  padding-left:15px;
+  padding-right:37px;
+  margin-top:5px;
+}
+.stat-details-container{
+  position:absolute;
+  z-index:3;
+  right:0;
+  width:60%;
+  top:60px;
+  height:420px;
+  padding-left:5%;
+  padding-right:2%;
+}
+
+
+.i-hp-a-1{
+  background-image:url('images/hp_arms.png');
+}
+.i-hp-a-2{
+  background-image:url('images/hp_arms1.png');
+}
+.i-hp-a-3{
+  background-image:url('images/hp_arms2.png');
+}
+.i-hp-h-1{
+  background-image:url('images/hp_head.png');
+}
+.i-hp-h-2{
+  background-image:url('images/hp_head1.png');
+}
+.i-hp-h-3{
+  background-image:url('images/hp_head2.png');
+}
+.i-hp-t-1{
+  background-image:url('images/hp_torso.png');
+}
+.i-hp-t-2{
+  background-image:url('images/hp_torso1.png');
+}
+.i-hp-t-3{
+  background-image:url('images/hp_torso2.png');
+}
+.i-hp-l-1{
+  background-image:url('images/hp_legs.png');
+}
+.i-hp-l-2{
+  background-image:url('images/hp_legs1.png');
+}
+.i-hp-l-3{
+  background-image:url('images/hp_legs2.png');
+}

@@ -1,7 +1,26 @@
 <template name="accountHome">
-  <p>Choose a game</p>
-  <ul>
-    <li>Game 1</li>
-    <li>Game 2</li>
-  </ul>
+  {{#if hasCharacter}}
+    <ul>
+      {{#each character in characters}}
+        <li>{{character.name}}</li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <div class="character-creation-form">
+      <h1>Create a character</h1>
+      <p>What is your name? <input type="text" id="change-name"/></p>
+      {{#momentum plugin='fade'}}
+        {{#if named}}
+          <div>
+            <p>Alright, {{name}}. What team do you want to join?</p>
+            <div>
+              <img src="images/22.png" class="join-img" data-team="romans"/>
+              <span>or</span>
+              <img src="images/32.png" class="join-img" data-team="japs"/>
+            </div>
+          </div>
+        {{/if}}
+      {{/momentum}}
+    </div>
+  {{/if}}
 </template>

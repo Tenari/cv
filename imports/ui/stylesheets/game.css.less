@@ -1,0 +1,97 @@
+.game-border {position:relative;}
+.g-container {
+  background-color:#898894;
+  
+  border-style:solid;
+  border-color:#505057;
+  -webkit-border-radius:15px;
+     -moz-border-radius: 15px;
+          border-radius: 15px;
+  box-shadow: 10px 10px 5px #888888;
+  
+  width:720px;
+  height:480px;
+  
+  margin-top:0;
+  margin-left:auto;
+  margin-right:auto;
+  
+  position:relative;
+  z-index:1;
+}
+.g-row{
+  height:60px;
+}
+.g-col{
+  height:60px;
+  width:60px;
+  background-repeat:no-repeat;
+  background-size:60px;
+  display:inline-block;
+}
+.top-left{
+  -webkit-border-top-left-radius:15px;
+     -moz-border-top-left-radius:15px;
+          border-top-left-radius:15px;
+}
+.bottom-left{
+  -webkit-border-bottom-left-radius:15px;
+     -moz-border-bottom-left-radius:15px;
+          border-bottom-left-radius:15px;
+}
+.top-right{
+  -webkit-border-top-right-radius:15px;
+     -moz-border-top-right-radius:15px;
+          border-top-right-radius:15px;
+}
+.bottom-right{
+  -webkit-border-bottom-right-radius:15px;
+     -moz-border-bottom-right-radius:15px;
+          border-bottom-right-radius:15px;
+}
+.container span{
+  font-size:40px;
+  line-height:41px;
+  padding-top:15px;
+  padding-bottom:25px;
+}
+.m-t-50{
+  margin-top:50px;
+}
+
+.energy-bar {
+  border: 1px solid black;
+  width: 120px;
+  height: 10px;
+  position: absolute;
+  right: 0;
+  z-index: 200;
+  .energy-fill {
+    background-color: blue;
+    height: 100%;
+  }
+}
+
+.left-side-hoverer {
+  position:absolute;
+  height: 100%;
+  width: 50%;
+  left: 0;
+  top: 0;
+  &:hover {
+    background-color: rgba(50,50,50, 0.1);
+  }
+}
+.right-side-hoverer {
+  position:absolute;
+  height: 100%;
+  width: 50%;
+  right: 0;
+  top: 0;
+  &:hover {
+    background-color: yellow;
+  }
+}
+
+.hide {display: none;}
+.red {color: red;}

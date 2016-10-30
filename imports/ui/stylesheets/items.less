@@ -1,0 +1,45 @@
+.items-menu {
+  height: 100%;
+  background-color: white;
+  display: flex;
+  p {
+    margin-top: 0;
+    padding-top: 9px;
+  }
+  .left, .right {
+    width: 50%;
+  }
+  .right {
+    .row {
+      display: flex;
+      justify-content: center;
+      .slot {
+        height: 40px;
+        width: 40px;
+        border: 1px solid black;
+        img {
+          height: 100%;
+          width: 100%;
+          background-color: yellow;
+        }
+      }
+      .head {
+        background-image: url('images/Man-Head-Silhouette.png');
+        background-size: cover;
+      }
+      .chest {
+        background-image: url('images/Equip-torso.png');
+        background-size: cover;
+      }
+    }
+  }
+  .items-list {
+    li {
+      list-style: none;
+      img {
+        height: 60px;
+        width: 60px;
+      }
+    }
+  }
+}

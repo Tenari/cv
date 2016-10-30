@@ -3,6 +3,8 @@ import { EJSON } from 'meteor/ejson';
 import { Rooms } from '../../api/rooms/rooms.js';
 import { Games } from '../../api/games/games.js';
 
+import  '../../api/characters/methods.js';
+
 Meteor.startup(function (){
   var game = Games.findOne();
   if ( !game ) { // ensure that there is one game with some rooms always
