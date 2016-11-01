@@ -5,6 +5,7 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import '../../ui/layouts/app.js';
 import '../../ui/pages/root.js';
 import '../../ui/pages/game.js';
+import '../../ui/pages/stats.js';
 import '../../ui/pages/not-found.js';
 
 // Import to override accounts templates
@@ -17,10 +18,17 @@ FlowRouter.route('/', {
   },
 });
 
-FlowRouter.route('/game/:gameId', {
+FlowRouter.route('/game/:gameId/world', {
   name: 'game.play',
   action() {
     BlazeLayout.render('app', { main: 'game' });
+  },
+});
+
+FlowRouter.route('/game/:gameId/stats', {
+  name: 'game.stats',
+  action() {
+    BlazeLayout.render('app', { main: 'stats' });
   },
 });
 

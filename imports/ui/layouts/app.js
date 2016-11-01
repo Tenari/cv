@@ -10,6 +10,8 @@ import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { _ } from 'meteor/underscore';
 import { $ } from 'meteor/jquery';
 
+import { Characters } from '../../api/characters/characters.js';
+
 import '../components/loading.js';
 import './app.html';
 
@@ -32,8 +34,7 @@ Meteor.startup(() => {
 });
 
 Template.app.onCreated(function appBodyOnCreated() {
-  this.subscribe('lists.public');
-  this.subscribe('lists.private');
+  this.subscribe('characters.own');
 
   this.state = new ReactiveDict();
   this.state.setDefault({
@@ -61,6 +62,9 @@ Template.app.helpers({
     }
 
     return true;
+  },
+  character() {
+    return Characters.findOne({userId: Meteor.userId()});
   },
 });
 

@@ -1,6 +1,11 @@
 <template name="app">
   <div id="nav">
     {{#if currentUser}}
+      {{#if character}}
+        <div>
+          <a href="/game/DYkfbGTSa5ob47tQr/stats">stats</a>
+        </div>
+      {{/if}}
       <div class="btns-group-vertical">
         <a href="#" class="js-user-menu btn-secondary">
           {{#if userMenuOpen}}

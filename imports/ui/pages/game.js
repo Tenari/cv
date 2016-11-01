@@ -6,6 +6,15 @@ import { Rooms } from '../../api/rooms/rooms.js'
 
 import './game.html';
 
+Template.game.onCreated(function gameOnCreated() {
+  this.subscribe('characters.room');
+  this.getGameId = () => FlowRouter.getParam('gameId');
+
+  this.autorun(() => {
+    this.subscribe('game.rooms', this.getGameId());
+  })
+})
+
 Template.game.helpers({
   gameHTML : function(){
     var room, html, i, j, tile, pos, viewH, viewW, usr, drawX, drawY, s_x, s_y, users;
@@ -13,11 +22,12 @@ Template.game.helpers({
     viewH = 8; viewW = 12;// default height and width (in tiles) of the viewport
     drawX = 5; drawY = 3; // default place for the user's character to appear onscreen
     usr = Characters.findOne({userId: Meteor.userId()});
-    if (usr.location == undefined) return ""; // make sure we've got the user
-    users = [];//Meteor.users.find({ emails: undefined}).fetch(); // the only fuckers we have access to are in the same room b/c it's defined that way in the publish method, so dont need to check that here.
+    if (usr == undefined || usr.location == undefined) return ""; // make sure we've got the user
+    users = Characters.find({}).fetch(); // the only fuckers we have access to are in the same room b/c it's defined that way in the publish method, so dont need to check that here.
 //    if(Session.get('room') != usr.location.room) Session.set('room',usr.location.room);
 
     room = Rooms.findOne(usr.location.roomId);
+    if (!room) return "";
 
     // (s_x, s_y) represents (0,0) from character's point of view
     s_x = usr.location.x - drawX;

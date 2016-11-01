@@ -17,8 +17,7 @@ Template.accountHome.onCreated(function accountHomeOnCreated() {
     name: '',
     named: false,
   });
-   
-
+  this.subscribe('characters.own');
 });
 
 Template.accountHome.helpers({

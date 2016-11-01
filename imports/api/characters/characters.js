@@ -64,4 +64,9 @@ Characters.attachSchema(Characters.schema);
 // them here to keep them private to the server.
 Characters.publicFields = {
   name: 1,
+  team: 1,
+  gameId: 1,
+  userId: 1,
+  location: 1,
+  stats: 1,
 };
