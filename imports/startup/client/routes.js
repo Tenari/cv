@@ -19,7 +19,7 @@ FlowRouter.route('/', {
 });
 
 FlowRouter.route('/game/:gameId/world', {
-  name: 'game.play',
+  name: 'game.world',
   action() {
     BlazeLayout.render('app', { main: 'game' });
   },

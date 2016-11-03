@@ -1,0 +1,43 @@
+@import '../stylesheets/variables.less';
+#nav {
+  position: realtive;
+  height: 50px;
+  line-height: 50px;
+  margin-bottom: 15px;
+  border-bottom: 3px solid @color-primary;
+  background-color: @color-primary-muted;
+
+  .nav-links {
+    width: 100%;
+    text-align: center;
+    a {
+      color: black;
+      text-decoration: none;
+      &:active, &:focus, &:hover {
+        outline: none;
+      }
+      &:hover {
+        color: @color-contrast;
+      }
+    }
+    a.active {
+      background-color: white;
+      border: 1px solid @color-contrast;
+      font-size: 16px;
+      font-weight: bold;
+      margin-left: 30px;
+      margin-right: 30px;
+      padding: 5px;
+      border-radius: 2px;
+      &:hover {
+        color: black;
+      }
+    }
+  }
+  .user-settings {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100px;
+  }
+}

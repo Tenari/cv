@@ -7,11 +7,12 @@ import { Rooms } from '../../api/rooms/rooms.js'
 import './game.html';
 
 Template.game.onCreated(function gameOnCreated() {
-  this.subscribe('characters.room');
   this.getGameId = () => FlowRouter.getParam('gameId');
+  this.getRoomId = () => Characters.findOne({userId: Meteor.userId()}).location.roomId;
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
+    this.subscribe('characters.room', this.getRoomId());
   })
 })
 

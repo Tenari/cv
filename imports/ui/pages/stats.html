@@ -1,5 +1,70 @@
 <template name="stats">
   <div class="stats-container">
-    <h1>{{character.name}}</h1>
+    <div class="key-character-status">
+      <h1>{{character.name}}</h1>
+      <div class="body-boxes-container">
+        <div class="row">
+          <div class="head-box">
+          </div>
+        </div>
+        <div class="row">
+          <div class="left-arm-box">
+          </div>
+          <div class="chest-box">
+          </div>
+          <div class="right-arm-box">
+          </div>
+        </div>
+        <div class="row">
+          <div class="legs-box">
+          </div>
+        </div>
+      </div>
+      <div class="stat-meter-container">
+        <p class="stat-meter-title">HP <span>{{character.stats.hp}} / {{character.stats.baseHp}}</span></p>
+        <div class="stat-meter">
+          <div class="stat-meter-filling hp" style="width: {{statPercent 'hp'}}%"></div>
+        </div>
+      </div>
+      <div class="stat-meter-container">
+        <p class="stat-meter-title">ENERGY <span>{{character.stats.energy}} / {{character.stats.baseEnergy}}</span></p>
+        <div class="stat-meter">
+          <div class="stat-meter-filling energy" style="width: {{statPercent 'energy'}}%"></div>
+        </div>
+      </div>
+      <div class="stat-meter-container">
+        <p class="stat-meter-title">WEIGHT <span>X / Y</span></p>
+        <div class="stat-meter">
+          <div class="stat-meter-filling weight" style="width: 10%"></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="detail-tabs-container">
+      <div class="tab-links">
+        <a href="javascrip:void(0)">Skills</a>
+        <a href="javascrip:void(0)">Items</a>
+        <a href="javascrip:void(0)">Resources</a>
+      </div>
+      {{#if showSkills}}
+        <div class="skills-display-container">
+          <h2>Basic combat skills</h2>
+          <li><i class="fa fa-caret-right"></i> Strength: {{character.stats.strength}} / {{character.stats.baseStrength}}</li>
+          <li><i class="fa fa-caret-right"></i> Accuracy: {{character.stats.accuracy}} / {{character.stats.baseAccuracy}}</li>
+          <li><i class="fa fa-caret-right"></i> Agility: {{character.stats.agility}} / {{character.stats.baseAgility}}</li>
+          <li><i class="fa fa-caret-right"></i> Toughness: {{character.stats.toughness}} / {{character.stats.baseToughness}}</li>
+        </div>
+      {{/if}}
+      {{#if showItems}}
+        <div class="items-display-container">
+          items list here
+        </div>
+      {{/if}}
+      {{#if showResources}}
+        <div class="resources-display-container">
+          resources list here
+        </div>
+      {{/if}}
+    </div>
   </div>
 </template>

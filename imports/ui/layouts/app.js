@@ -66,6 +66,10 @@ Template.app.helpers({
   character() {
     return Characters.findOne({userId: Meteor.userId()});
   },
+  isActive(name) {
+    if (FlowRouter.getRouteName().match(name)) return "active";
+    return "";
+  },
 });
 
 Template.app.events({

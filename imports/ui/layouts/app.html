@@ -2,11 +2,12 @@
   <div id="nav">
     {{#if currentUser}}
       {{#if character}}
-        <div>
-          <a href="/game/DYkfbGTSa5ob47tQr/stats">stats</a>
+        <div class="nav-links">
+          <a href="/game/{{character.gameId}}/stats" class="{{isActive 'stats'}}">Stats</a>
+          <a href="/game/{{character.gameId}}/world" class="{{isActive 'world'}}">World</a>
         </div>
       {{/if}}
-      <div class="btns-group-vertical">
+      <div class="user-settings btns-group-vertical">
         <a href="#" class="js-user-menu btn-secondary">
           {{#if userMenuOpen}}
             <span class="icon-arrow-up"></span>

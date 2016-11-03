@@ -33,7 +33,7 @@ Template.accountHome.helpers({
   characters(){
     const cursor = Characters.find({userId: Meteor.userId()});
     if (cursor.count() == 1) {
-      FlowRouter.go('game.play', {gameId: cursor.fetch()[0].gameId});
+      FlowRouter.go('game.world', {gameId: cursor.fetch()[0].gameId});
     }
     return cursor;
   }

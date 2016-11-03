@@ -1,0 +1,107 @@
+@import '../stylesheets/variables.less';
+
+.stats-container {
+  display: flex;
+  margin-top: 50px;
+  .key-character-status {
+    width: 20%;
+
+    .body-boxes-container {
+      margin-top: 15px;
+      .row {
+        display: flex;
+        justify-content: center;
+
+        .box {
+          border: 1px solid black;
+          margin: 3px;
+          &:hover {
+            box-shadow: 0px 0px 9px #999;
+          }
+        }
+        .head-box {
+          .box();
+          height: 40px;
+          width: 40px;
+        }
+        .left-arm-box {
+          .box();
+          height: 80px;
+          width: 40px;
+        }
+        .chest-box {
+          .box();
+          height: 100px;
+          width: 60px;
+        }
+        .right-arm-box {
+          .box();
+          height: 80px;
+          width: 40px;
+        }
+        .legs-box {
+          .box();
+          height: 100px;
+          width: 60px;
+        }
+      }
+    }
+    .stat-meter-container {
+      border: 1px solid black;
+      border-radius: 2px;
+      padding: 5px;
+      background-color: @color-primary-muted;
+      margin: 10px;
+      width: 80%;
+
+      p.stat-meter-title {
+      }
+      .stat-meter {
+        width: 95%;
+        height: 15px;
+        border: 2px solid black;
+        border-radius: 2px;
+        background-color: white;
+        .stat-meter-filling {
+          height: 100%;
+          background-color: @color-primary;
+          &.energy {
+            background-color: blue;
+          }
+          &.hp {
+            background-color: @color-contrast;
+          }
+        }
+      }
+    }
+  }
+  .detail-tabs-container {
+    .tab-links {
+      margin-bottom: 20px;
+      a {
+        margin: 20px;
+        padding: 5px;
+        border-top: 1px solid black;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        color: black;
+        &:hover {
+          background-color: black;
+          color: white;
+        }
+      }
+    }
+    .skills-display-container {
+      li {
+        text-transform: uppercase;
+        list-style: none;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        .fa {display: none;}
+        &:hover {
+          .fa {display: inline;}
+        }
+      }
+    }
+  }
+}
