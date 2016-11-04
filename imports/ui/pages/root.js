@@ -11,6 +11,12 @@ import './sales.html';
 import './account-home.html';
 import './root.html';
 
+Template.salesPage.events({
+  'click button.signup'(event, instance) {
+    FlowRouter.go('/join');
+  }
+})
+
 Template.accountHome.onCreated(function accountHomeOnCreated() {
   this.state = new ReactiveDict();
   this.state.setDefault({
@@ -33,9 +39,14 @@ Template.accountHome.helpers({
   characters(){
     const cursor = Characters.find({userId: Meteor.userId()});
     if (cursor.count() == 1) {
-      FlowRouter.go('game.world', {gameId: cursor.fetch()[0].gameId});
+      //TODO: better way to go into the game. this currently has infinte-loop potential without the timeout
+      Meteor.setTimeout(function(){}, 2000);
     }
     return cursor;
+  },
+  characterGamePath(){
+    const gameId = Characters.findOne({userId: Meteor.userId()}).gameId;
+    return FlowRouter.path('game.world', {gameId: gameId});
   }
 });
 
@@ -52,10 +63,9 @@ Template.accountHome.events({
   'click img.join-img'(event, instance) {
     const team = $(event.target).data('team');
     const name = instance.state.get('name');
-    console.log('adsfasdf')
 
-    Meteor.call('characters.insert', {team: team, name: name});
-    console.log('eeeee')
-
+    Meteor.call('characters.insert', {team: team, name: name}, function(){
+      FlowRouter.go('game.world', {gameId: Characters.findOne({userId: Meteor.userId()}).gameId});
+    });
   }
 });

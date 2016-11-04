@@ -1,0 +1,20 @@
+<template name="statusBars">
+  <div class="stat-meter-container">
+    <p class="stat-meter-title">HP <span>{{character.stats.hp}} / {{character.stats.baseHp}}</span></p>
+    <div class="stat-meter">
+      <div class="stat-meter-filling hp" style="width: {{statPercent 'hp'}}%"></div>
+    </div>
+  </div>
+  <div class="stat-meter-container">
+    <p class="stat-meter-title">ENERGY <span>{{character.stats.energy}} / {{character.stats.baseEnergy}}</span></p>
+    <div class="stat-meter">
+      <div class="stat-meter-filling energy" style="width: {{statPercent 'energy'}}%"></div>
+    </div>
+  </div>
+  <div class="stat-meter-container">
+    <p class="stat-meter-title">WEIGHT <span>X / Y</span></p>
+    <div class="stat-meter">
+      <div class="stat-meter-filling weight" style="width: 10%"></div>
+    </div>
+  </div>
+</template>

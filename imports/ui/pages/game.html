@@ -1,11 +1,9 @@
 <template name="game">
+  <div class="game-status-bars">
+    {{> statusBars}}
+  </div>
   <div class="game-border">
-    <div class="left-side-hoverer"></div>
-    <div class="right-side-hoverer"></div>
     <div class="g-container">
-      <div class="energy-bar">
-        <div class="energy-fill" style="width: {{energyPercent}}%"></div>
-      </div>
       {{{gameHTML}}}
     </div>
   </div>

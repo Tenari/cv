@@ -94,5 +94,6 @@ Template.app.events({
 
   'click .js-logout'() {
     Meteor.logout();
+    FlowRouter.go('App.home');
   },
 });

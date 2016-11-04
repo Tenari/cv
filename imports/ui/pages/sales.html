@@ -1,7 +1,19 @@
 <template name="salesPage">
   <div class="sales-page">
     <h1>Welcome to Coaltion Victory</h1>
-    <img src="images/roman-vs-jap.png" class="sales-banner"/>
-    <p>Some wonderful sales text</p>
+    <h2>The best browser game around</h2>
+    <div class="banner-container">
+      <img src="images/roman-vs-jap.png" class="sales-banner"/>
+    </div>
+    <p class="blurb">If you like the feel of the old-school RPG games (like Pokemon) combined with the teamwork of modern MMOs (like World of Warcraft) and the competitiveness of modern MOBAs (like League of Legends), you should <a href="{{pathFor 'join'}}">play this game</a>.</p>
+    <div class="action-words">
+      <p class="fight">Fight.</p>
+      <p class="explore">Explore.</p>
+      <p class="craft">Craft.</p>
+      <p class="troll">Troll some noobs.</p>
+    </div>
+    <div class="flex-block">
+      <button class="signup">Sign up for Free</button>
+    </div>
   </div>
 </template>

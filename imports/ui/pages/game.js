@@ -4,11 +4,12 @@ import { Template } from 'meteor/templating';
 import { Characters } from '../../api/characters/characters.js'
 import { Rooms } from '../../api/rooms/rooms.js'
 
+import '../components/status-bars.js';
 import './game.html';
 
 Template.game.onCreated(function gameOnCreated() {
   this.getGameId = () => FlowRouter.getParam('gameId');
-  this.getRoomId = () => Characters.findOne({userId: Meteor.userId()}).location.roomId;
+  this.getRoomId = () => Meteor.userId() && Characters.findOne({userId: Meteor.userId()}).location.roomId;
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
@@ -158,16 +159,6 @@ Template.game.events({
   'click button#start-fight': function(event, template) {
     console.log(getPotentialOpponent());
     Meteor.call('startFight', getPotentialOpponent()._id);
-  },
-  'mouseenter .left-side-hoverer': function (){
-    Session.set('showStats', true);
-    Session.set('showItems', false);
-  },
-  'mouseleave .left-side-hoverer': function (){
-    Session.set('showStats', false);
-  },
-  'click .right-side-hoverer': function (){
-    Session.set('showItems', !Session.get('showItems'));
   },
   */
 

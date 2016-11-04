@@ -46,34 +46,6 @@
         }
       }
     }
-    .stat-meter-container {
-      border: 1px solid black;
-      border-radius: 2px;
-      padding: 5px;
-      background-color: @color-primary-muted;
-      margin: 10px;
-      width: 80%;
-
-      p.stat-meter-title {
-      }
-      .stat-meter {
-        width: 95%;
-        height: 15px;
-        border: 2px solid black;
-        border-radius: 2px;
-        background-color: white;
-        .stat-meter-filling {
-          height: 100%;
-          background-color: @color-primary;
-          &.energy {
-            background-color: blue;
-          }
-          &.hp {
-            background-color: @color-contrast;
-          }
-        }
-      }
-    }
   }
   .detail-tabs-container {
     .tab-links {
@@ -101,6 +73,35 @@
         &:hover {
           .fa {display: inline;}
         }
+      }
+    }
+  }
+}
+
+.stat-meter-container {
+  border: 1px solid black;
+  border-radius: 2px;
+  padding: 5px;
+  background-color: @color-primary-muted;
+  margin: 10px;
+  width: 80%;
+
+  p.stat-meter-title {
+  }
+  .stat-meter {
+    width: 95%;
+    height: 15px;
+    border: 2px solid black;
+    border-radius: 2px;
+    background-color: white;
+    .stat-meter-filling {
+      height: 100%;
+      background-color: @color-primary;
+      &.energy {
+        background-color: blue;
+      }
+      &.hp {
+        background-color: @color-contrast;
       }
     }
   }

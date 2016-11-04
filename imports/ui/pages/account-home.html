@@ -2,7 +2,7 @@
   {{#if hasCharacter}}
     <ul>
       {{#each character in characters}}
-        <li>{{character.name}}</li>
+        <li>Play as <a href="{{characterGamePath}}">{{character.name}}</a></li>
       {{/each}}
     </ul>
   {{else}}
