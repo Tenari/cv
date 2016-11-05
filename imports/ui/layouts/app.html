@@ -5,6 +5,9 @@
         <div class="nav-links">
           <a href="/game/{{character.gameId}}/stats" class="{{isActive 'stats'}}">Stats</a>
           <a href="/game/{{character.gameId}}/world" class="{{isActive 'world'}}">World</a>
+          {{#if fight}}
+            <a href="/game/{{character.gameId}}/fight" class="{{isActive 'fight'}}">Fight</a>
+          {{/if}}
         </div>
       {{/if}}
       <div class="user-settings btns-group-vertical">

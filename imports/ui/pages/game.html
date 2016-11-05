@@ -4,7 +4,31 @@
   </div>
   <div class="game-border">
     <div class="g-container">
+      {{#if fighting}}
+        <div class="fighting-overlay"><div class="msg">In Combat</div></div>
+      {{/if}}
       {{{gameHTML}}}
     </div>
   </div>
+  {{#if opponentsToFight}}
+    <div class="opponent-list">
+      {{#each opponent in opponents}}
+        <div class="opponent-container">
+          <div class="character i-{{opponentImage opponent}}"></div>
+          <div>
+            <p>{{opponent.name}}</p>
+            {{#if fighting}}
+              {{#if amFighting opponent._id}}
+                <span class="red">Fighting!</span>
+              {{else}}
+                <span>--</span>
+              {{/if}}
+            {{else}}
+              <button class="fight" data-id="{{opponent._id}}">Fight</button>
+            {{/if}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
 </template>

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { Characters } from '../../api/characters/characters.js'
 
@@ -8,6 +9,10 @@ import './stats.html';
 
 Template.stats.onCreated(function gameOnCreated() {
   this.subscribe('characters.own');
+  this.state = new ReactiveDict();
+  this.state.setDefault({
+    page: 'Skills'
+  });
 })
 
 Template.stats.helpers({
@@ -15,8 +20,14 @@ Template.stats.helpers({
     return Characters.findOne({userId: Meteor.userId()});
   },
 
-  showSkills: function(){
-    return true
-  },
+  page: function(key) {
+    return Template.instance().state.get('page') == key ? 'active' : false;
+  }
 
 });
+
+Template.stats.events({
+  'click .tab-links>a'(e, instance) {
+    instance.state.set('page', $(e.target).data('page'));
+  }
+})

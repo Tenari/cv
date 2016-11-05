@@ -25,25 +25,30 @@
     </div>
     <div class="detail-tabs-container">
       <div class="tab-links">
-        <a href="javascrip:void(0)">Skills</a>
-        <a href="javascrip:void(0)">Items</a>
-        <a href="javascrip:void(0)">Resources</a>
+        <a href="javascrip:void(0)" data-page="Skills" class="{{page 'Skills'}}">Skills</a>
+        <a href="javascrip:void(0)" data-page="Items" class="{{page 'Items'}}">Items</a>
+        <a href="javascrip:void(0)" data-page="Resources" class="{{page 'Resources'}}">Resources</a>
       </div>
-      {{#if showSkills}}
+      {{#if page 'Skills'}}
         <div class="skills-display-container">
           <h2>Basic combat skills</h2>
           <li><i class="fa fa-caret-right"></i> Strength: {{character.stats.strength}} / {{character.stats.baseStrength}}</li>
           <li><i class="fa fa-caret-right"></i> Accuracy: {{character.stats.accuracy}} / {{character.stats.baseAccuracy}}</li>
           <li><i class="fa fa-caret-right"></i> Agility: {{character.stats.agility}} / {{character.stats.baseAgility}}</li>
           <li><i class="fa fa-caret-right"></i> Toughness: {{character.stats.toughness}} / {{character.stats.baseToughness}}</li>
+          <h2>Weapon skills</h2>
+          <li><i class="fa fa-caret-right"></i> Hands: {{character.stats.weapon.hands}} / {{character.stats.weapon.baseHands}}</li>
+          <li><i class="fa fa-caret-right"></i> Small Blade: {{character.stats.weapon.smallBlade}} / {{character.stats.weapon.baseSmallBlade}}</li>
+          <li><i class="fa fa-caret-right"></i> Large Blade: {{character.stats.weapon.largeBlade}} / {{character.stats.weapon.baseLargeBlade}}</li>
+          <li><i class="fa fa-caret-right"></i> Axe: {{character.stats.weapon.axe}} / {{character.stats.weapon.baseAxe}}</li>
         </div>
       {{/if}}
-      {{#if showItems}}
+      {{#if page 'Items'}}
         <div class="items-display-container">
           items list here
         </div>
       {{/if}}
-      {{#if showResources}}
+      {{#if page 'Resources'}}
         <div class="resources-display-container">
           resources list here
         </div>

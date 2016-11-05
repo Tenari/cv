@@ -56,6 +56,7 @@ Characters.schema = new SimpleSchema({
   userId: { type: String, regEx: SimpleSchema.RegEx.Id },
   location: {type: LocationSchema},
   stats: {type: StatsSchema},
+  defaultAttackStyle: {type: String, defaultValue: 'quick'},
 });
 
 Characters.attachSchema(Characters.schema);

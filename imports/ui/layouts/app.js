@@ -6,11 +6,11 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Template } from 'meteor/templating';
 import { ActiveRoute } from 'meteor/zimme:active-route';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { T9n } from 'meteor/softwarerero:accounts-t9n';
 import { _ } from 'meteor/underscore';
 import { $ } from 'meteor/jquery';
 
 import { Characters } from '../../api/characters/characters.js';
+import { Fights } from '../../api/fights/fights.js';
 
 import '../components/loading.js';
 import './app.html';
@@ -35,6 +35,7 @@ Meteor.startup(() => {
 
 Template.app.onCreated(function appBodyOnCreated() {
   this.subscribe('characters.own');
+  this.subscribe('fights.own');
 
   this.state = new ReactiveDict();
   this.state.setDefault({
@@ -69,6 +70,9 @@ Template.app.helpers({
   isActive(name) {
     if (FlowRouter.getRouteName().match(name)) return "active";
     return "";
+  },
+  fight() {
+    return Fights.findOne();
   },
 });
 

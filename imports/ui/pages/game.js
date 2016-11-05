@@ -1,8 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Rooms } from '../../api/rooms/rooms.js'
+import { Fights } from '../../api/fights/fights.js'
 
 import '../components/status-bars.js';
 import './game.html';
@@ -10,6 +12,7 @@ import './game.html';
 Template.game.onCreated(function gameOnCreated() {
   this.getGameId = () => FlowRouter.getParam('gameId');
   this.getRoomId = () => Meteor.userId() && Characters.findOne({userId: Meteor.userId()}).location.roomId;
+  this.subscribe('fights.own');
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
@@ -95,30 +98,28 @@ Template.game.helpers({
     }
     return html;
   },
-  /*
-  canStartFight: function(){
-    var u = Meteor.user();
-    var fights = Fights.find({$or: [{initiatorId: u._id}, {opponentId: u._id}]}).fetch();
-    return u && fights.length == 0 && getPotentialOpponent() != undefined;
+  opponentsToFight: function(){
+    const uId = Meteor.userId();
+    const character = Characters.findOne({userId: uId});
+//    var fights = Fights.find({$or: [{initiatorId: u._id}, {opponentId: u._id}]}).fetch();
+//    return u && fights.length == 0 && getPotentialOpponent() != undefined;
+    return Characters.find({'location.x': character.location.x, 'location.y': character.location.y, userId: { $ne: uId }}).count() > 0;
   },
   fighting: function(){
-    var u = Meteor.user() || {};
-    var fights = Fights.find({$or: [{initiatorId: u._id}, {opponentId: u._id}]}).fetch();
-    return u && fights.length > 0;
+    return Fights.find().count() > 0;
   },
-  */
-  energyPercent: function(){
-    var character = Characters.findOne({userId: Meteor.userId()});
-    return character && character.stats && (character.stats.energy / 100);
+  amFighting: function(id) {
+    const fight = Fights.findOne();
+    return fight && (fight.attackerId == id || fight.defenderId == id);
   },
-  /*
-  sessionGet: function(opt){
-    return Session.get(opt);
+  opponents: function(){
+    const character = Characters.findOne({userId: Meteor.userId()});
+
+    return Characters.find({'location.x': character.location.x, 'location.y': character.location.y, userId: { $ne: Meteor.userId() }});
   },
-  showMainScreen: function (){
-    return !Session.get('showStats') && !Session.get('showItems');
+  opponentImage: function(opponent){
+    return parseInt(opponent.location.classId)+parseInt(opponent.location.direction);
   },
-  */
 });
 
 Template.game.rendered = function() {
@@ -155,21 +156,11 @@ Template.game.events({
   'click .g-row>.g-col:last-child' : move(3),
   'click .g-row>.g-col:first-child' : move(4),
 
-  /*
-  'click button#start-fight': function(event, template) {
-    console.log(getPotentialOpponent());
-    Meteor.call('startFight', getPotentialOpponent()._id);
+  'click button.fight': function(event, template) {
+    Meteor.call('fights.start', $(event.target).data('id'), function(error, result){
+      if(error) return;
+      FlowRouter.go('game.fight', {gameId: Characters.findOne({userId: Meteor.userId()}).gameId});
+    });
   },
-  */
 
 });
-/*
-function getPotentialOpponent(){
-  var user = Meteor.user();
-  if (user == null)
-    return null;
-
-  var users = Meteor.users.find({ emails: undefined, 'location.x': user.location.x, 'location.y': user.location.y}).fetch();
-  return users[0];
-}
-*/

@@ -1,0 +1,53 @@
+<template name="fight">
+  {{#if enemy}}
+  <div class="opponent-status-bars">
+    <h2>{{enemy.name}}</h2>
+    {{> hpBar enemy}}
+  </div>
+  {{/if}}
+  <div class="game-status-bars">
+    <h2>Self</h2>
+    {{> statusBars}}
+  </div>
+  <div class="game-border">
+    <div class="g-container">
+      <div class="fight">
+        <div class="visuals">
+          <div class="opponent-img i-{{enemyMainImage}}"></div>
+          <div class="self-img i-{{ownMainImage}}"></div>
+        </div>
+        <div class="controls">
+          <div class="countdown">
+            <p>Next round in:</p>
+            <div class="time-left">5</div>
+          </div>
+
+          <div class="up-next">
+            <p class="prompt">What will you do next?</p>
+            <div class="next-move-description">
+              {{#if nextIsAttack}}
+                <span class="attack">{{nextAttack}}</span> attack<br/><span class="sub-prompt">with your</span><br/>{{currentWeapon}}
+              {{else}}
+                attempt to <span class="attack">{{nextAttack}}</span>
+              {{/if}}
+            </div>
+          </div>
+
+          <div class="menu">
+            {{#if menu 'base'}}
+              <div class="option fight-option"><i class="fa fa-caret-right"></i> FIGHT</div>
+              <div class="option attack flee-option" data-style="flee"><i class="fa fa-caret-right"></i> FLEE</div>
+            {{/if}}
+
+            {{#if menu 'attack'}}
+              <div class="option attack" data-style="quick"><i class="fa fa-caret-right"></i> QUICK</div>
+              <div class="option attack" data-style="normal"><i class="fa fa-caret-right"></i> NORMAL</div>
+              <div class="option attack" data-style="heavy"><i class="fa fa-caret-right"></i> HEAVY</div>
+              <div class="option attack" data-style="block"><i class="fa fa-caret-right"></i> BLOCK</div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

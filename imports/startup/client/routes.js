@@ -6,6 +6,7 @@ import '../../ui/layouts/app.js';
 import '../../ui/pages/root.js';
 import '../../ui/pages/game.js';
 import '../../ui/pages/stats.js';
+import '../../ui/pages/fight.js';
 import '../../ui/pages/not-found.js';
 
 // Import to override accounts templates
@@ -29,6 +30,13 @@ FlowRouter.route('/game/:gameId/stats', {
   name: 'game.stats',
   action() {
     BlazeLayout.render('app', { main: 'stats' });
+  },
+});
+
+FlowRouter.route('/game/:gameId/fight', {
+  name: 'game.fight',
+  action() {
+    BlazeLayout.render('app', { main: 'fight' });
   },
 });
 

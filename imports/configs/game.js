@@ -12,3 +12,5 @@ export const teamCode = {
 export const doors = {'door':true, 'mat': true};
 
 export const movableSpots = {'grass':true, 'hz-path': true, "path-inv-T": true, "path-plus": true, "path-T": true};
+
+export const fightStyles = {'quick':true, 'normal':true, 'heavy':true, 'block':true, 'flee':true};

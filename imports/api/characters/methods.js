@@ -47,10 +47,8 @@ Meteor.methods({
 
     if( Date.now() <= character.location.updatedAt + 300)
       return false;
-/*
-    if (userFights.length > 0)
+    if (Fights.find({$or: [{attackerId: character._id},{defenderId: character._id}]}).count() > 0)
       return false;
-*/
 
     switch(directionInt) {
       case 1:
@@ -77,7 +75,7 @@ Meteor.methods({
     if (movableSpots[nextSpotChar] && character.location.direction == directionInt) {
       Characters.update(character._id, {
         $inc: moveObject, 
-        $set: {'location.direction': directionInt, 'location.updatedAt': Date.now(), 'stats.movement.energy': newEnergy}
+        $set: {'location.direction': directionInt, 'location.updatedAt': Date.now(), 'stats.energy': newEnergy}
       });
     } else if (doors[nextSpotChar] && character.location.direction == directionInt) {
       changeRoom(character, room, directionInt, newEnergy);

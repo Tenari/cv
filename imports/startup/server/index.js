@@ -7,6 +7,8 @@ import  '../../api/games/publications.js';
 import  '../../api/rooms/publications.js';
 import  '../../api/characters/methods.js';
 import  '../../api/characters/publications.js';
+import  '../../api/fights/methods.js';
+import  '../../api/fights/publications.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();
