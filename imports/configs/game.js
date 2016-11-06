@@ -14,3 +14,10 @@ export const doors = {'door':true, 'mat': true};
 export const movableSpots = {'grass':true, 'hz-path': true, "path-inv-T": true, "path-plus": true, "path-T": true};
 
 export const fightStyles = {'quick':true, 'normal':true, 'heavy':true, 'block':true, 'flee':true};
+
+export const styleFactors = {quick: 3, normal: 4, heavy: 5};
+
+export const fightEnergyCostFactor = 2;
+
+export const speeds = {'large blade': 1, 'none': 4, 'small blade': 3};
+

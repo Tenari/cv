@@ -3,6 +3,8 @@ import { EJSON } from 'meteor/ejson';
 import { Rooms } from '../../api/rooms/rooms.js';
 import { Games } from '../../api/games/games.js';
 
+import './gameLoop.js';
+
 import  '../../api/games/publications.js';
 import  '../../api/rooms/publications.js';
 import  '../../api/characters/methods.js';

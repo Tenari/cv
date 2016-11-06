@@ -14,12 +14,14 @@
       <div class="fight">
         <div class="visuals">
           <div class="opponent-img i-{{enemyMainImage}}"></div>
+          <div class="opponent-dmg-taken">{{opponentDamageTaken}}</div>
           <div class="self-img i-{{ownMainImage}}"></div>
+          <div class="own-dmg-taken">{{ownDamageTaken}}</div>
         </div>
         <div class="controls">
           <div class="countdown">
             <p>Next round in:</p>
-            <div class="time-left">5</div>
+            <div class="time-left">{{timeLeft}}</div>
           </div>
 
           <div class="up-next">
@@ -50,4 +52,8 @@
       </div>
     </div>
   </div>
+  {{#each round in fight.rounds}}
+    <p>attacker did {{round.attackerDealt}}</p>
+    <p>defender did {{round.defenderDealt}}</p>
+  {{/each}}
 </template>

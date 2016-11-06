@@ -14,10 +14,37 @@ Template.fight.onCreated(function fightOnCreated() {
   this.state.setDefault({
     menu: 'base',
     next: 'quick',
+    opponentDamage: 0,
+    ownDamage: 0,
+    timeLeft: 5
   })
+  var state = this.state;
   this.subscribe('fights.own');
   this.subscribe('characters.fight');
   this.character = () => Characters.findOne({userId: Meteor.userId()});
+
+  Meteor.setInterval(()=>{
+    state.set('timeLeft', state.get('timeLeft') - 1);
+  },1000);
+
+  this.autorun(() => {
+    state.set('timeLeft', 5);
+    const fight = Fights.findOne();
+    if (!fight) return;
+    const round = fight.rounds[fight.rounds.length-1];
+    if (!round) return;
+
+    const damage = this.character()._id == fight.attackerId ? round.attackerDealt : round.defenderDealt;
+    this.state.set('opponentDamage', damage);
+
+    const ownDamage = this.character()._id == fight.attackerId ? round.defenderDealt : round.attackerDealt;
+    this.state.set('ownDamage', ownDamage);
+
+    Meteor.setTimeout(function(){
+      state.set('opponentDamage', 0);
+      state.set('ownDamage', 0);
+    }, 2000) 
+  })
 })
 
 function nextAttack() {
@@ -48,6 +75,20 @@ Template.fight.helpers({
   },
   ownMainImage() {
     return Template.instance().character().location.classId + 1;
+  },
+  fight(){
+    return Fights.findOne();
+  },
+  opponentDamageTaken(){
+    const dmg = Template.instance().state.get('opponentDamage');
+    return dmg > 0 ? ("-"+dmg) : "";
+  },
+  ownDamageTaken(){
+    const dmg = Template.instance().state.get('ownDamage');
+    return dmg > 0 ? ("-"+dmg) : "";
+  },
+  timeLeft(){
+    return Template.instance().state.get('timeLeft');
   }
 })
 

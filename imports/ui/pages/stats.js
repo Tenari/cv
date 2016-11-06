@@ -22,6 +22,10 @@ Template.stats.helpers({
 
   page: function(key) {
     return Template.instance().state.get('page') == key ? 'active' : false;
+  },
+
+  decimal(stat){
+    return stat.toFixed(2);
   }
 
 });

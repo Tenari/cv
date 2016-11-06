@@ -4,6 +4,7 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 import { Games } from '../games/games.js';
 import { Rooms } from '../rooms/rooms.js';
+import { Fights } from '../fights/fights.js';
 import { Characters } from './characters.js';
 
 import { moveCost, teamCode, doors, movableSpots } from '../../configs/game.js';

@@ -27,6 +27,6 @@ Template.statusBars.helpers({
 
 Template.hpBar.helpers({
   statPercent(){
-    this.stats.hp / this.stats.baseHp * 100;
+    return this.stats.hp / this.stats.baseHp * 100;
   }
 })

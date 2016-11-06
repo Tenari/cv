@@ -16,7 +16,12 @@ Fights.schema = new SimpleSchema({
   defenderId: { type: String, regEx: SimpleSchema.RegEx.Id },
   createdAt: {type: Number },
   round: {type: Number, defaultValue: 0},
-  rounds: {type: [Object] },
+  rounds: {type: [Object]},
+  'rounds.$.round': {type: Number},
+  'rounds.$.defenderHit': {type: Boolean},
+  'rounds.$.defenderDealt': {type: Number},
+  'rounds.$.attackerHit': {type: Boolean},
+  'rounds.$.attackerDealt': {type: Number},
   attackerStyle: {type: String},
   defenderStyle: {type: String},
 });
