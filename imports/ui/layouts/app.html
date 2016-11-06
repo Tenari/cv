@@ -1,15 +1,17 @@
 <template name="app">
   <div id="nav">
     {{#if currentUser}}
+      <div class="nav-links">
       {{#if character}}
-        <div class="nav-links">
-          <a href="/game/{{character.gameId}}/stats" class="{{isActive 'stats'}}">Stats</a>
-          <a href="/game/{{character.gameId}}/world" class="{{isActive 'world'}}">World</a>
-          {{#if fight}}
-            <a href="/game/{{character.gameId}}/fight" class="{{isActive 'fight'}}">Fight</a>
-          {{/if}}
-        </div>
+        <a href="/game/{{character.gameId}}/stats" class="{{isActive 'stats'}}">Stats</a>
+        <a href="/game/{{character.gameId}}/world" class="{{isActive 'world'}}">World</a>
+        {{#if fight}}
+          <a href="/game/{{character.gameId}}/fight" class="{{isActive 'fight'}}">Fight</a>
+        {{/if}}
+      {{else}}
+        <a href="/">Coalition Victory</a>
       {{/if}}
+      </div>
       <div class="user-settings btns-group-vertical">
         <a href="#" class="js-user-menu btn-secondary">
           {{#if userMenuOpen}}

@@ -45,6 +45,13 @@ Template.fight.onCreated(function fightOnCreated() {
       state.set('ownDamage', 0);
     }, 2000) 
   })
+
+  this.autorun(()=> {
+    if (this.subscriptionsReady()) {
+      if (Fights.find().count() == 0) // if there is no fight, re-route.
+        FlowRouter.go('game.world', {gameId: FlowRouter.getParam('gameId')})
+    }
+  })
 })
 
 function nextAttack() {

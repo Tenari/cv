@@ -13,6 +13,13 @@ Template.stats.onCreated(function gameOnCreated() {
   this.state.setDefault({
     page: 'Skills'
   });
+
+  this.autorun(() => {
+    if (this.subscriptionsReady()) {
+      if (Characters.find().count() == 0)
+        FlowRouter.go('/');
+    }
+  })
 })
 
 Template.stats.helpers({

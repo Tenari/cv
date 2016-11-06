@@ -1,58 +1,60 @@
 <template name="stats">
-  <div class="stats-container">
-    <div class="key-character-status">
-      <h1>{{character.name}}</h1>
-      <div class="body-boxes-container">
-        <div class="row">
-          <div class="head-box">
+  {{#if character}}
+    <div class="stats-container">
+      <div class="key-character-status">
+        <h1>{{character.name}}</h1>
+        <div class="body-boxes-container">
+          <div class="row">
+            <div class="head-box">
+            </div>
+          </div>
+          <div class="row">
+            <div class="left-arm-box">
+            </div>
+            <div class="chest-box">
+            </div>
+            <div class="right-arm-box">
+            </div>
+          </div>
+          <div class="row">
+            <div class="legs-box">
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="left-arm-box">
-          </div>
-          <div class="chest-box">
-          </div>
-          <div class="right-arm-box">
-          </div>
-        </div>
-        <div class="row">
-          <div class="legs-box">
-          </div>
-        </div>
-      </div>
-      {{> statusBars}}
+        {{> statusBars}}
 
-    </div>
-    <div class="detail-tabs-container">
-      <div class="tab-links">
-        <a href="javascrip:void(0)" data-page="Skills" class="{{page 'Skills'}}">Skills</a>
-        <a href="javascrip:void(0)" data-page="Items" class="{{page 'Items'}}">Items</a>
-        <a href="javascrip:void(0)" data-page="Resources" class="{{page 'Resources'}}">Resources</a>
       </div>
-      {{#if page 'Skills'}}
-        <div class="skills-display-container">
-          <h2>Basic combat skills</h2>
-          <li><i class="fa fa-caret-right"></i> Strength: {{decimal character.stats.strength}} / {{decimal character.stats.baseStrength}}</li>
-          <li><i class="fa fa-caret-right"></i> Accuracy: {{decimal character.stats.accuracy}} / {{decimal character.stats.baseAccuracy}}</li>
-          <li><i class="fa fa-caret-right"></i> Agility: {{decimal character.stats.agility}} / {{decimal character.stats.baseAgility}}</li>
-          <li><i class="fa fa-caret-right"></i> Toughness: {{decimal character.stats.toughness}} / {{decimal character.stats.baseToughness}}</li>
-          <h2>Weapon skills</h2>
-          <li><i class="fa fa-caret-right"></i> Hands: {{decimal character.stats.weapon.hands}} / {{decimal character.stats.weapon.baseHands}}</li>
-          <li><i class="fa fa-caret-right"></i> Small Blade: {{decimal character.stats.weapon.smallBlade}} / {{decimal character.stats.weapon.baseSmallBlade}}</li>
-          <li><i class="fa fa-caret-right"></i> Large Blade: {{decimal character.stats.weapon.largeBlade}} / {{decimal character.stats.weapon.baseLargeBlade}}</li>
-          <li><i class="fa fa-caret-right"></i> Axe: {{decimal character.stats.weapon.axe}} / {{decimal character.stats.weapon.baseAxe}}</li>
+      <div class="detail-tabs-container">
+        <div class="tab-links">
+          <a href="javascrip:void(0)" data-page="Skills" class="{{page 'Skills'}}">Skills</a>
+          <a href="javascrip:void(0)" data-page="Items" class="{{page 'Items'}}">Items</a>
+          <a href="javascrip:void(0)" data-page="Resources" class="{{page 'Resources'}}">Resources</a>
         </div>
-      {{/if}}
-      {{#if page 'Items'}}
-        <div class="items-display-container">
-          items list here
-        </div>
-      {{/if}}
-      {{#if page 'Resources'}}
-        <div class="resources-display-container">
-          resources list here
-        </div>
-      {{/if}}
+        {{#if page 'Skills'}}
+          <div class="skills-display-container">
+            <h2>Basic combat skills</h2>
+            <li><i class="fa fa-caret-right"></i> Strength: {{decimal character.stats.strength}} / {{decimal character.stats.baseStrength}}</li>
+            <li><i class="fa fa-caret-right"></i> Accuracy: {{decimal character.stats.accuracy}} / {{decimal character.stats.baseAccuracy}}</li>
+            <li><i class="fa fa-caret-right"></i> Agility: {{decimal character.stats.agility}} / {{decimal character.stats.baseAgility}}</li>
+            <li><i class="fa fa-caret-right"></i> Toughness: {{decimal character.stats.toughness}} / {{decimal character.stats.baseToughness}}</li>
+            <h2>Weapon skills</h2>
+            <li><i class="fa fa-caret-right"></i> Hands: {{decimal character.stats.weapon.hands}} / {{decimal character.stats.weapon.baseHands}}</li>
+            <li><i class="fa fa-caret-right"></i> Small Blade: {{decimal character.stats.weapon.smallBlade}} / {{decimal character.stats.weapon.baseSmallBlade}}</li>
+            <li><i class="fa fa-caret-right"></i> Large Blade: {{decimal character.stats.weapon.largeBlade}} / {{decimal character.stats.weapon.baseLargeBlade}}</li>
+            <li><i class="fa fa-caret-right"></i> Axe: {{decimal character.stats.weapon.axe}} / {{decimal character.stats.weapon.baseAxe}}</li>
+          </div>
+        {{/if}}
+        {{#if page 'Items'}}
+          <div class="items-display-container">
+            items list here
+          </div>
+        {{/if}}
+        {{#if page 'Resources'}}
+          <div class="resources-display-container">
+            resources list here
+          </div>
+        {{/if}}
+      </div>
     </div>
-  </div>
+  {{/if}}
 </template>

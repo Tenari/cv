@@ -4,9 +4,10 @@ import { Characters } from '../characters/characters.js';
 import { Fights } from './fights.js';
 
 Meteor.publish ("fights.own", function() {
-  if (!this.userId) {this.ready();}
+  if (!this.userId) {return this.ready();}
 
-  const characterId = Characters.findOne({userId: this.userId})._id;
-  return Fights.find({$or: [{attackerId: characterId}, {defenderId: characterId}]}, {fields: Fights.publicFields});
+  const character = Characters.findOne({userId: this.userId, 'stats.hp': {$gt: 0} });
+  if (!character) return this.ready();
+  return Fights.find({$or: [{attackerId: character._id}, {defenderId: character._id}]}, {fields: Fights.publicFields});
 });
 

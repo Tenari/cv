@@ -17,55 +17,34 @@ Template.salesPage.events({
   }
 })
 
+///////////////////////////////
+// accountHome below
+///////////////////////////////
+
 Template.accountHome.onCreated(function accountHomeOnCreated() {
-  this.state = new ReactiveDict();
-  this.state.setDefault({
-    name: '',
-    named: false,
-  });
-  this.subscribe('characters.own');
+  this.subscribe('characters.own', true);
+  this.autorun(() => {
+    const recentlyDead = Characters.findOne({recentlyDead: true});
+    if (recentlyDead)
+      FlowRouter.go('character.death', {characterId: recentlyDead._id});
+  })
 });
 
 Template.accountHome.helpers({
   hasCharacter: function(){
     return Characters.findOne({userId: Meteor.userId()});
   },
-  named() {
-    return Template.instance().state.get('named');
-  },
-  name() {
-    return Template.instance().state.get('name');
-  },
   characters(){
-    const cursor = Characters.find({userId: Meteor.userId()});
-    if (cursor.count() == 1) {
-      //TODO: better way to go into the game. this currently has infinte-loop potential without the timeout
-      Meteor.setTimeout(function(){}, 2000);
-    }
-    return cursor;
+    return Characters.find({userId: Meteor.userId()});
   },
   characterGamePath(){
     const gameId = Characters.findOne({userId: Meteor.userId()}).gameId;
     return FlowRouter.path('game.world', {gameId: gameId});
-  }
-});
-
-var handle = null;
-Template.accountHome.events({
-  'keyup #change-name': function(e, instance){
-    instance.state.set('name', $(e.target).val());
-    Meteor.clearTimeout(handle);
-    handle = Meteor.setTimeout(function(){
-      instance.state.set('named', true);
-    }, 667);
   },
-
-  'click img.join-img'(event, instance) {
-    const team = $(event.target).data('team');
-    const name = instance.state.get('name');
-
-    Meteor.call('characters.insert', {team: team, name: name}, function(){
-      FlowRouter.go('game.world', {gameId: Characters.findOne({userId: Meteor.userId()}).gameId});
-    });
+  image(character){
+    return 2 + character.location.classId;
+  },
+  isAlive(character) {
+    return character.stats.hp > 0;
   }
 });

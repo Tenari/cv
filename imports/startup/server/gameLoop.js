@@ -55,8 +55,8 @@ function fightLoop(){
     }
 
     if (last.stats.hp <= 0) { // the last is dead!!!
-      Fights.remove(fight._id);
-      Characters.update(first._id, {$set: {stats: first.stats}});
+      last.recentlyDead = true;
+      endFight(fight, first, last);
       return;
     }
 
@@ -77,8 +77,8 @@ function fightLoop(){
     }
 
     if (first.stats.hp <= 0) { // the first is dead!!!
-      Fights.remove(fight._id);
-      Characters.update(last._id, {$set: {stats: last.stats}});
+      first.recentlyDead = true;
+      endFight(fight, first, last);
       return;
     }
     
@@ -88,6 +88,12 @@ function fightLoop(){
     console.log(roundLog);
     Fights.update(fight._id, {$inc: {round: 1}, $push: {rounds: roundLog}});
   }); 
+}
+
+function endFight(fight, first, last) {
+  Fights.remove(fight._id);
+  Characters.update(first._id, {$set: {stats: first.stats, recentlyDead: first.recentlyDead}});
+  Characters.update(last._id, {$set: {stats: last.stats, recentlyDead: last.recentlyDead}});
 }
 
 // a is the attacker
@@ -110,7 +116,7 @@ function aDamagesB(fight, a, b) {
   const styleFactor = styleFactors[style];
   const strDiff = a.stats.strength - b.stats.toughness;
   // calc the damage
-  return 5 * Math.pow( Math.E, (strDiff * 0.038));
+  return Math.round(5 * Math.pow( Math.E, (strDiff * 0.038)));
 }
 
 function skillIncreaseAmount(trainee, trainer) {

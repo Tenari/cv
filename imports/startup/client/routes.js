@@ -4,9 +4,11 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // Import to load these templates
 import '../../ui/layouts/app.js';
 import '../../ui/pages/root.js';
+import '../../ui/pages/new-character.js';
 import '../../ui/pages/game.js';
 import '../../ui/pages/stats.js';
 import '../../ui/pages/fight.js';
+import '../../ui/pages/death.js';
 import '../../ui/pages/not-found.js';
 
 // Import to override accounts templates
@@ -16,6 +18,13 @@ FlowRouter.route('/', {
   name: 'App.home',
   action() {
     BlazeLayout.render('app', { main: 'rootPage' });
+  },
+});
+
+FlowRouter.route('/new', {
+  name: 'characters.new',
+  action() {
+    BlazeLayout.render('app', { main: 'newCharacter' });
   },
 });
 
@@ -37,6 +46,13 @@ FlowRouter.route('/game/:gameId/fight', {
   name: 'game.fight',
   action() {
     BlazeLayout.render('app', { main: 'fight' });
+  },
+});
+
+FlowRouter.route('/character/:characterId/death', {
+  name: 'character.death',
+  action() {
+    BlazeLayout.render('app', { main: 'death' });
   },
 });
 

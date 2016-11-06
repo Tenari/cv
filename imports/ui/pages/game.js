@@ -13,10 +13,17 @@ Template.game.onCreated(function gameOnCreated() {
   this.getGameId = () => FlowRouter.getParam('gameId');
   this.getRoomId = () => Meteor.userId() && Characters.findOne({userId: Meteor.userId()}).location.roomId;
   this.subscribe('fights.own');
+  var myself = this.subscribe('characters.own');
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
-    this.subscribe('characters.room', this.getRoomId());
+    if (myself.ready()) {
+      if (Characters.find().count() == 0) {
+        FlowRouter.go('/');
+      } else {
+        this.subscribe('characters.room', this.getRoomId());
+      }
+    }
   })
 })
 
@@ -101,6 +108,7 @@ Template.game.helpers({
   opponentsToFight: function(){
     const uId = Meteor.userId();
     const character = Characters.findOne({userId: uId});
+    if (!character) return null;
 //    var fights = Fights.find({$or: [{initiatorId: u._id}, {opponentId: u._id}]}).fetch();
 //    return u && fights.length == 0 && getPotentialOpponent() != undefined;
     return Characters.find({'location.x': character.location.x, 'location.y': character.location.y, userId: { $ne: uId }}).count() > 0;

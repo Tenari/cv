@@ -8,15 +8,18 @@ Meteor.publish ("characters.room", function() {
   if (this.userId) {
     // only publish the users in the same room. Don't need to know about those other fuckers.
     var roomId = Characters.findOne({userId: this.userId}).location.roomId;
-    return Characters.find({$or: [{userId: this.userId}, {"location.roomId": roomId}]}, {fields: Characters.publicFields});
+    return Characters.find({$or: [{userId: this.userId}, {"location.roomId": roomId}], 'stats.hp': {$gt: 0}}, {fields: Characters.publicFields});
   } else {
     this.ready();
   }
 });
 
-Meteor.publish ("characters.own", function() {
+Meteor.publish ("characters.own", function(showDead) {
   if (this.userId) {
-    return Characters.find({userId: this.userId}, {fields: Characters.publicFields});
+    var search = {userId: this.userId};
+    if (!showDead)
+      search['stats.hp'] = {$gt: 0};
+    return Characters.find(search, {fields: Characters.publicFields});
   } else {
     this.ready();
   }
@@ -24,9 +27,11 @@ Meteor.publish ("characters.own", function() {
 
 // returns the characters involved in the fight that this.userId is involved in.
 Meteor.publish ("characters.fight", function() {
-  if (!this.userId) this.ready();
+  if (!this.userId) return this.ready();
 
-  const character = Characters.findOne({userId: this.userId});
+  const character = Characters.findOne({userId: this.userId, 'stats.hp': {$gt: 0} });
+  if (!character) return this.ready();
   const fight = Fights.findOne({$or: [{attackerId: character._id},{defenderId: character._id}]});
+  if (!fight) return this.ready();
   return Characters.find({_id: {$in: [fight.attackerId, fight.defenderId] } }, {fields: Characters.publicFields});
 });

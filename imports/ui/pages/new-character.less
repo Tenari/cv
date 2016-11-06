@@ -1,0 +1,22 @@
+@import '../stylesheets/variables.less';
+
+.character-creation-form {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 3px solid black;
+  border-radius: 15px;
+  padding: 30px;
+  margin-top: 30px;
+  input#change-name {
+    border: none;
+    border-bottom: 1px solid black;
+    &:active, &:focus {
+      outline: none;
+      border-bottom: 2px solid @color-tertiary;
+    }
+  }
+  .step2 {
+    margin-top: 30px;
+  }
+}

@@ -16,7 +16,7 @@ Meteor.methods({
         'Gotta be logged in to create a character');
     }
 
-    const character = Characters.findOne({userId: this.userId});
+    const character = Characters.findOne({userId: this.userId, 'stats.hp': {$gt: 0}});
 
     if (character) {
       throw new Meteor.Error('todos.insert.alreadyThere',
@@ -37,11 +37,12 @@ Meteor.methods({
     obj.userId = this.userId;
     obj.location = location;
 
-    Characters.insert(obj);
+    const id = Characters.insert(obj);
+    return obj.gameId; //return the gameId so the ui knows what url to go to
   },
 
   'characters.move'(directionInt) {
-    var character = Characters.findOne({userId: this.userId});
+    var character = Characters.findOne({userId: this.userId, 'stats.hp':{$gt: 0}});
     var room = Rooms.findOne(character.location.roomId);
     var nextSpotChar, moveObject;
     directionInt = parseInt(directionInt);
@@ -86,6 +87,12 @@ Meteor.methods({
       });
     }
   },
+
+  'characters.sawDeathNotification'(characterId) {
+    console.log('setting recentlyDead to false due to method call');
+    if (this.userId != Characters.findOne(characterId).userId) throw new Meteor.Error('characters.sawDeathNotification', 'not your character dude');
+    Characters.update(characterId, {$set: {recentlyDead: false}});
+  }
 });
 
 

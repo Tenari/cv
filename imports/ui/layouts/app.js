@@ -65,7 +65,7 @@ Template.app.helpers({
     return true;
   },
   character() {
-    return Characters.findOne({userId: Meteor.userId()});
+    return Characters.findOne({userId: Meteor.userId(), 'stats.hp':{$gt: 0}});
   },
   isActive(name) {
     if (FlowRouter.getRouteName().match(name)) return "active";

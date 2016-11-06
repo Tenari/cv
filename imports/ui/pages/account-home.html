@@ -1,26 +1,17 @@
 <template name="accountHome">
   {{#if hasCharacter}}
     <ul>
+      Your characters:
       {{#each character in characters}}
-        <li>Play as <a href="{{characterGamePath}}">{{character.name}}</a></li>
+        {{#if isAlive character}}
+          <li><img src="images/{{image character}}.png"/> Play as <a href="{{characterGamePath}}">{{character.name}}</a></li>
+        {{else}}
+          <li><img src="images/{{image character}}.png"/> {{character.name}} is dead</li>
+        {{/if}}
       {{/each}}
     </ul>
+    <p><a href="/new">Make a new character</a></p>
   {{else}}
-    <div class="character-creation-form">
-      <h1>Create a character</h1>
-      <p>What is your name? <input type="text" id="change-name"/></p>
-      {{#momentum plugin='fade'}}
-        {{#if named}}
-          <div>
-            <p>Alright, {{name}}. What team do you want to join?</p>
-            <div>
-              <img src="images/22.png" class="join-img" data-team="romans"/>
-              <span>or</span>
-              <img src="images/32.png" class="join-img" data-team="japs"/>
-            </div>
-          </div>
-        {{/if}}
-      {{/momentum}}
-    </div>
+    <p>Looks like you don't have any characters. <a href="/new">Make a new one</a></p>
   {{/if}}
 </template>

@@ -57,6 +57,7 @@ Characters.schema = new SimpleSchema({
   location: {type: LocationSchema},
   stats: {type: StatsSchema},
   defaultAttackStyle: {type: String, defaultValue: 'quick'},
+  recentlyDead: {type: Boolean, defaultValue: false},
 });
 
 Characters.attachSchema(Characters.schema);
@@ -71,4 +72,5 @@ Characters.publicFields = {
   userId: 1,
   location: 1,
   stats: 1,
+  recentlyDead: 1,
 };
