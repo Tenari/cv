@@ -5,9 +5,10 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { Games } from '../games/games.js';
 import { Rooms } from '../rooms/rooms.js';
 import { Fights } from '../fights/fights.js';
+import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
-import { moveCost, teamCode, doors, movableSpots } from '../../configs/game.js';
+import { moveCost, teamCode, doors, movableSpots, equipSlots } from '../../configs/game.js';
 
 Meteor.methods({
   'characters.insert'(obj) {
@@ -38,6 +39,15 @@ Meteor.methods({
     obj.location = location;
 
     const id = Characters.insert(obj);
+    Items.insert({ // everyon gets an item to start with
+      name: 'Shitty sword',
+      type: 'large blade',
+      img: '/images/shitty-sword.png',
+      weight: 10,
+      equipped: false,
+      equipSlot: equipSlots.hand,
+      ownerId: id,
+    });
     return obj.gameId; //return the gameId so the ui knows what url to go to
   },
 

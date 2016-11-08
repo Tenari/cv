@@ -21,3 +21,4 @@ export const fightEnergyCostFactor = 2;
 
 export const speeds = {'large blade': 1, 'none': 4, 'small blade': 3};
 
+export const equipSlots = {hand: 1, head: 2, legs: 3, chest: 4};

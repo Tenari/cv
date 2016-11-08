@@ -9,6 +9,8 @@ import  '../../api/games/publications.js';
 import  '../../api/rooms/publications.js';
 import  '../../api/characters/methods.js';
 import  '../../api/characters/publications.js';
+import  '../../api/items/publications.js';
+import  '../../api/items/methods.js';
 import  '../../api/fights/methods.js';
 import  '../../api/fights/publications.js';
 
