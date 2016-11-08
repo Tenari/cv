@@ -1,0 +1,17 @@
+<template name="item">
+  <div class="item" data-id="{{_id}}">
+    <img src="{{img}}"/>
+    <div>
+      <h3>{{name}}</h3>
+      {{#if equipped}}
+        <p>Equipped</p>
+      {{else}}
+        {{#if ownerId}}
+          <p>Weight: {{weight}}</p>
+        {{else}}
+          <button class="pick-up-item" data-id="{{_id}}">Take</button>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</template>

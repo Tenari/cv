@@ -10,6 +10,13 @@ Items.deny({
   remove() { return true; },
 });
 
+const LocationSchema = new SimpleSchema({
+  x: {type: Number},
+  y: {type: Number},
+  roomId: { type: String, regEx: SimpleSchema.RegEx.Id },
+  updatedAt: { type: Number },
+});
+
 Items.schema = new SimpleSchema({
   _id: { type: String, regEx: SimpleSchema.RegEx.Id },
   name: {type: String},
@@ -18,7 +25,9 @@ Items.schema = new SimpleSchema({
   weight: {type: Number},
   equipped: {type: Boolean},
   equipSlot: {type: Number},
-  ownerId: { type: String, regEx: SimpleSchema.RegEx.Id },
+  ownerId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true }, // items do not have this if they are un-owned
+  location: {type: LocationSchema, optional: true}, // items only have a location when they are not owned
+  condition: {type: Number, optional: true}, //only wearables tend to have condition (0-100)
 });
 
 Items.attachSchema(Items.schema);
@@ -34,4 +43,5 @@ Items.publicFields = {
   equipped: 1,
   equipSlot: 1,
   ownerId: 1,
+  location: 1,
 };

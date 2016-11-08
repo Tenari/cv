@@ -10,25 +10,34 @@
       {{{gameHTML}}}
     </div>
   </div>
-  {{#if opponentsToFight}}
-    <div class="opponent-list">
-      {{#each opponent in opponents}}
-        <div class="opponent-container">
-          <div class="character i-{{opponentImage opponent}}"></div>
-          <div>
-            <p>{{opponent.name}}</p>
-            {{#if fighting}}
-              {{#if amFighting opponent._id}}
-                <span class="red">Fighting!</span>
+  <div class="same-space-lists">
+    {{#if opponentsToFight}}
+      <div class="opponent-list">
+        {{#each opponent in opponents}}
+          <div class="opponent-container">
+            <div class="character i-{{opponentImage opponent}}"></div>
+            <div>
+              <p>{{opponent.name}}</p>
+              {{#if fighting}}
+                {{#if amFighting opponent._id}}
+                  <span class="red">Fighting!</span>
+                {{else}}
+                  <span>--</span>
+                {{/if}}
               {{else}}
-                <span>--</span>
+                <button class="fight" data-id="{{opponent._id}}">Fight</button>
               {{/if}}
-            {{else}}
-              <button class="fight" data-id="{{opponent._id}}">Fight</button>
-            {{/if}}
+            </div>
           </div>
-        </div>
-      {{/each}}
-    </div>
-  {{/if}}
+        {{/each}}
+      </div>
+    {{/if}}
+    {{#if itemsHere}}
+      <div class="item-list">
+        {{#each itemX in items}}
+          {{> item itemX}}
+        {{/each}}
+      </div>
+    {{/if}}
+  </div>
 </template>

@@ -8,6 +8,7 @@ import { Items } from '../../api/items/items.js'
 import '../../api/items/methods.js'; 
 import { equipSlots } from '../../configs/game.js'; 
 
+import '../components/item.js';
 import '../components/status-bars.js';
 import './stats.html';
 
@@ -81,7 +82,7 @@ Template.stats.events({
     instance.state.set('page', $(e.target).data('page'));
     instance.state.set('item', false);
   },
-  'click .items-display-container>.item'(e, instance){
+  'click .items-display-container>div>.item'(e, instance){
     instance.state.set('item', instance.state.get('item') ? false : Items.findOne($(e.currentTarget).data('id')));
   },
   'click .item-actions>.action'(e, instance){

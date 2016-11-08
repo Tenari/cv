@@ -61,17 +61,9 @@
         {{/if}}
         {{#if page 'Items'}}
           <div class="items-display-container">
-            {{#each item in items}}
-              <div class="item {{itemSelectedClass item}}" data-id="{{item._id}}">
-                <img src="{{item.img}}"/>
-                <div>
-                  <h3>{{item.name}}</h3>
-                  {{#if item.equipped}}
-                    <p>Equipped</p>
-                  {{else}}
-                    <p>Weight: {{item.weight}}</p>
-                  {{/if}}
-                </div>
+            {{#each itemX in items}}
+              <div class="{{itemSelectedClass itemX}}">
+                {{> item itemX}}
               </div>
             {{else}}
               <p>You aren't carrying any items. What are you, poor?</p>

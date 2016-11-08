@@ -11,3 +11,8 @@ Meteor.publish ("items.own", function() {
   return Items.find({ownerId: character._id}, {fields: Items.publicFields});
 });
 
+Meteor.publish ("items.room", function(roomId) {
+  if (!this.userId) return this.ready();
+
+  return Items.find({'location.roomId': roomId}, {fields: Items.publicFields});
+});

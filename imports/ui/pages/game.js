@@ -3,9 +3,11 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Characters } from '../../api/characters/characters.js'
+import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
 import { Fights } from '../../api/fights/fights.js'
 
+import '../components/item.js';
 import '../components/status-bars.js';
 import './game.html';
 
@@ -22,6 +24,7 @@ Template.game.onCreated(function gameOnCreated() {
         FlowRouter.go('/');
       } else {
         this.subscribe('characters.room', this.getRoomId());
+        this.subscribe('items.room', this.getRoomId());
       }
     }
   })
@@ -128,6 +131,14 @@ Template.game.helpers({
   opponentImage: function(opponent){
     return parseInt(opponent.location.classId)+parseInt(opponent.location.direction);
   },
+  itemsHere: function(){
+    const character = Characters.findOne({userId: Meteor.userId()});
+    return Items.find({'location.x': character.location.x, 'location.y':character.location.y}).count() > 0;
+  },
+  items: function(){
+    const character = Characters.findOne({userId: Meteor.userId()});
+    return Items.find({'location.x': character.location.x, 'location.y':character.location.y});
+  },
 });
 
 Template.game.rendered = function() {
@@ -171,4 +182,7 @@ Template.game.events({
     });
   },
 
+  'click button.pick-up-item': function(event, template) {
+    Meteor.call('items.take', $(event.target).data('id'));
+  },
 });

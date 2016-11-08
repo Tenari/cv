@@ -94,32 +94,33 @@
 }
 
 
-.opponent-list {
+.same-space-lists {
   position: absolute;
   right: 0;
   top: 0;
-  margin-right: 20px;
-  border: 2px solid black;
-  border-radius: 2px;
-  padding: 10px;
-  width: 190px;
+  .opponent-list, .item-list {
+    margin-right: 20px;
+    border: 2px solid black;
+    border-radius: 2px;
+    padding: 10px;
+    width: 190px;
 
-  @media screen and (max-width: 1219px) {
-    margin-top: 30px;
-    width: 50%;
-    position: static;
-    margin-left: 25%;
-    display: flex;
-    margin-bottom: 50px;
-  }
-  
-  .opponent-container {
-    display: flex;
-    .character {
+    @media screen and (max-width: 1219px) {
+      margin-top: 30px;
+      width: 50%;
       position: static;
+      margin-left: 25%;
+      display: flex;
+      margin-bottom: 50px;
+    }
+    
+    .opponent-container {
+      display: flex;
+      .character {
+        position: static;
+      }
     }
   }
-
 }
 
 .fighting-overlay {
