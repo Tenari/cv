@@ -37,6 +37,9 @@ Template.accountHome.helpers({
   characters(){
     return Characters.find({userId: Meteor.userId()});
   },
+  canMakeCharacter(){
+    return Characters.find({userId: Meteor.userId(), 'stats.hp': {$gt: 0}}).count() == 0;
+  },
   characterGamePath(){
     const gameId = Characters.findOne({userId: Meteor.userId()}).gameId;
     return FlowRouter.path('game.world', {gameId: gameId});

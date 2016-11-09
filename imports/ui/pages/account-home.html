@@ -10,7 +10,9 @@
         {{/if}}
       {{/each}}
     </ul>
-    <p><a href="/new">Make a new character</a></p>
+    {{#if canMakeCharacter}}
+      <p><a href="/new">Make a new character</a></p>
+    {{/if}}
   {{else}}
     <p>Looks like you don't have any characters. <a href="/new">Make a new one</a></p>
   {{/if}}
