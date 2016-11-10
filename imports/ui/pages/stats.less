@@ -2,9 +2,10 @@
 
 .stats-container {
   display: flex;
+  flex-wrap: wrap;
   margin-top: 50px;
   .key-character-status {
-    width: 20%;
+    width: 250px;
 
     .body-boxes-container {
       margin-top: 15px;
@@ -89,15 +90,20 @@
     }
     .items-display-container {
       display: flex;
-      .item { margin-right: 20px; }
+      flex-wrap: wrap;
+      width: 420px;
+      .item {
+        margin-right: 20px;
+        margin-bottom: 20px;
+      }
       .selected .item {
         border-color: @color-tertiary !important;
       }
     }
   }
   .action-menu-container {
-    flex-grow: 2;
     margin-right: 40px;
+    width: 400px;
     .item-action-menu {
       border: 3px solid black;
       border-radius: 4px;

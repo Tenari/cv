@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 
 import { Fights } from '../../api/fights/fights.js';
+import { Items } from '../../api/items/items.js';
 import { Characters } from '../../api/characters/characters.js';
 
 import { styleFactors, fightEnergyCostFactor, speeds } from '../../configs/game.js';
@@ -67,7 +68,6 @@ export function fightLoop(){
     }
 
     if (last.stats.hp <= 0) { // the last is dead!!!
-      last.recentlyDead = true;
       endFight(fight, first, last);
       return;
     }
@@ -92,7 +92,6 @@ export function fightLoop(){
     }
 
     if (first.stats.hp <= 0) { // the first is dead!!!
-      first.recentlyDead = true;
       endFight(fight, first, last);
       return;
     }
@@ -106,6 +105,16 @@ export function fightLoop(){
 }
 
 function endFight(fight, first, last) {
+  if (first.stats.hp <= 0) {
+    first.recentlyDead = true;
+    const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
+    Items.update({ownerId: first._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
+  }
+  if (last.stats.hp <= 0) {
+    last.recentlyDead = true;
+    const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};
+    Items.update({ownerId: last._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
+  }
   Fights.remove(fight._id);
   Characters.update(first._id, {$set: {stats: first.stats, recentlyDead: first.recentlyDead}});
   Characters.update(last._id, {$set: {stats: last.stats, recentlyDead: last.recentlyDead}});
