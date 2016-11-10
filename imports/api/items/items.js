@@ -24,7 +24,9 @@ Items.schema = new SimpleSchema({
   img: {type: String},
   weight: {type: Number},
   equipped: {type: Boolean},
-  equipSlot: {type: Number},
+  equipSlot: {type: Number, optional: true},
+  effectType: {type: String, optional: true},
+  effectAmount: {type: Number, optional: true},
   ownerId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true }, // items do not have this if they are un-owned
   location: {type: LocationSchema, optional: true}, // items only have a location when they are not owned
   condition: {type: Number, optional: true}, //only wearables tend to have condition (0-100)
@@ -44,4 +46,6 @@ Items.publicFields = {
   equipSlot: 1,
   ownerId: 1,
   location: 1,
+  effectType: 1,
+  effectAmount: 1,
 };

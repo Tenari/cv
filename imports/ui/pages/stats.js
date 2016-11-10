@@ -50,6 +50,14 @@ Template.stats.helpers({
     return Template.instance().state.get('item');
   },
 
+  itemDescription(){
+    const item = Template.instance().state.get('item');
+    if (item.effectType == 'stats.hp') {
+     return 'Increases your HP by '+ item.effectAmount +' on use. Is consumed in the process.';
+    }
+    return false;
+  },
+
   itemSelectedClass(item){
     const stateItem = Template.instance().state.get('item');
     return stateItem && item._id == stateItem._id ? 'selected' : '';

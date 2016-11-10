@@ -9,6 +9,7 @@ import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
 import { moveCost, teamCode, doors, movableSpots, equipSlots } from '../../configs/game.js';
+import { shittySword, chickenLeg } from '../../configs/items.js';
 
 Meteor.methods({
   'characters.insert'(obj) {
@@ -39,15 +40,14 @@ Meteor.methods({
     obj.location = location;
 
     const id = Characters.insert(obj);
-    Items.insert({ // everyon gets an item to start with
-      name: 'Shitty sword',
-      type: 'large blade',
-      img: '/images/shitty-sword.png',
-      weight: 10,
-      equipped: false,
-      equipSlot: equipSlots.hand,
-      ownerId: id,
-    });
+
+    let sword = shittySword;
+    sword.ownerId = id;
+    Items.insert(sword);
+
+    let food = chickenLeg;
+    food.ownerId = id;
+    Items.insert(food);
     return obj.gameId; //return the gameId so the ui knows what url to go to
   },
 

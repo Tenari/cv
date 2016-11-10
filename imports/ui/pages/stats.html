@@ -83,12 +83,19 @@
               <h3>{{selectedItem.name}}</h3>
               <p>Weight: {{selectedItem.weight}}lbs</p>
               <p>Type: {{selectedItem.type}}</p>
+              {{#if itemDescription}}
+                <p>{{itemDescription}}</p>
+              {{/if}}
             </div>
             <div class="item-actions">
               {{#if selectedItem.equipped}}
                 <div class="action" data-action="unequip" data-id="{{selectedItem._id}}"><i class="fa fa-caret-right"></i> Unequip</div>
               {{else}}
-                <div class="action" data-action="equip" data-id="{{selectedItem._id}}"><i class="fa fa-caret-right"></i> Equip</div>
+                {{#if selectedItem.equipSlot}}
+                  <div class="action" data-action="equip" data-id="{{selectedItem._id}}"><i class="fa fa-caret-right"></i> Equip</div>
+                {{else}}
+                  <div class="action" data-action="use" data-id="{{selectedItem._id}}"><i class="fa fa-caret-right"></i> Use</div>
+                {{/if}}
               {{/if}}
               <div class="action" data-action="drop" data-id="{{selectedItem._id}}"><i class="fa fa-caret-right"></i> Drop</div>
             </div>
