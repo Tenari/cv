@@ -6,7 +6,13 @@
         {{#if isAlive character}}
           <li><img src="images/{{image character}}.png"/> Play as <a href="{{characterGamePath}}">{{character.name}}</a></li>
         {{else}}
-          <li><img src="images/{{image character}}.png"/> {{character.name}} is dead</li>
+          <li><img src="images/{{image character}}.png"/> {{character.name}} is dead.
+            {{#if canRevive character}}
+              <button class="revive" data-id="{{character._id}}">Revive</button>
+            {{else}}
+              <span>You can revive in {{timeToLife character}} minutes</span>
+            {{/if}}
+          </li>
         {{/if}}
       {{/each}}
     </ul>

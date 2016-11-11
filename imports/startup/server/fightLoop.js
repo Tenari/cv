@@ -106,18 +106,22 @@ export function fightLoop(){
 
 function endFight(fight, first, last) {
   if (first.stats.hp <= 0) {
-    first.recentlyDead = true;
+    first.deaths.recentlyDead = true;
+    first.deaths.diedAt = Date.now();
+    first.deaths.count += 1;
     const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: first._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
   }
   if (last.stats.hp <= 0) {
-    last.recentlyDead = true;
+    last.deaths.recentlyDead = true;
+    last.deaths.diedAt = Date.now();
+    last.deaths.count += 1;
     const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: last._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
   }
   Fights.remove(fight._id);
-  Characters.update(first._id, {$set: {stats: first.stats, recentlyDead: first.recentlyDead}});
-  Characters.update(last._id, {$set: {stats: last.stats, recentlyDead: last.recentlyDead}});
+  Characters.update(first._id, {$set: {stats: first.stats, 'deaths': first.deaths}});
+  Characters.update(last._id, {$set: {stats: last.stats, 'deaths': last.deaths}});
 }
 
 // a is the attacker

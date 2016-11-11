@@ -24,7 +24,7 @@ Template.salesPage.events({
 Template.accountHome.onCreated(function accountHomeOnCreated() {
   this.subscribe('characters.own', true);
   this.autorun(() => {
-    const recentlyDead = Characters.findOne({recentlyDead: true});
+    const recentlyDead = Characters.findOne({'deaths.recentlyDead': true});
     if (recentlyDead)
       FlowRouter.go('character.death', {characterId: recentlyDead._id});
   })
@@ -49,5 +49,17 @@ Template.accountHome.helpers({
   },
   isAlive(character) {
     return character.stats.hp > 0;
+  },
+  canRevive(character){
+    return character && (character.deaths.diedAt + 1800000) < Date.now();
+  },
+  timeToLife(character){
+    return character && Math.round(((character.deaths.diedAt + 1800000) - Date.now()) / 60 / 1000);
+  }
+});
+
+Template.accountHome.events({
+  'click button.revive'(event, instance){
+    Meteor.call('characters.revive', $(event.currentTarget).data('id'));
   }
 });

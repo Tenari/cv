@@ -1,5 +1,12 @@
 <template name="death">
   <h1>LOL. You died.</h1>
-  <p>What a noob. Normally, we'd ask if you want to continue, but we haven't gotten around to adding a credit-card feature yet.</p>
+  <p>What a noob.</p>
+  <p>If you want to continue your sad existence,
+  {{#if canRevive}}
+    <button class="revive">I guess you can try again</button>.
+  {{else}}
+    you may in {{timeToLife}} minutes.
+  {{/if}}
+  </p>
   <button id="new-character">Create a new character</button>
 </template>

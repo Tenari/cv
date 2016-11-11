@@ -41,11 +41,11 @@ Meteor.methods({
 
     const id = Characters.insert(obj);
 
-    let sword = shittySword;
+    let sword = _.clone(shittySword);
     sword.ownerId = id;
     Items.insert(sword);
 
-    let food = chickenLeg;
+    let food = _.clone(chickenLeg);
     food.ownerId = id;
     Items.insert(food);
     return obj.gameId; //return the gameId so the ui knows what url to go to
@@ -101,7 +101,13 @@ Meteor.methods({
   'characters.sawDeathNotification'(characterId) {
     console.log('setting recentlyDead to false due to method call');
     if (this.userId != Characters.findOne(characterId).userId) throw new Meteor.Error('characters.sawDeathNotification', 'not your character dude');
-    Characters.update(characterId, {$set: {recentlyDead: false}});
+    Characters.update(characterId, {$set: {'deaths.recentlyDead': false}});
+  },
+
+  'characters.revive'(id) {
+    if (this.userId != Characters.findOne(id).userId) throw new Meteor.Error('characters.revive', 'not your character dude');
+    if (Characters.find({'stats.hp': {$gt: 0}, userId: this.userId}).count() > 0) throw new Meteor.Error('characters.revive', 'dumbass, you already have a character alive');
+    return Characters.update(id, {$set: {'stats.energy': 20, 'stats.hp': 1}});
   }
 });
 

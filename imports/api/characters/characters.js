@@ -48,6 +48,12 @@ const StatsSchema = new SimpleSchema({
   money: {type: Number, defaultValue: 100},
 });
 
+const DeathsSchema = new SimpleSchema({
+  recentlyDead: {type: Boolean, defaultValue: false},
+  diedAt: {type: Number, optional: true},// initally doesn't exist
+  count: {type: Number, defaultValue: 0}
+});
+
 Characters.schema = new SimpleSchema({
   _id: { type: String, regEx: SimpleSchema.RegEx.Id },
   name: { type: String },
@@ -57,7 +63,7 @@ Characters.schema = new SimpleSchema({
   location: {type: LocationSchema},
   stats: {type: StatsSchema},
   defaultAttackStyle: {type: String, defaultValue: 'quick'},
-  recentlyDead: {type: Boolean, defaultValue: false},
+  deaths: { type: DeathsSchema },
 });
 
 Characters.attachSchema(Characters.schema);
@@ -72,5 +78,5 @@ Characters.publicFields = {
   userId: 1,
   location: 1,
   stats: 1,
-  recentlyDead: 1,
+  deaths: 1,
 };
