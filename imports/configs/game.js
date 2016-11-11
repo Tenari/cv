@@ -19,6 +19,14 @@ export const styleFactors = {quick: 3, normal: 4, heavy: 5};
 
 export const fightEnergyCostFactor = 2;
 
-export const speeds = {'large blade': 1, 'none': 4, 'small blade': 3};
+export const speeds = {'hands': 4, 'smallBlade': 3, 'axe': 2, 'largeBlade': 1};
 
 export const equipSlots = {hand: 1, head: 2, legs: 3, chest: 4};
+
+export function canRevive(character) {
+  return character && (character.deaths.diedAt + 1800000) < Date.now();
+};
+
+export function minutesUntilRevive(character) {
+  return character && Math.round(((character.deaths.diedAt + 1800000) - Date.now()) / 60 / 1000); 
+}

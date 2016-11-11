@@ -7,6 +7,8 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Characters } from '../../api/characters/characters.js';
 import '../../api/characters/methods.js';
 
+import { canRevive, minutesUntilRevive } from '../../configs/game.js';
+
 import './sales.html';
 import './account-home.html';
 import './root.html';
@@ -51,10 +53,10 @@ Template.accountHome.helpers({
     return character.stats.hp > 0;
   },
   canRevive(character){
-    return character && (character.deaths.diedAt + 1800000) < Date.now();
+    return canRevive(character);
   },
   timeToLife(character){
-    return character && Math.round(((character.deaths.diedAt + 1800000) - Date.now()) / 60 / 1000);
+    return minutesUntilRevive(character);
   }
 });
 

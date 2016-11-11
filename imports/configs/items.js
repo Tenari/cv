@@ -2,7 +2,7 @@ import { equipSlots } from './game.js';
 
 export const shittySword = {
   name: 'Shitty sword',
-  type: 'large blade',
+  type: 'largeBlade',
   img: '/images/shitty-sword.png',
   weight: 10,
   equipped: false,

@@ -3,6 +3,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Characters } from '../../api/characters/characters.js';
+import { canRevive, minutesUntilRevive } from '../../configs/game.js';
 
 import './death.html';
 
@@ -14,11 +15,11 @@ Template.death.onCreated( function deathOnCreated(){
 Template.death.helpers({
   canRevive(){
     const character = Characters.findOne(FlowRouter.getParam('characterId'));
-    return character && (character.deaths.diedAt + 1800000) < Date.now();
+    return canRevive(character);
   },
   timeToLife(){
     const character = Characters.findOne(FlowRouter.getParam('characterId'));
-    return character && Math.round(((character.deaths.diedAt + 1800000) - Date.now()) / 60 / 1000);
+    return minutesUntilRevive(character);
   }
 })
 

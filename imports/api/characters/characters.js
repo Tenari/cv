@@ -21,13 +21,13 @@ const LocationSchema = new SimpleSchema({
 
 const WeaponStatsSchema = new SimpleSchema({
   hands: {type: Number, defaultValue: 1, decimal: true},
-  baseHands: {type: Number, defaultValue: 1, decimal: true},
+  handsBase: {type: Number, defaultValue: 1, decimal: true},
   smallBlade: {type: Number, defaultValue: 1, decimal: true},
-  baseSmallBlade: {type: Number, defaultValue: 1, decimal: true},
+  smallBladeBase: {type: Number, defaultValue: 1, decimal: true},
   largeBlade: {type: Number, defaultValue: 1, decimal: true},
-  baseLargeBlade: {type: Number, defaultValue: 1, decimal: true},
+  largeBladeBase: {type: Number, defaultValue: 1, decimal: true},
   axe: {type: Number, defaultValue: 1, decimal: true},
-  baseAxe: {type: Number, defaultValue: 1, decimal: true},
+  axeBase: {type: Number, defaultValue: 1, decimal: true},
 });
 
 const StatsSchema = new SimpleSchema({
