@@ -4,15 +4,17 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Items } from '../../api/items/items.js'
+import { Rooms } from '../../api/rooms/rooms.js'
 
 import '../../api/items/methods.js'; 
-import { equipSlots } from '../../configs/game.js'; 
+import { carriedWeight, moveCost, equipSlots } from '../../configs/game.js'; 
 
 import '../components/item.js';
 import '../components/status-bars.js';
 import './stats.html';
 
 Template.stats.onCreated(function gameOnCreated() {
+  this.subscribe('game.rooms', FlowRouter.getParam('gameId'));
   this.subscribe('characters.own');
   this.subscribe('items.own');
   this.state = new ReactiveDict();
@@ -82,6 +84,12 @@ Template.stats.helpers({
   equippedLegs(){
     return Items.findOne({equipped: true, equipSlot: equipSlots.legs});
   },
+
+  moveCost(character) {
+    const weight = carriedWeight(character, Items);
+    const terrain = Rooms.findOne(character.location.roomId).map[character.location.y][character.location.x].type;
+    return moveCost(character, weight, terrain);
+  }
 
 });
 

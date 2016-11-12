@@ -8,7 +8,7 @@ import { Fights } from '../fights/fights.js';
 import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
-import { moveCost, teamCode, doors, movableSpots, equipSlots } from '../../configs/game.js';
+import { maxWeight, moveCost, teamCode, doors, movableSpots, equipSlots, carriedWeight } from '../../configs/game.js';
 import { shittySword, chickenLeg } from '../../configs/items.js';
 
 Meteor.methods({
@@ -82,12 +82,15 @@ Meteor.methods({
         break;
     }
 
-    var newEnergy = character.stats.energy - (moveCost[nextSpotChar] || 0);
+    const weight = carriedWeight(character, Items);
+    const terrain = room.map[character.location.y][character.location.x].type;
+    var newEnergy = character.stats.energy - moveCost(character, weight, terrain);
+    const newEndurance = character.stats.endurance + (0.01 * weight / maxWeight(character));
 
     if (movableSpots[nextSpotChar] && character.location.direction == directionInt) {
       Characters.update(character._id, {
         $inc: moveObject, 
-        $set: {'location.direction': directionInt, 'location.updatedAt': Date.now(), 'stats.energy': newEnergy}
+        $set: {'location.direction': directionInt, 'location.updatedAt': Date.now(), 'stats.energy': newEnergy, 'stats.endurance': newEndurance}
       });
     } else if (doors[nextSpotChar] && character.location.direction == directionInt) {
       changeRoom(character, room, directionInt, newEnergy);

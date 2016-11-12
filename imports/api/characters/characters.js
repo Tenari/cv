@@ -44,7 +44,7 @@ const StatsSchema = new SimpleSchema({
   weapon: {type: WeaponStatsSchema},
   energy: {type: Number, defaultValue: 10000, decimal: true},
   baseEnergy: {type: Number, defaultValue: 10000},
-  endurance: {type: Number, defaultValue: 0, decimal: true},
+  endurance: {type: Number, defaultValue: 1, decimal: true},
   money: {type: Number, defaultValue: 100},
 });
 

@@ -1,5 +1,5 @@
-export const moveCost = {
-  grass: 2,
+export const moveCosts = {
+  grass: 8,
   door: 1,
   mat: 1
 };
@@ -29,4 +29,28 @@ export function canRevive(character) {
 
 export function minutesUntilRevive(character) {
   return character && Math.round(((character.deaths.diedAt + 1800000) - Date.now()) / 60 / 1000); 
+}
+
+/*
+export function carriedWeight(character, Items){
+  const agg = Items.aggregate([{$match: {ownerId: character._id}}, {$group: {_id: null, weight: {$sum: "$weight"}}}])[0];
+  return agg ? agg.weight : 0;
+}
+*/
+
+export function carriedWeight(character, Items){
+  let weight = 0;
+  Items.find({ownerId: character._id}).forEach(function(item){weight += item.weight;});
+  return weight;
+}
+
+export function moveCost(character, weight, terrain) {
+  return Math.max( 1, Math.round( (moveCosts[terrain] || 10) * (2 * weight / maxWeight(character)) ) );
+}
+
+export function maxWeight(character) {
+  // with endurance of 100, you can carry 200
+  // with endurance of 1, you can carry 20
+  // ish
+  return 40*Math.log(character.stats.endurance) + 20;
 }

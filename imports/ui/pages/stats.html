@@ -37,6 +37,17 @@
           </div>
         </div>
         {{> statusBars}}
+        <div class="misc-status-container">
+          <div class="misc-status money">
+            <img src="/images/money.png"/>
+            <span>{{character.stats.money}}</span>
+          </div>
+          <div class="misc-status move-cost">
+            <img src="/images/move-cost.png"/>
+            <span>{{moveCost character}}</span>
+          </div>
+          Endurance: {{character.stats.endurance}}
+        </div>
 
       </div>
       <div class="detail-tabs-container">
