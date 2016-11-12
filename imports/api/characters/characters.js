@@ -59,7 +59,7 @@ Characters.schema = new SimpleSchema({
   name: { type: String },
   team: {type: String},
   gameId: { type: String, regEx: SimpleSchema.RegEx.Id },
-  userId: { type: String, regEx: SimpleSchema.RegEx.Id },
+  userId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
   location: {type: LocationSchema},
   stats: {type: StatsSchema},
   defaultAttackStyle: {type: String, defaultValue: 'quick'},

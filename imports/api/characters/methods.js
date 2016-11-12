@@ -53,52 +53,7 @@ Meteor.methods({
 
   'characters.move'(directionInt) {
     var character = Characters.findOne({userId: this.userId, 'stats.hp':{$gt: 0}});
-    var room = Rooms.findOne(character.location.roomId);
-    var nextSpotChar, moveObject;
-    directionInt = parseInt(directionInt);
-
-    if( Date.now() <= character.location.updatedAt + 300)
-      return false;
-    if (Fights.find({$or: [{attackerId: character._id},{defenderId: character._id}]}).count() > 0)
-      return false;
-
-    switch(directionInt) {
-      case 1:
-        nextSpotChar = room.map[character.location.y-1] && room.map[character.location.y-1][character.location.x] ? room.map[character.location.y-1][character.location.x].type : "out of bounds";
-        moveObject = {'location.y':-1};
-        break;
-      case 2:
-        nextSpotChar = room.map[character.location.y+1] && room.map[character.location.y+1][character.location.x] ? room.map[character.location.y+1][character.location.x].type : "out of bounds";
-        moveObject = {'location.y': 1};
-        break;
-      case 3:
-        nextSpotChar = room.map[character.location.y] && room.map[character.location.y][character.location.x+1] ? room.map[character.location.y][character.location.x+1].type : "out of bounds";
-        moveObject = {'location.x': 1};
-        break;
-      case 4:
-      default:
-        nextSpotChar = room.map[character.location.y] && room.map[character.location.y][character.location.x-1] ? room.map[character.location.y][character.location.x-1].type : "out of bounds";
-        moveObject = {'location.x': -1};
-        break;
-    }
-
-    const weight = carriedWeight(character, Items);
-    const terrain = room.map[character.location.y][character.location.x].type;
-    var newEnergy = character.stats.energy - moveCost(character, weight, terrain);
-    const newEndurance = character.stats.endurance + (0.01 * weight / maxWeight(character));
-
-    if (movableSpots[nextSpotChar] && character.location.direction == directionInt) {
-      Characters.update(character._id, {
-        $inc: moveObject, 
-        $set: {'location.direction': directionInt, 'location.updatedAt': Date.now(), 'stats.energy': newEnergy, 'stats.endurance': newEndurance}
-      });
-    } else if (doors[nextSpotChar] && character.location.direction == directionInt) {
-      changeRoom(character, room, directionInt, newEnergy);
-    } else {
-      Characters.update(character._id, {
-        $set: {'location.direction': directionInt, 'location.updatedAt': Date.now()} 
-      });
-    }
+    moveCharacter(character, directionInt);
   },
 
   'characters.sawDeathNotification'(characterId) {
@@ -114,6 +69,57 @@ Meteor.methods({
   }
 });
 
+export function moveCharacter(character, directionInt) {
+  const room = Rooms.findOne(character.location.roomId);
+  var nextSpotChar, moveObject;
+  directionInt = parseInt(directionInt);
+
+  if( Date.now() <= character.location.updatedAt + 300)
+    return false;
+  if (Fights.find({$or: [{attackerId: character._id},{defenderId: character._id}]}).count() > 0)
+    return false;
+
+  const weight = carriedWeight(character, Items);
+  const terrain = room.map[character.location.y][character.location.x].type;
+  var newEnergy = character.stats.energy - moveCost(character, weight, terrain);
+  const newEndurance = character.stats.endurance + (0.01 * weight / maxWeight(character));
+
+  if (newEnergy < 0) // can't move without energy
+    return false;
+
+  switch(directionInt) {
+    case 1:
+      nextSpotChar = room.map[character.location.y-1] && room.map[character.location.y-1][character.location.x] ? room.map[character.location.y-1][character.location.x].type : "out of bounds";
+      moveObject = {'location.y':-1};
+      break;
+    case 2:
+      nextSpotChar = room.map[character.location.y+1] && room.map[character.location.y+1][character.location.x] ? room.map[character.location.y+1][character.location.x].type : "out of bounds";
+      moveObject = {'location.y': 1};
+      break;
+    case 3:
+      nextSpotChar = room.map[character.location.y] && room.map[character.location.y][character.location.x+1] ? room.map[character.location.y][character.location.x+1].type : "out of bounds";
+      moveObject = {'location.x': 1};
+      break;
+    case 4:
+    default:
+      nextSpotChar = room.map[character.location.y] && room.map[character.location.y][character.location.x-1] ? room.map[character.location.y][character.location.x-1].type : "out of bounds";
+      moveObject = {'location.x': -1};
+      break;
+  }
+
+  if (movableSpots[nextSpotChar] && character.location.direction == directionInt) {
+    Characters.update(character._id, {
+      $inc: moveObject, 
+      $set: {'location.direction': directionInt, 'location.updatedAt': Date.now(), 'stats.energy': newEnergy, 'stats.endurance': newEndurance}
+    });
+  } else if (doors[nextSpotChar] && character.location.direction == directionInt) {
+    changeRoom(character, room, directionInt, newEnergy);
+  } else {
+    Characters.update(character._id, {
+      $set: {'location.direction': directionInt, 'location.updatedAt': Date.now()} 
+    });
+  }
+}
 
 var changeRoom = function(user, room, dirInt, newEnergy){
   var spot;

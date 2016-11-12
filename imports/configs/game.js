@@ -15,7 +15,7 @@ export const movableSpots = {'grass':true, 'hz-path': true, "path-inv-T": true, 
 
 export const fightStyles = {'quick':true, 'normal':true, 'heavy':true, 'block':true, 'flee':true};
 
-export const styleFactors = {quick: 3, normal: 4, heavy: 5};
+export const styleFactors = {quick: 3, normal: 4, heavy: 5, block: 1, flee: 1};
 
 export const fightEnergyCostFactor = 2;
 
