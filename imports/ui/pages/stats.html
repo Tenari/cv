@@ -68,6 +68,12 @@
             <li><i class="fa fa-caret-right"></i> Small Blade: {{decimal character.stats.weapon.smallBlade}} / {{decimal character.stats.weapon.smallBladeBase}}</li>
             <li><i class="fa fa-caret-right"></i> Large Blade: {{decimal character.stats.weapon.largeBlade}} / {{decimal character.stats.weapon.largeBladeBase}}</li>
             <li><i class="fa fa-caret-right"></i> Axe: {{decimal character.stats.weapon.axe}} / {{decimal character.stats.weapon.axeBase}}</li>
+            <h2>Resource collection skills</h2>
+            <li><i class="fa fa-caret-right"></i> Wood: {{decimal character.stats.collecting.wood}} / {{decimal character.stats.collecting.woodBase}}</li>
+            <li><i class="fa fa-caret-right"></i> Hide: {{decimal character.stats.collecting.hide}} / {{decimal character.stats.collecting.hideBase}}</li>
+            <li><i class="fa fa-caret-right"></i> Leather: {{decimal character.stats.collecting.leather}} / {{decimal character.stats.collecting.leatherBase}}</li>
+            <li><i class="fa fa-caret-right"></i> Ore: {{decimal character.stats.collecting.ore}} / {{decimal character.stats.collecting.oreBase}}</li>
+            <li><i class="fa fa-caret-right"></i> Metal: {{decimal character.stats.collecting.metal}} / {{decimal character.stats.collecting.metalBase}}</li>
           </div>
         {{/if}}
         {{#if page 'Items'}}
@@ -83,7 +89,11 @@
         {{/if}}
         {{#if page 'Resources'}}
           <div class="resources-display-container">
-            resources list here
+            <li><i class="fa fa-caret-right"></i> Wood: {{character.stats.resources.wood}} lbs</li>
+            <li><i class="fa fa-caret-right"></i> Hide: {{character.stats.resources.hide}} lbs</li>
+            <li><i class="fa fa-caret-right"></i> Leather: {{character.stats.resources.leather}} lbs</li>
+            <li><i class="fa fa-caret-right"></i> Ore: {{character.stats.resources.ore}} lbs</li>
+            <li><i class="fa fa-caret-right"></i> Metal: {{character.stats.resources.metal}} lbs</li>
           </div>
         {{/if}}
       </div>

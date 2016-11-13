@@ -7,6 +7,7 @@ import './gameLoop.js';
 
 import  '../../api/games/publications.js';
 import  '../../api/rooms/publications.js';
+import  '../../api/rooms/methods.js';
 import  '../../api/characters/methods.js';
 import  '../../api/characters/publications.js';
 import  '../../api/items/publications.js';

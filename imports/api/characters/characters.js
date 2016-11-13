@@ -30,6 +30,27 @@ const WeaponStatsSchema = new SimpleSchema({
   axeBase: {type: Number, defaultValue: 1, decimal: true},
 });
 
+const ResourcesSchema = new SimpleSchema({
+  wood: {type: Number, defaultValue: 0},
+  hide: {type: Number, defaultValue: 0},
+  leather: {type: Number, defaultValue: 0},
+  ore: {type: Number, defaultValue: 0},
+  metal: {type: Number, defaultValue: 0},
+});
+
+const CollectingSchema = new SimpleSchema({
+  wood: {type: Number, defaultValue: 1, decimal: true},
+  woodBase: {type: Number, defaultValue: 1, decimal: true},
+  hide: {type: Number, defaultValue: 1, decimal: true},
+  hideBase: {type: Number, defaultValue: 1, decimal: true},
+  leather: {type: Number, defaultValue: 1, decimal: true},
+  leatherBase: {type: Number, defaultValue: 1, decimal: true},
+  ore: {type: Number, defaultValue: 1, decimal: true},
+  oreBase: {type: Number, defaultValue: 1, decimal: true},
+  metal: {type: Number, defaultValue: 1, decimal: true},
+  metalBase: {type: Number, defaultValue: 1, decimal: true},
+});
+
 const StatsSchema = new SimpleSchema({
   hp: {type: Number, defaultValue: 30},
   baseHp: {type: Number, defaultValue: 30},
@@ -42,6 +63,8 @@ const StatsSchema = new SimpleSchema({
   toughness: {type: Number, defaultValue: 1, decimal: true},
   baseToughness: {type: Number, defaultValue: 1, decimal: true},
   weapon: {type: WeaponStatsSchema},
+  resources: { type: ResourcesSchema },
+  collecting: { type: CollectingSchema },
   energy: {type: Number, defaultValue: 10000, decimal: true},
   baseEnergy: {type: Number, defaultValue: 10000},
   endurance: {type: Number, defaultValue: 1, decimal: true},

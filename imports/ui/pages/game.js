@@ -5,6 +5,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Characters } from '../../api/characters/characters.js'
 import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
+import '../../api/rooms/methods.js'
 import { Fights } from '../../api/fights/fights.js'
 
 import '../components/item.js';
@@ -39,7 +40,6 @@ Template.game.helpers({
     usr = Characters.findOne({userId: Meteor.userId()});
     if (usr == undefined || usr.location == undefined) return ""; // make sure we've got the user
     users = Characters.find({}).fetch(); // the only fuckers we have access to are in the same room b/c it's defined that way in the publish method, so dont need to check that here.
-//    if(Session.get('room') != usr.location.room) Session.set('room',usr.location.room);
 
     room = Rooms.findOne(usr.location.roomId);
     if (!room) return "";
@@ -139,6 +139,29 @@ Template.game.helpers({
     const character = Characters.findOne({userId: Meteor.userId()});
     return Items.find({'location.x': character.location.x, 'location.y':character.location.y});
   },
+  resource: function(){
+    const character = Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
+    const room = Rooms.findOne(character.location.roomId);
+    let nextSpace = room.map[character.location.y-1][character.location.x];
+    switch(character.location.direction) {
+      case 2:
+        nextSpace = room.map[character.location.y+1][character.location.x];
+        break;
+      case 3:
+        nextSpace = room.map[character.location.y][character.location.x+1];
+        break;
+      case 4:
+        nextSpace = room.map[character.location.y][character.location.x-1];
+        break;
+    }
+    return nextSpace.resources;
+  },
+  resourceSource: function(){
+    return "Tree";
+  },
+  resourceCollectionVerb: function(){
+    return "Chop";
+  },
 });
 
 Template.game.rendered = function() {
@@ -184,5 +207,9 @@ Template.game.events({
 
   'click button.pick-up-item': function(event, template) {
     Meteor.call('items.take', $(event.target).data('id'));
+  },
+
+  'click button.collect': function(){
+    Meteor.call('rooms.collect', FlowRouter.getParam('gameId'));
   },
 });

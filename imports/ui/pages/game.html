@@ -39,5 +39,11 @@
         {{/each}}
       </div>
     {{/if}}
+    {{#if resource}}
+      <div class="collect-resource">
+        <p>{{resourceSource}} has {{resource.amount}} lbs {{resource.type}} left</p>
+        <button class="collect">{{resourceCollectionVerb}}</button>
+      </div>
+    {{/if}}
   </div>
 </template>
