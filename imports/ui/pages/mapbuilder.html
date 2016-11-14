@@ -1,0 +1,22 @@
+<template name="mapbuilder">
+  <div class="mapbuilder">
+    <input type="number" class="rows" value="4"/>
+    <input type="number" class="cols" value="4"/>
+    <button class="export">Export</button>
+    <div class="tiles g-row">
+      {{#each tiles}}
+        <div class="g-col i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
+      {{/each}}
+    </div>
+    <hr/>
+    <div class="map">
+      {{#each row in map}}
+        <div class="g-row" data-index="{{@index}}">
+          {{#each tile in row}}
+            <div class="g-col i-{{tile.type}}" data-index="{{@index}}"></div>
+          {{/each}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>

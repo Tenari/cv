@@ -11,6 +11,8 @@ import '../../ui/pages/fight.js';
 import '../../ui/pages/death.js';
 import '../../ui/pages/not-found.js';
 
+import '../../ui/pages/mapbuilder.js';
+
 // Import to override accounts templates
 import '../../ui/components/accounts.js';
 
@@ -53,6 +55,13 @@ FlowRouter.route('/character/:characterId/death', {
   name: 'character.death',
   action() {
     BlazeLayout.render('app', { main: 'death' });
+  },
+});
+
+FlowRouter.route('/mapbuilder', {
+  name: 'tools.mapbuilder',
+  action() {
+    BlazeLayout.render('app', { main: 'mapbuilder' });
   },
 });
 

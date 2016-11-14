@@ -3,7 +3,9 @@ export const moveCosts = {
   grass: 8,
   door: 1,
   mat: 1,
+  floor: 2,
   "tree-stump": 14,
+  'vertical-path': 5,
   'hz-path': 5,
   "path-inv-T": 5,
   "path-plus": 5,
@@ -48,3 +50,20 @@ export function moveCost(character, weight, terrain) {
 // objects representing individual tiles which you can _.clone() into a room.map
 export const treeStumpTile = {type: "tree-stump"};
 export const treeTile = {type: "tree", resources: {type: "wood", amount: 10}};
+export const tiles = {
+  treeStump: treeStumpTile,
+  tree: treeTile,
+  grass: {type: 'grass'},
+  door: {type: 'door', data: {x: 0, y: 0, name: 'rome'}},
+  mat: {type: 'mat', data: {x: 0, y: 0, name: 'rome'}},
+  'vertical-path': {type: 'vertical-path'},
+  'hz-path': {type: 'hz-path'},
+  'path-inv-T': {type: 'path-inv-T'},
+  'path-plus': {type: 'path-plus'},
+  'path-T': {type: 'path-T'},
+  'hz-fence': {type: 'hz-fence'},
+  'vt-fence': {type: 'vt-fence'},
+  'floor': {type: 'floor'},
+  'bar': {type: 'bar'},
+  'full-building-wall': {type: 'full-building-wall'},
+};
