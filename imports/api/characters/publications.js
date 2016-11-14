@@ -7,7 +7,7 @@ Meteor.publish ("characters.room", function() {
   // only get to see users if you're logged in
   if (this.userId) {
     // only publish the users in the same room. Don't need to know about those other fuckers.
-    var roomId = Characters.findOne({userId: this.userId}).location.roomId;
+    const roomId = Characters.findOne({userId: this.userId}).location.roomId;
     return Characters.find({$or: [{userId: this.userId}, {"location.roomId": roomId}], 'stats.hp': {$gt: 0}}, {fields: Characters.publicFields});
   } else {
     this.ready();

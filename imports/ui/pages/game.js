@@ -10,12 +10,16 @@ import { Fights } from '../../api/fights/fights.js'
 
 import '../components/item.js';
 import '../components/status-bars.js';
+import '../components/misc-status.js';
 import './game.html';
+
+import { nextSpotXY } from '../../configs/locations.js';
 
 Template.game.onCreated(function gameOnCreated() {
   this.getGameId = () => FlowRouter.getParam('gameId');
   this.getRoomId = () => Meteor.userId() && Characters.findOne({userId: Meteor.userId()}).location.roomId;
   this.subscribe('fights.own');
+  this.subscribe('items.own');
   var myself = this.subscribe('characters.own');
 
   this.autorun(() => {
@@ -142,25 +146,19 @@ Template.game.helpers({
   resource: function(){
     const character = Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
     const room = Rooms.findOne(character.location.roomId);
-    let nextSpace = room.map[character.location.y-1][character.location.x];
-    switch(character.location.direction) {
-      case 2:
-        nextSpace = room.map[character.location.y+1][character.location.x];
-        break;
-      case 3:
-        nextSpace = room.map[character.location.y][character.location.x+1];
-        break;
-      case 4:
-        nextSpace = room.map[character.location.y][character.location.x-1];
-        break;
-    }
-    return nextSpace.resources;
+    if (!room) return false;
+    const xy = nextSpotXY(character);
+    const nextSpace = room.map[xy.y] && room.map[xy.y][xy.x];
+    return nextSpace && nextSpace.resources;
   },
   resourceSource: function(){
     return "Tree";
   },
   resourceCollectionVerb: function(){
     return "Chop";
+  },
+  character: function(){
+    return Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
   },
 });
 

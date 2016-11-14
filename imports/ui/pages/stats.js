@@ -7,10 +7,11 @@ import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
 
 import '../../api/items/methods.js'; 
-import { carriedWeight, moveCost, equipSlots } from '../../configs/game.js'; 
+import { equipSlots } from '../../configs/game.js'; 
 
 import '../components/item.js';
 import '../components/status-bars.js';
+import '../components/misc-status.js';
 import './stats.html';
 
 Template.stats.onCreated(function gameOnCreated() {
@@ -84,13 +85,6 @@ Template.stats.helpers({
   equippedLegs(){
     return Items.findOne({equipped: true, equipSlot: equipSlots.legs});
   },
-
-  moveCost(character) {
-    const weight = carriedWeight(character, Items);
-    const terrain = Rooms.findOne(character.location.roomId).map[character.location.y][character.location.x].type;
-    return moveCost(character, weight, terrain);
-  }
-
 });
 
 Template.stats.events({

@@ -1,6 +1,9 @@
 <template name="game">
   <div class="game-status-bars">
     {{> statusBars}}
+    {{#if character}}
+      {{> miscStatus character}}
+    {{/if}}
   </div>
   <div class="game-border">
     <div class="g-container">

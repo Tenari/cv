@@ -37,17 +37,7 @@
           </div>
         </div>
         {{> statusBars}}
-        <div class="misc-status-container">
-          <div class="misc-status money">
-            <img src="/images/money.png"/>
-            <span>{{character.stats.money}}</span>
-          </div>
-          <div class="misc-status move-cost">
-            <img src="/images/move-cost.png"/>
-            <span>{{moveCost character}}</span>
-          </div>
-          Endurance: {{character.stats.endurance}}
-        </div>
+        {{> miscStatus character}}
 
       </div>
       <div class="detail-tabs-container">
@@ -74,6 +64,7 @@
             <li><i class="fa fa-caret-right"></i> Leather: {{decimal character.stats.collecting.leather}} / {{decimal character.stats.collecting.leatherBase}}</li>
             <li><i class="fa fa-caret-right"></i> Ore: {{decimal character.stats.collecting.ore}} / {{decimal character.stats.collecting.oreBase}}</li>
             <li><i class="fa fa-caret-right"></i> Metal: {{decimal character.stats.collecting.metal}} / {{decimal character.stats.collecting.metalBase}}</li>
+            <li><i class="fa fa-caret-right"></i> Endurance: {{decimal character.stats.endurance}}</li>
           </div>
         {{/if}}
         {{#if page 'Items'}}
