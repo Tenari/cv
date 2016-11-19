@@ -28,6 +28,7 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
   });
 
   this.selected = new ReactiveVar('grass');
+  this.door = new ReactiveVar({name: 'tokyo', x: 3, y:5});
 })
 
 Template.mapbuilder.helpers({
@@ -41,6 +42,9 @@ Template.mapbuilder.helpers({
   },
   tileSelected(key){
     return Template.instance().selected.get() == key ? 'selected' : '';
+  },
+  showDoor(){
+    return tiles[Template.instance().selected.get()].data;
   }
 });
 
@@ -75,12 +79,30 @@ Template.mapbuilder.events({
     instance.selected.set($(e.target).data('key'));
   },
   'click .map .g-col'(e, instance){
-    const newTile = _.clone(tiles[instance.selected.get()]);
+    let newTile = _.clone(tiles[instance.selected.get()]);
+    if (newTile.data) {
+      newTile.data = _.clone(instance.door.get());
+    }
     const row = $(e.currentTarget).closest('.g-row').data('index');
     const col = $(e.currentTarget).data('index');
     let map = instance.map.get();
     map[row][col] = newTile;
     instance.map.set(map);
     instance.dimensions.set('rows', map.length);
+  },
+  'change .door-data input.name'(e, instance) {
+    let doorData = instance.door.get();
+    doorData.name = $(e.currentTarget).val();
+    instance.door.set(doorData)
+  },
+  'change .door-data input.x'(e, instance) {
+    let doorData = instance.door.get();
+    doorData.x = parseInt($(e.currentTarget).val());
+    instance.door.set(doorData)
+  },
+  'change .door-data input.y'(e, instance) {
+    let doorData = instance.door.get();
+    doorData.y = parseInt($(e.currentTarget).val());
+    instance.door.set(doorData)
   },
 });

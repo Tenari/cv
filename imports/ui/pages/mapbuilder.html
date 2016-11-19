@@ -3,6 +3,13 @@
     <input type="number" class="rows" value="4"/>
     <input type="number" class="cols" value="4"/>
     <button class="export">Export</button>
+    {{#if showDoor}}
+    <div class="door-data">
+      Name: <input type="text" class="name"/>
+      x: <input type="number" class="x"/>
+      y: <input type="number" class="y"/>
+    </div>
+    {{/if}}
     <div class="tiles g-row">
       {{#each tiles}}
         <div class="g-col i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
