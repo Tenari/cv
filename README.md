@@ -24,10 +24,10 @@ _(in no particular order)_
 - sales page that looks professional
 - character creation + tutorial flow
 - game features:
-    - [moving](#Moving)
-    - [fighting](#Fighting)
-    - collecting resources
-    - making items
+    - [moving](#moving)
+    - [fighting](#fighting)
+    - collecting [resources](#resources)
+    - making [items](#items)
     - interacting (trading/talking) with NPCs
     - ai monsters
     - 2 cities + wildernes in between
@@ -51,3 +51,19 @@ _(in no particular order)_
 - equipped weapons affect attack speed (who attacks first) and attack damage
 - character skill levels affect attack accuracy and attack damage
 - a convineint log of past turns of combat exists
+
+## Resources
+
+- wood, hide, leather, ore, and metal
+
+## Items
+
+- Weapons
+    - hands
+    - small blades
+    - large blades
+    - axes
+- Armor
+- Single use
+    - food: heals HP
+    - drinks: restore energy
