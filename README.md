@@ -5,7 +5,7 @@ Coalition Victory, in meteor, one more time.
 2. install [meteor](https://www.meteor.com/install)
 3. clone the repo `git clone https://github.com/Tenari/cv.git`
 4. run `meteor` from the project directory
-5. go to http://localhost:3000/ in Chrome
+5. go to [http://localhost:3000/](http://localhost:3000/) in Chrome
 
 # Essential concepts
 
