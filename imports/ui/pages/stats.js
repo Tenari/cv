@@ -7,7 +7,7 @@ import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
 
 import '../../api/items/methods.js'; 
-import { equipSlots } from '../../configs/game.js'; 
+import { equipSlots, statDescriptions } from '../../configs/game.js'; 
 
 import '../components/item.js';
 import '../components/status-bars.js';
@@ -22,6 +22,7 @@ Template.stats.onCreated(function gameOnCreated() {
   this.state.setDefault({
     page: 'Skills',
     item: null,
+    stat: null,
   });
 
   this.autorun(() => {
@@ -85,6 +86,19 @@ Template.stats.helpers({
   equippedLegs(){
     return Items.findOne({equipped: true, equipSlot: equipSlots.legs});
   },
+
+  selectedStat(){
+    if (Template.instance().state.get('page') != 'Skills') return false;
+    var fullStatKey = Template.instance().state.get('stat');
+    if (fullStatKey == null) return false;
+    let category = fullStatKey.split(".")[0];
+    let specific = fullStatKey.split(".")[1];
+    if (!specific) {
+      specific = category;
+      category = 'fighting';
+    }
+    return statDescriptions[category][specific];
+  },
 });
 
 Template.stats.events({
@@ -126,4 +140,7 @@ Template.stats.events({
     if (item) 
       Meteor.call('items.unequip', item._id);
   },
+  'mouseenter .skills-display-container>li'(e, instance){
+    instance.state.set('stat', $(e.currentTarget).data('stat'));
+  }
 })

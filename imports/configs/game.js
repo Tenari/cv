@@ -31,3 +31,27 @@ export const teamCode = {
   romans: 20,
   japs: 30
 }
+
+// copy/text constants
+export const statDescriptions = {
+  fighting: {
+    strength: 'Your Strength skill affects how much damage each attack you land will cause.',
+    accuracy: 'Your Accuracy skill affects how likely you are to hit an opponent.',
+    agility: 'Your Agility skill affects how difficult it is for an opponent to hit you.',
+    toughness: 'Your Toughness skill affects how much damage you take when an opponent hits you.',
+    endurance: 'Your Endurance skill affects how much energy it costs to move. It also affects how much weight you can carry.',
+  },
+  weapon: {
+    hands: 'Your Hands skill increases the amount of damage and the likelyhood to hit during unarmed combat.',
+    smallBlade: 'Your Small Blade skill increases the amount of damage and the likelyhood to hit when using a small blade in combat.',
+    largeBlade: 'Your Large Blade skill increases the amount of damage and the likelyhood to hit when using a large blade in combat.',
+    axe: 'Your Axe skill increases the amount of damage and the likelyhood to hit when using an axe in combat.',
+  },
+  collecting: {
+    wood: 'Improves how much wood you collect in one chop.',
+    hide: 'Improves how much hide you collect from animals.',
+    leather: 'Improves how much leather you make from hide.',
+    ore: 'Improves how much ore you mine from rocks.',
+    metal: 'Improves how much metal you get from refining ore.',
+  },
+};

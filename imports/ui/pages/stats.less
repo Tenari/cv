@@ -104,9 +104,19 @@
   .action-menu-container {
     margin-right: 40px;
     width: 400px;
-    .item-action-menu {
+    .borderer {
       border: 3px solid black;
       border-radius: 4px;
+    }
+    .stat-description {
+      .borderer();
+      p {
+        padding: 20px;
+        line-height: 1.5em;
+      }
+    }
+    .item-action-menu {
+      .borderer();
       .item-info {
         padding: 20px;
         border-bottom: 2px solid black;
