@@ -24,8 +24,8 @@ _(in no particular order)_
 - sales page that looks professional
 - character creation + tutorial flow
 - game features:
-    - moving
-    - fighting
+    - [moving](#Moving)
+    - [fighting](#Fighting)
     - collecting resources
     - making items
     - interacting (trading/talking) with NPCs
@@ -36,3 +36,18 @@ _(in no particular order)_
     - game-wide events/plot (find the [MacGuffin](http://tvtropes.org/pmwiki/pmwiki.php/Main/MacGuffin), then fight over it/steal it for your team)
 - account + character management screens
 - pay to play past your first game/character
+
+## Moving
+
+- `W`,`A`,`S`, and `D` move the player from tile to tile in the world similar to how moving around in pokemon games feels.
+- The character animates when he moves
+- moving uses up energy, which when depleted, prevents the player from moving any further
+
+## Fighting
+
+- Fighting is turn-based, but turns happen automatically on a timer of 5 seconds
+- 4 attack styles: quick, normal, heavy, block
+- characters animate when they attack/hit/get hit
+- equipped weapons affect attack speed (who attacks first) and attack damage
+- character skill levels affect attack accuracy and attack damage
+- a convineint log of past turns of combat exists
