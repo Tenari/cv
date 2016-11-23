@@ -48,5 +48,11 @@
         <button class="collect">{{resourceCollectionVerb}}</button>
       </div>
     {{/if}}
+    {{#if usableLocation}}
+      <div class="collect-resource">
+        <p>{{usableLocation.name}}</p>
+        <a href="{{usableLocation.path}}">USE</a>
+      </div>
+    {{/if}}
   </div>
 </template>

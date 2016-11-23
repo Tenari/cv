@@ -9,6 +9,7 @@ import '../../ui/pages/game.js';
 import '../../ui/pages/stats.js';
 import '../../ui/pages/fight.js';
 import '../../ui/pages/death.js';
+import '../../ui/pages/craft.js';
 import '../../ui/pages/not-found.js';
 
 import '../../ui/pages/mapbuilder.js';
@@ -48,6 +49,13 @@ FlowRouter.route('/game/:gameId/fight', {
   name: 'game.fight',
   action() {
     BlazeLayout.render('app', { main: 'fight' });
+  },
+});
+
+FlowRouter.route('/character/:characterId/craft', {
+  name: 'character.craft',
+  action() {
+    BlazeLayout.render('app', { main: 'craft' });
   },
 });
 

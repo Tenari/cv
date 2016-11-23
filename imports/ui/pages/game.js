@@ -160,6 +160,17 @@ Template.game.helpers({
   character: function(){
     return Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
   },
+  usableLocation: function(){
+    const character = Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
+    const room = Rooms.findOne(character.location.roomId);
+    if (!room) return false;
+    const xy = nextSpotXY(character);
+    const nextSpace = room.map[xy.y] && room.map[xy.y][xy.x];
+    if (!nextSpace || !nextSpace.use) return false;
+    let useObj = nextSpace.use;
+    useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
+    return useObj;
+  },
 });
 
 Template.game.rendered = function() {

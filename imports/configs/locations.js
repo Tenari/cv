@@ -54,6 +54,8 @@ export const tiles = {
   treeStump: treeStumpTile,
   tree: treeTile,
   grass: {type: 'grass'},
+  'workbench-left': {type: 'workbench-left', craft: 'wood'},
+  'workbench-right': {type: 'workbench-right', craft: 'wood'},
   door: {type: 'door', data: {x: 0, y: 0, name: 'rome'}},
   mat: {type: 'mat', data: {x: 0, y: 0, name: 'rome'}},
   'vertical-path': {type: 'vertical-path'},
