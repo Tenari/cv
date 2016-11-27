@@ -20,3 +20,24 @@ export const chickenLeg = {
   effectType: 'stats.hp',
   effectAmount: 5,
 };
+
+export const woodenHelmet = {
+  name: 'Wooden Helm',
+  type: 'armor',
+  img: '/images/wooden-helmet.png',
+  weight: 5,
+  equipped: false,
+  equipSlot: equipSlots.head,
+  effectType: 'damage',
+  effectAmount: -2,
+};
+
+export const workbench = {
+  armor: {
+    woodenHelmet: woodenHelmet,
+  }
+}
+
+export const craftingLocations = {
+  wood: {name: 'Workbench', items: workbench},
+};

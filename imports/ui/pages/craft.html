@@ -1,5 +1,11 @@
 <template name="craft">
   <div class="crafting-container">
-    Welcome to the crafting system. You are crafting
+    <h2>{{craftLocation.name}}</h2>
+    <p>Choose type of item to craft</p>
+    <ul>
+      {{#each type in craftLocationItems}}
+        <li><i class="fa fa-caret-right"></i> {{type.key}}</li>
+      {{/each}}
+    </ul>
   </div>
 </template>
