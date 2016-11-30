@@ -3,7 +3,7 @@
     <h2>{{craftLocation.name}}</h2>
     <div class="craft-tree-container">
       <div class="menu">
-        <p>Choose type of item to craft</p>
+        <p>Choose type of item to craft:</p>
         <ul>
           {{#each type in craftLocationTypes}}
             <li class="type" data-key="{{type.key}}"><i class="fa fa-caret-right"></i> {{type.key}}</li>
@@ -15,7 +15,7 @@
           <p>Choose item to craft</p>
           <ul>
             {{#each item in craftLocationItems}}
-              <li class="item" data-index="{{@index}}"><i class="fa fa-caret-right"></i> {{item.name}}</li>
+              <li class="item-selector" data-index="{{@index}}"><i class="fa fa-caret-right"></i> {{item.name}}</li>
             {{/each}}
           </ul>
         </div>
@@ -25,10 +25,10 @@
           <p>Craft one {{itemToCraft.name}}</p>
           <img src="{{itemToCraft.img}}"/>
           <p>Cost: {{cost}}</p>
-          <div class="craft-actions">
-            <li><i class="fa fa-caret-right"></i> Craft</li>
-            <li><i class="fa fa-caret-right"></i> Cancel</li>
-          </div>
+          <ul class="craft-actions">
+            <li class="craft"><i class="fa fa-caret-right"></i> Craft</li>
+            <li class="cancel"><i class="fa fa-caret-right"></i> Cancel</li>
+          </ul>
         </div>
       {{/if}}
     </div>

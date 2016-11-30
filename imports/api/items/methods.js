@@ -4,6 +4,8 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 import { Characters } from '../characters/characters.js';
 import { Items } from './items.js';
+import { craftingLocations } from '../../configs/items.js'
+import { getCharacter } from '../../configs/game.js'
 
 Meteor.methods({
   'items.equip'(id) {
@@ -58,4 +60,21 @@ Meteor.methods({
 
     return Items.remove(id);
   },
+  'items.create'(characterId, location, type, key){
+    if (!this.userId) {
+      throw new Meteor.Error('items.craft.accessDenied', 'Gotta be logged in to craft an item');
+    }
+    let character = Characters.findOne(characterId);
+    let item = _.clone(craftingLocations[location].items[type][key]);
+    _.each(item.cost, function(cost, resource) {
+      if (character.stats.resources[resource] < cost) {
+        throw new Meteor.Error('items.craft.notEnough', 'Gotta have resources to craft an item');
+      }
+      character.stats.resources[resource] -= cost;
+    });
+
+    item.ownerId = character._id;
+    Items.insert(item);
+    Characters.update(character._id, {$set: { 'stats.resources': character.stats.resources }});
+  }
 });

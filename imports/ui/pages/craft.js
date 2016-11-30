@@ -29,6 +29,11 @@ Template.craft.helpers({
   },
   itemToCraft() {
     return Template.instance().itemToCraft.get();
+  },
+  cost() {
+    return _.map(Template.instance().itemToCraft.get().cost, function(cost, resource) {
+      return ""+ cost + "lbs "+ resource;
+    }).join(", ");
   }
 })
 
@@ -36,11 +41,18 @@ Template.craft.events({
   'click .menu ul li.type'(event, instance){
     instance.itemClass.set($(event.currentTarget).data('key'));
   },
-  'click .menu ul li.item'(event, instance){
+  'click .menu ul li.item-selector'(event, instance){
     const itemClass = Template.instance().itemClass.get();
     console.log($(event.currentTarget).data('index'));
     const item = _.values(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass])[$(event.currentTarget).data('index')];
     console.log(item);
     instance.itemToCraft.set(item);
-  } 
+  },
+  'click .craft-actions .craft'(event, instance) {
+    Meteor.call('items.create', FlowRouter.getParam('characterId'), FlowRouter.getQueryParam('resource'), instance.itemClass.get(), instance.itemToCraft.get().key);
+  },
+  'click .craft-actions .cancel'(event, instance) {
+    instance.itemClass.set(null);
+    instance.itemToCraft.set(null);
+  }
 })

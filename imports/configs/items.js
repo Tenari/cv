@@ -22,6 +22,7 @@ export const chickenLeg = {
 };
 
 export const woodenHelmet = {
+  key: 'woodenHelmet',
   name: 'Wooden Helm',
   type: 'armor',
   img: '/images/wooden-helmet.png',
@@ -30,6 +31,7 @@ export const woodenHelmet = {
   equipSlot: equipSlots.head,
   effectType: 'damage',
   effectAmount: -2,
+  cost: {wood: 6},
 };
 
 export const workbench = {

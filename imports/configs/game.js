@@ -32,6 +32,10 @@ export const teamCode = {
   japs: 30
 }
 
+export function getCharacter(userId, gameId, Characters) {
+  return Characters.findOne({userId: userId, gameId: gameId, 'stats.hp':{$gt: 0}})
+}
+
 // copy/text constants
 export const statDescriptions = {
   fighting: {
