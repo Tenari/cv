@@ -24,6 +24,7 @@ export function minutesUntilRevive(character) {
 export function carriedWeight(character, Items){
   let weight = 0;
   Items.find({ownerId: character._id}).forEach(function(item){weight += item.weight;});
+  _.each(character.stats.resources, function(amount){weight += amount})
   return weight;
 }
 

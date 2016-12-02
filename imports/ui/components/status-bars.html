@@ -8,9 +8,9 @@
       </div>
     </div>
     <div class="stat-meter-container">
-      <p class="stat-meter-title">WEIGHT <span>X / Y</span></p>
+      <p class="stat-meter-title">WEIGHT <span>{{characterWeight}} / {{maxWeight character}}</span></p>
       <div class="stat-meter">
-        <div class="stat-meter-filling weight" style="width: 10%"></div>
+        <div class="stat-meter-filling weight" style="width: {{weightRatio character}}%"></div>
       </div>
     </div>
   {{/if}}
