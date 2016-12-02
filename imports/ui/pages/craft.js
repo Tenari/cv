@@ -24,18 +24,64 @@ Template.craft.helpers({
     const itemClass = Template.instance().itemClass.get();
     return _.values(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass]);
   },
+  classExpanded(key){
+    return Template.instance().itemClass.get() == key;
+  },
   itemClass() {
     return Template.instance().itemClass.get();
   },
   itemToCraft() {
     return Template.instance().itemToCraft.get();
   },
-  cost() {
-    return _.map(Template.instance().itemToCraft.get().cost, function(cost, resource) {
-      return ""+ cost + "lbs "+ resource;
-    }).join(", ");
+  costs() {
+    return _.map(Template.instance().itemToCraft.get().cost, function(cost,resource){return {amount: cost, type: resource};});
+  },
+  myResources() {
+    return _.map(myResources(), function(cost,resource){return {amount: cost, type: resource};});
+  },
+  remainingResources(){
+    const mine = myResources();
+    let remaining = {};
+    _.each(Template.instance().itemToCraft.get().cost, function(cost,resource){
+      remaining[resource] = mine[resource] - cost;
+    });
+    return _.map(remaining, function(cost,resource){return {amount: cost, type: resource};});
+  },
+  negative(val){
+    return val < 0;
+  },
+  effectMessage(){
+    const item = Template.instance().itemToCraft.get();
+    let str = '';
+    if (item.effectAmount > 0) {
+      str= 'increases '+item.effectType+' given by ';
+    } else {
+      str= 'reduces '+item.effectType+' taken by ';
+    }
+    return str + Math.abs(item.effectAmount);
+  },
+  canCreate(){
+    let can = true;
+    const mine = myResources();
+    _.each(Template.instance().itemToCraft.get().cost, function(cost, resource){
+      can = can && mine[resource] - cost > 0;
+    });
+    return can;
   }
 })
+
+function myResources() {
+  const character = Characters.findOne();
+  let myResources = {};
+  _.each(_.keys(Template.instance().itemToCraft.get().cost), function(resource) {
+    if (character.stats[resource]) {
+      myResources[resource] = character.stats[resource];
+    } else if (character.stats.resources[resource]) {
+      myResources[resource] = character.stats.resources[resource];
+    }
+  });
+  return myResources;
+}
 
 Template.craft.events({
   'click .menu ul li.type'(event, instance){
@@ -43,9 +89,7 @@ Template.craft.events({
   },
   'click .menu ul li.item-selector'(event, instance){
     const itemClass = Template.instance().itemClass.get();
-    console.log($(event.currentTarget).data('index'));
     const item = _.values(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass])[$(event.currentTarget).data('index')];
-    console.log(item);
     instance.itemToCraft.set(item);
   },
   'click .craft-actions .craft'(event, instance) {

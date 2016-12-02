@@ -31,12 +31,41 @@ export const woodenHelmet = {
   equipSlot: equipSlots.head,
   effectType: 'damage',
   effectAmount: -2,
-  cost: {wood: 6},
+  cost: {wood: 6, energy: 20},
+};
+
+export const woodenKnuckles = {
+  key: 'woodenKnuckles',
+  name: 'Wooden Knuckles',
+  type: 'hands',
+  img: '/images/wooden-knuckles.png',
+  weight: 2,
+  equipped: false,
+  equipSlot: equipSlots.hand,
+  effectType: 'damage',
+  effectAmount: 1,
+  cost: {wood: 2, energy: 25},
+};
+export const woodenSword = {
+  key: 'woodenSword',
+  name: 'Wooden Sword',
+  type: 'hands',
+  img: '/images/wooden-sword.png',
+  weight: 2,
+  equipped: false,
+  equipSlot: equipSlots.hand,
+  effectType: 'damage',
+  effectAmount: 1,
+  cost: {wood: 2, energy: 25},
 };
 
 export const workbench = {
   armor: {
     woodenHelmet: woodenHelmet,
+  },
+  weapon: {
+    woodenKnuckles: woodenKnuckles,
+    woodenSword: woodenSword,
   }
 }
 

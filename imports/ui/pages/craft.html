@@ -3,30 +3,63 @@
     <h2>{{craftLocation.name}}</h2>
     <div class="craft-tree-container">
       <div class="menu">
-        <p>Choose type of item to craft:</p>
+        <p>Choose item to craft:</p>
         <ul>
           {{#each type in craftLocationTypes}}
-            <li class="type" data-key="{{type.key}}"><i class="fa fa-caret-right"></i> {{type.key}}</li>
+            <li class="type" data-key="{{type.key}}">
+            {{#if classExpanded type.key}}
+              <i class="fa fa-caret-down"></i>
+            {{else}}
+              <i class="fa fa-caret-right"></i>
+            {{/if}}
+            {{type.key}}</li>
+            {{#if classExpanded type.key}}
+              {{#each item in craftLocationItems}}
+                <li class="item-selector" data-index="{{@index}}"><i class="fa fa-caret-right"></i> {{item.name}}</li>
+              {{/each}}
+            {{/if}}
           {{/each}}
         </ul>
       </div>
-      {{#if itemClass}}
-        <div class="menu">
-          <p>Choose item to craft</p>
-          <ul>
-            {{#each item in craftLocationItems}}
-              <li class="item-selector" data-index="{{@index}}"><i class="fa fa-caret-right"></i> {{item.name}}</li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
       {{#if itemToCraft}}
-        <div class="menu">
-          <p>Craft one {{itemToCraft.name}}</p>
-          <img src="{{itemToCraft.img}}"/>
-          <p>Cost: {{cost}}</p>
+        <div class="full-item-menu">
+          <h2>{{itemToCraft.name}}</h2>
+          <div class="flex-block">
+            <div>
+              <img src="{{itemToCraft.img}}"/>
+            </div>
+            <div class="item-stats">
+              Type: {{itemToCraft.type}}
+              <br>
+              Effect: {{effectMessage}}
+              <br>
+              Weight: {{itemToCraft.weight}}lbs
+            </div>
+          </div>
+          <div class="flex-block cost-lists">
+            <div>
+              <h3>Cost</h3>
+              {{#each cost in costs}}
+                <p>{{cost.amount}} {{cost.type}}</p>
+              {{/each}}
+            </div>
+            <div>
+              <h3>You have</h3>
+              {{#each cost in myResources}}
+                <p>{{cost.amount}} {{cost.type}}</p>
+              {{/each}}
+            </div>
+            <div>
+              <h3>Remaining</h3>
+              {{#each cost in remainingResources}}
+                <p class="{{#if negative cost.amount}}red{{/if}}">{{cost.amount}} {{cost.type}}</p>
+              {{/each}}
+            </div>
+          </div>
           <ul class="craft-actions">
-            <li class="craft"><i class="fa fa-caret-right"></i> Craft</li>
+            {{#if canCreate}}
+              <li class="craft"><i class="fa fa-caret-right"></i> Craft</li>
+            {{/if}}
             <li class="cancel"><i class="fa fa-caret-right"></i> Cancel</li>
           </ul>
         </div>
