@@ -1,7 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
-import { Characters } from '../../api/characters/characters.js'
+import { Characters } from '../../api/characters/characters.js';
+import { Items } from '../../api/items/items.js';
+import { carriedWeight } from '../../configs/game.js';
+import { maxWeight } from '../../configs/locations.js';
 
 import './status-bars.html';
 
@@ -16,6 +19,18 @@ Template.statusBars.onCreated(function gameOnCreated() {
 Template.statusBars.helpers({
   character : function(){
     return Characters.findOne({userId: Meteor.userId()});
+  },
+
+  characterWeight(){
+    return carriedWeight(Characters.findOne({userId: Meteor.userId()}), Items);
+  },
+
+  maxWeight(character){
+    return Math.floor(maxWeight(character));
+  },
+
+  weightRatio(character){
+    return carriedWeight(Characters.findOne({userId: Meteor.userId()}), Items)/(maxWeight(character)) * 100;
   },
 
   statPercent(stat){
