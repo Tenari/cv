@@ -1,6 +1,11 @@
 <template name="craft">
   <div class="crafting-container">
     <h2>{{craftLocation.name}}</h2>
+    {{#momentum plugin='fade'}}
+      {{#if crafted}}
+        <div class="notification">You just crafted a {{crafted.name}}</div>
+      {{/if}}
+    {{/momentum}}
     <div class="craft-tree-container">
       <div class="menu">
         <p>Choose item to craft:</p>

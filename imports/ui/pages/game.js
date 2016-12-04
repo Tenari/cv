@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Items } from '../../api/items/items.js'
@@ -21,6 +22,7 @@ Template.game.onCreated(function gameOnCreated() {
   this.subscribe('fights.own');
   this.subscribe('items.own');
   var myself = this.subscribe('characters.own');
+  this.notification = new ReactiveVar(null);
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
@@ -171,6 +173,9 @@ Template.game.helpers({
     useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
     return useObj;
   },
+  notification: function(){
+    return Template.instance().notification.get();
+  },
 });
 
 Template.game.rendered = function() {
@@ -215,10 +220,21 @@ Template.game.events({
   },
 
   'click button.pick-up-item': function(event, template) {
-    Meteor.call('items.take', $(event.target).data('id'));
+    Meteor.call('items.take', $(event.target).data('id'), FlowRouter.getParam('gameId'), handleNotification(template));
   },
 
-  'click button.collect': function(){
-    Meteor.call('rooms.collect', FlowRouter.getParam('gameId'));
+  'click button.collect': function(event, template){
+    Meteor.call('rooms.collect', FlowRouter.getParam('gameId'), handleNotification(template));
   },
 });
+
+function handleNotification(template) {
+  return function(error, result){
+    if(error) {
+      template.notification.set({type:'error', message: error.reason});
+      Meteor.setTimeout(function(){
+        template.notification.set(null);
+      }, 7777);
+    }
+  }
+}

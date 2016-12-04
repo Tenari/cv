@@ -1,58 +1,65 @@
 <template name="game">
-  <div class="game-status-bars">
-    {{> statusBars}}
-    {{#if character}}
-      {{> miscStatus character}}
+  {{#momentum plugin='fade'}}
+    {{#if notification}}
+      <div class="notification notification-{{notification.type}}">{{notification.message}}</div>
     {{/if}}
-  </div>
-  <div class="game-border">
-    <div class="g-container">
-      {{#if fighting}}
-        <div class="fighting-overlay"><div class="msg">In Combat</div></div>
+  {{/momentum}}
+  <div class="whole-game-hud-container">
+    <div class="game-status-bars">
+      {{> statusBars}}
+      {{#if character}}
+        {{> miscStatus character}}
       {{/if}}
-      {{{gameHTML}}}
     </div>
-  </div>
-  <div class="same-space-lists">
-    {{#if opponentsToFight}}
-      <div class="opponent-list">
-        {{#each opponent in opponents}}
-          <div class="opponent-container">
-            <div class="character i-{{opponentImage opponent}}"></div>
-            <div>
-              <p>{{opponent.name}}</p>
-              {{#if fighting}}
-                {{#if amFighting opponent._id}}
-                  <span class="red">Fighting!</span>
+    <div class="game-border">
+      <div class="g-container">
+        {{#if fighting}}
+          <div class="fighting-overlay"><div class="msg">In Combat</div></div>
+        {{/if}}
+        {{{gameHTML}}}
+      </div>
+    </div>
+    <div class="same-space-lists">
+      {{#if opponentsToFight}}
+        <div class="opponent-list">
+          {{#each opponent in opponents}}
+            <div class="opponent-container">
+              <div class="character i-{{opponentImage opponent}}"></div>
+              <div>
+                <p>{{opponent.name}}</p>
+                {{#if fighting}}
+                  {{#if amFighting opponent._id}}
+                    <span class="red">Fighting!</span>
+                  {{else}}
+                    <span>--</span>
+                  {{/if}}
                 {{else}}
-                  <span>--</span>
+                  <button class="fight" data-id="{{opponent._id}}">Fight</button>
                 {{/if}}
-              {{else}}
-                <button class="fight" data-id="{{opponent._id}}">Fight</button>
-              {{/if}}
+              </div>
             </div>
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
-    {{#if itemsHere}}
-      <div class="item-list">
-        {{#each itemX in items}}
-          {{> item itemX}}
-        {{/each}}
-      </div>
-    {{/if}}
-    {{#if resource}}
-      <div class="collect-resource">
-        <p>{{resourceSource}} has {{resource.amount}} lbs {{resource.type}} left</p>
-        <button class="collect">{{resourceCollectionVerb}}</button>
-      </div>
-    {{/if}}
-    {{#if usableLocation}}
-      <div class="collect-resource">
-        <p>{{usableLocation.name}}</p>
-        <a href="{{usableLocation.path}}">USE</a>
-      </div>
-    {{/if}}
+          {{/each}}
+        </div>
+      {{/if}}
+      {{#if itemsHere}}
+        <div class="item-list">
+          {{#each itemX in items}}
+            {{> item itemX}}
+          {{/each}}
+        </div>
+      {{/if}}
+      {{#if resource}}
+        <div class="collect-resource">
+          <p>{{resourceSource}} has {{resource.amount}} lbs {{resource.type}} left</p>
+          <button class="collect">{{resourceCollectionVerb}}</button>
+        </div>
+      {{/if}}
+      {{#if usableLocation}}
+        <div class="collect-resource">
+          <p>{{usableLocation.name}}</p>
+          <a href="{{usableLocation.path}}">USE</a>
+        </div>
+      {{/if}}
+    </div>
   </div>
 </template>

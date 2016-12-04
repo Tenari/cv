@@ -44,19 +44,19 @@ export const woodenKnuckles = {
   equipSlot: equipSlots.hand,
   effectType: 'damage',
   effectAmount: 1,
-  cost: {wood: 2, energy: 25},
+  cost: {wood: 3, energy: 25},
 };
 export const woodenSword = {
   key: 'woodenSword',
   name: 'Wooden Sword',
   type: 'hands',
   img: '/images/wooden-sword.png',
-  weight: 2,
+  weight: 3,
   equipped: false,
   equipSlot: equipSlots.hand,
   effectType: 'damage',
   effectAmount: 1,
-  cost: {wood: 2, energy: 25},
+  cost: {wood: 4, energy: 25},
 };
 
 export const workbench = {

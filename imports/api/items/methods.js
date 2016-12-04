@@ -5,7 +5,7 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { Characters } from '../characters/characters.js';
 import { Items } from './items.js';
 import { craftingLocations } from '../../configs/items.js'
-import { getCharacter } from '../../configs/game.js'
+import { canCarry, getCharacter } from '../../configs/game.js'
 
 Meteor.methods({
   'items.equip'(id) {
@@ -37,13 +37,15 @@ Meteor.methods({
 
     Items.update(id, {$set: {equipped: false, ownerId: null, location: newLocation}});
   },
-  'items.take'(id) {
+  'items.take'(id, gameId) {
     if (!this.userId) {
       throw new Meteor.Error('items.take.accessDenied',
         'Gotta be logged in to take an item');
     }
     const item = Items.findOne(id);
-    const newOwner = Characters.findOne({userId: this.userId, 'stats.hp':{$gt: 0}});
+    const newOwner = getCharacter(this.userId, gameId, Characters);
+
+    if (!canCarry(newOwner, item.weight, Items)) throw new Meteor.Error('items.take.full', 'Item weighs too much to carry');
 
     Items.update(id, {$set: {equipped: false, ownerId: newOwner._id, location: null}});
   },

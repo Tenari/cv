@@ -3,8 +3,7 @@ import { Template } from 'meteor/templating';
 
 import { Characters } from '../../api/characters/characters.js';
 import { Items } from '../../api/items/items.js';
-import { carriedWeight } from '../../configs/game.js';
-import { maxWeight } from '../../configs/locations.js';
+import { maxWeight, carriedWeight } from '../../configs/game.js';
 
 import './status-bars.html';
 

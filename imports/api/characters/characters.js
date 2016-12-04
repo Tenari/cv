@@ -52,7 +52,27 @@ const CollectingSchema = new SimpleSchema({
 });
 
 const StatsSchema = new SimpleSchema({
-  hp: {type: Number, defaultValue: 30},
+  hp: {
+    type: Number, 
+    // this fucntion will overwrite the value of the hp to never be more than the baseHp of the same document
+    autoValue: function(){
+      //default to 30
+      if (!this.isSet && this.isInsert) {
+        return 30;
+      }
+      const doc = Characters.findOne(this.docId);
+      if (!doc) return undefined;
+
+      if (this.isSet && doc.stats.baseHp && this.operator == '$set' && this.value > doc.stats.baseHp) {
+        return doc.stats.baseHp;
+      }
+      if (this.isSet && doc.stats.baseHp && this.operator == '$inc') {
+        if (doc.stats.hp + this.value > doc.stats.baseHp) {
+          return this.value - ((doc.stats.hp + this.value) - doc.stats.baseHp);
+        }
+      }
+    }
+  },
   baseHp: {type: Number, defaultValue: 30},
   strength: {type: Number, defaultValue: 1, decimal: true},
   baseStrength: {type: Number, defaultValue: 1, decimal: true},
@@ -65,7 +85,24 @@ const StatsSchema = new SimpleSchema({
   weapon: {type: WeaponStatsSchema},
   resources: { type: ResourcesSchema },
   collecting: { type: CollectingSchema },
-  energy: {type: Number, defaultValue: 10000, decimal: true},
+  energy: {type: Number, decimal: true, autoValue: function(){
+    // this fucntion will overwrite the value of the energy to never be more than the baseEnergy of the same document
+    //default to 10000
+    if (!this.isSet && this.isInsert) {
+      return 10000;
+    }
+    const doc = Characters.findOne(this.docId);
+    if (!doc) return undefined;
+
+    if (this.isSet && doc.stats.baseEnergy && this.operator == '$set' && this.value > doc.stats.baseEnergy) {
+      return doc.stats.baseEnergy;
+    }
+    if (this.isSet && doc.stats.baseEnergy && this.operator == '$inc') {
+      if (doc.stats.energy + this.value > doc.stats.baseEnergy) {
+        return this.value - ((doc.stats.energy + this.value) - doc.stats.baseEnergy);
+      }
+    }
+  }},
   baseEnergy: {type: Number, defaultValue: 10000},
   endurance: {type: Number, defaultValue: 1, decimal: true},
   money: {type: Number, defaultValue: 100},

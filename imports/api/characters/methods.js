@@ -8,8 +8,8 @@ import { Fights } from '../fights/fights.js';
 import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
-import { maxWeight, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
-import { teamCode, carriedWeight } from '../../configs/game.js';
+import { moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
+import { maxWeight, teamCode, carriedWeight } from '../../configs/game.js';
 import { shittySword, chickenLeg } from '../../configs/items.js';
 
 Meteor.methods({

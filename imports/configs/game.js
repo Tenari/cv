@@ -28,6 +28,17 @@ export function carriedWeight(character, Items){
   return weight;
 }
 
+export function maxWeight(character) {
+  // with endurance of 100, you can carry 200
+  // with endurance of 1, you can carry 20
+  // ish
+  return 40*Math.log(character.stats.endurance) + 20;
+}
+
+export function canCarry(character, weight, Items) {
+  return maxWeight(character) > (carriedWeight(character, Items) + weight);
+}
+
 export const teamCode = {
   romans: 20,
   japs: 30

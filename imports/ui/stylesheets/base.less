@@ -1,3 +1,4 @@
+@import './variables.less';
 html, body, p, h1, h2, h3, h4, h5, h6, input, textarea, button, form, div, span {
   font-family: "Lucida Console", Monaco, monospace;
 }
@@ -52,4 +53,16 @@ li {
       display: inline;
     }
   }
+}
+
+.notification {
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  margin: 5px;
+  background-color: @color-secondary;
+}
+.notification-error {
+  background-color: @color-contrast;
 }

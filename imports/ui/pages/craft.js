@@ -1,16 +1,37 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Characters } from '../../api/characters/characters.js';
+import { Rooms } from '../../api/rooms/rooms.js';
 import { craftingLocations } from '../../configs/items.js';
+import { nextSpotXY } from '../../configs/locations.js';
 
 import './craft.html';
 
 Template.craft.onCreated( function craftOnCreated(){
-  this.subscribe('characters.own', true);
+  var myself = this.subscribe('characters.own', true);
+  var rooms;
   this.itemClass = new ReactiveVar(null);
   this.itemToCraft = new ReactiveVar(null);
+  this.crafted = new ReactiveVar(null);
+
+  this.autorun(() => {
+    if(myself.ready()) {
+      const character = Characters.findOne();
+      rooms = this.subscribe('game.rooms', character.gameId);
+      if (rooms.ready()) {
+        const room = Rooms.findOne(character.location.roomId)
+        const xy = nextSpotXY(character);
+        if (room.map[xy.y] && room.map[xy.y][xy.x] && room.map[xy.y][xy.x].use && room.map[xy.y][xy.x].use.params && room.map[xy.y][xy.x].use.params.resource == FlowRouter.getQueryParam('resource')) {
+          // all good
+        } else {
+          FlowRouter.go('/'); //you're not allowed to be here!
+        }
+      }
+    }
+  })
 })
 
 Template.craft.helpers({
@@ -64,9 +85,12 @@ Template.craft.helpers({
     let can = true;
     const mine = myResources();
     _.each(Template.instance().itemToCraft.get().cost, function(cost, resource){
-      can = can && mine[resource] - cost > 0;
+      can = can && mine[resource] - cost >= 0;
     });
     return can;
+  },
+  crafted() {
+    return Template.instance().crafted.get();
   }
 })
 
@@ -76,7 +100,7 @@ function myResources() {
   _.each(_.keys(Template.instance().itemToCraft.get().cost), function(resource) {
     if (character.stats[resource]) {
       myResources[resource] = character.stats[resource];
-    } else if (character.stats.resources[resource]) {
+    } else if (character.stats.resources[resource] || character.stats.resources[resource] == 0) {
       myResources[resource] = character.stats.resources[resource];
     }
   });
@@ -93,7 +117,15 @@ Template.craft.events({
     instance.itemToCraft.set(item);
   },
   'click .craft-actions .craft'(event, instance) {
-    Meteor.call('items.create', FlowRouter.getParam('characterId'), FlowRouter.getQueryParam('resource'), instance.itemClass.get(), instance.itemToCraft.get().key);
+    Meteor.call('items.create', FlowRouter.getParam('characterId'), FlowRouter.getQueryParam('resource'), instance.itemClass.get(), instance.itemToCraft.get().key, function(error, result){
+      console.log(error, result);
+      if (error) {return;}
+      //show the "you just made a thing" message
+      instance.crafted.set(_.clone(instance.itemToCraft.get()));
+      Meteor.setTimeout(function(){
+        instance.crafted.set(null);
+      }, 7777);
+    });
   },
   'click .craft-actions .cancel'(event, instance) {
     instance.itemClass.set(null);

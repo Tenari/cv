@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 import { Rooms } from '../../api/rooms/rooms.js';
 import { Games } from '../../api/games/games.js';
+import { Characters } from '../../api/characters/characters.js';
 
 import './gameLoop.js';
 
@@ -26,4 +27,5 @@ Meteor.startup(function (){
     Rooms.upsert({name : "rome"}, { $set : rome});
     Rooms.upsert({name : "tokyo"}, { $set : tokyo});
   }
+
 });

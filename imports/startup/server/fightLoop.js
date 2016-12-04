@@ -118,7 +118,6 @@ export function fightLoop(){
     // update all the users records in Mongo
     Characters.update(first._id, {$set: {stats: first.stats}});
     Characters.update(last._id, {$set: {stats: last.stats}});
-    console.log(roundLog);
     Fights.update(fight._id, {$inc: {round: 1}, $push: {rounds: roundLog}});
   }); 
 }

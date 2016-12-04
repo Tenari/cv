@@ -1,3 +1,4 @@
+import { maxWeight } from './game.js';
 // the map of all traversable tile types and their base move cost
 export const moveCosts = {
   grass: 8,
@@ -33,13 +34,6 @@ export function nextSpotXY(character){
       break;
   }
   return {x: x, y: y, moveObject : moveObject};
-}
-
-export function maxWeight(character) {
-  // with endurance of 100, you can carry 200
-  // with endurance of 1, you can carry 20
-  // ish
-  return 40*Math.log(character.stats.endurance) + 20;
 }
 
 export function moveCost(character, weight, terrain) {
