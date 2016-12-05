@@ -5,6 +5,7 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { Games } from '../games/games.js';
 import { Rooms } from '../rooms/rooms.js';
 import { Fights } from '../fights/fights.js';
+import { Trades } from '../trades/trades.js';
 import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
@@ -93,6 +94,8 @@ export function moveCharacter(character, directionInt) {
   moveObject = xy.moveObject;
 
   if (nextSpot != "out of bounds" && moveCosts[nextSpot.type] && character.location.direction == directionInt) { // can traverse the next spot and are facing the right way
+    Trades.remove({$or: [{sellerId: character._id}, {buyerId: character._id}]}) // if the dude leaves, the trade is cancelled
+
     if (nextSpot.data && nextSpot.data.x > -1 && nextSpot.data.y > -1) { // next spot is a door
       const roomId = Rooms.findOne({gameId: room.gameId, name: nextSpot.data.name})._id;
 

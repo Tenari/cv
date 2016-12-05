@@ -8,6 +8,8 @@ import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
 import '../../api/rooms/methods.js'
 import { Fights } from '../../api/fights/fights.js'
+import { Trades } from '../../api/trades/trades.js'
+import '../../api/trades/trades.js'
 
 import '../components/item.js';
 import '../components/status-bars.js';
@@ -15,10 +17,13 @@ import '../components/misc-status.js';
 import './game.html';
 
 import { nextSpotXY } from '../../configs/locations.js';
+import { getCharacter } from '../../configs/game.js';
 
 Template.game.onCreated(function gameOnCreated() {
+  var that = this;
   this.getGameId = () => FlowRouter.getParam('gameId');
-  this.getRoomId = () => Meteor.userId() && Characters.findOne({userId: Meteor.userId()}).location.roomId;
+  this.me = () => getCharacter(Meteor.userId(), that.getGameId(), Characters);
+  this.getRoomId = () => Meteor.userId() && that.me() && that.me().location.roomId;
   this.subscribe('fights.own');
   this.subscribe('items.own');
   var myself = this.subscribe('characters.own');
@@ -26,12 +31,29 @@ Template.game.onCreated(function gameOnCreated() {
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
+    this.subscribe('trades.own', this.getGameId());
     if (myself.ready()) {
       if (Characters.find().count() == 0) {
         FlowRouter.go('/');
       } else {
         this.subscribe('characters.room', this.getRoomId());
         this.subscribe('items.room', this.getRoomId());
+      }
+    }
+  })
+
+  this.autorun(() => {
+    if (Trades.find().count() > 0) {
+      const trade = Trades.findOne();
+      if (this.me() && trade.buyerId == this.me()._id) {
+        this.notification.set({type:'good', message: "You have a trade offer", action: "View", actionPath: FlowRouter.path('game.trade', {gameId: this.getGameId(), tradeId: trade._id})});
+        var that = this;
+        Meteor.setTimeout(function(){
+          that.notification.set(null);
+          if (!FlowRouter.getRouteName().match("trade")) { // if they are on the trade page, then they obviously accepted it
+            Meteor.call('trades.end', that.getGameId(), trade._id);
+          }
+        }, 9999); // have 10 seconds to open the trade or it expires
       }
     }
   })
@@ -43,7 +65,7 @@ Template.game.helpers({
 
     viewH = 8; viewW = 12;// default height and width (in tiles) of the viewport
     drawX = 5; drawY = 3; // default place for the user's character to appear onscreen
-    usr = Characters.findOne({userId: Meteor.userId()});
+    usr = Template.instance().me();
     if (usr == undefined || usr.location == undefined) return ""; // make sure we've got the user
     users = Characters.find({}).fetch(); // the only fuckers we have access to are in the same room b/c it's defined that way in the publish method, so dont need to check that here.
 
@@ -116,7 +138,7 @@ Template.game.helpers({
   },
   opponentsToFight: function(){
     const uId = Meteor.userId();
-    const character = Characters.findOne({userId: uId});
+    const character = Template.instance().me();
     if (!character) return null;
 //    var fights = Fights.find({$or: [{initiatorId: u._id}, {opponentId: u._id}]}).fetch();
 //    return u && fights.length == 0 && getPotentialOpponent() != undefined;
@@ -130,7 +152,7 @@ Template.game.helpers({
     return fight && (fight.attackerId == id || fight.defenderId == id);
   },
   opponents: function(){
-    const character = Characters.findOne({userId: Meteor.userId()});
+    const character = Template.instance().me();
 
     return Characters.find({'location.x': character.location.x, 'location.y': character.location.y, userId: { $ne: Meteor.userId() }});
   },
@@ -138,15 +160,15 @@ Template.game.helpers({
     return parseInt(opponent.location.classId)+parseInt(opponent.location.direction);
   },
   itemsHere: function(){
-    const character = Characters.findOne({userId: Meteor.userId()});
+    const character = Template.instance().me();
     return Items.find({'location.x': character.location.x, 'location.y':character.location.y}).count() > 0;
   },
   items: function(){
-    const character = Characters.findOne({userId: Meteor.userId()});
+    const character = Template.instance().me();
     return Items.find({'location.x': character.location.x, 'location.y':character.location.y});
   },
   resource: function(){
-    const character = Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
+    const character = Template.instance().me();
     const room = Rooms.findOne(character.location.roomId);
     if (!room) return false;
     const xy = nextSpotXY(character);
@@ -160,10 +182,10 @@ Template.game.helpers({
     return "Chop";
   },
   character: function(){
-    return Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
+    return Template.instance().me();
   },
   usableLocation: function(){
-    const character = Characters.findOne({userId: Meteor.userId(), gameId: FlowRouter.getParam('gameId')});
+    const character = Template.instance().me();
     const room = Rooms.findOne(character.location.roomId);
     if (!room) return false;
     const xy = nextSpotXY(character);
@@ -176,6 +198,9 @@ Template.game.helpers({
   notification: function(){
     return Template.instance().notification.get();
   },
+  canTrade: function(characterId){
+    return true;
+  }
 });
 
 Template.game.rendered = function() {
@@ -215,7 +240,15 @@ Template.game.events({
   'click button.fight': function(event, template) {
     Meteor.call('fights.start', $(event.target).data('id'), function(error, result){
       if(error) return;
-      FlowRouter.go('game.fight', {gameId: Characters.findOne({userId: Meteor.userId()}).gameId});
+      FlowRouter.go('game.fight', {gameId: FlowRouter.getParam('gameId')});
+    });
+  },
+
+  'click button.trade': function(event, template) {
+    console.log('clicked');
+    Meteor.call('trades.start', FlowRouter.getParam('gameId'), $(event.target).data('id'), function(error, result){
+      if(error) return;
+      FlowRouter.go('game.trade', {gameId: FlowRouter.getParam('gameId'), tradeId: result});
     });
   },
 

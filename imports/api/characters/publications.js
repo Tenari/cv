@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 
 import { Fights } from '../fights/fights.js';
+import { Trades } from '../trades/trades.js';
 import { Characters } from './characters.js';
+import { getCharacter } from '../../configs/game.js';
 
 Meteor.publish ("characters.room", function() {
   // only get to see users if you're logged in
@@ -34,4 +36,17 @@ Meteor.publish ("characters.fight", function() {
   const fight = Fights.findOne({$or: [{attackerId: character._id},{defenderId: character._id}]});
   if (!fight) return this.ready();
   return Characters.find({_id: {$in: [fight.attackerId, fight.defenderId] } }, {fields: Characters.publicFields});
+});
+
+// returns the characters involved in the trade that this.userId is involved in.
+Meteor.publish ("characters.trade", function(gameId) {
+  if (!this.userId) return this.ready();
+
+  const character = getCharacter(this.userId, gameId, Characters);
+  if (!character) return this.ready();
+
+  const trade = Trades.findOne({$or: [{sellerId: character._id},{buyerId: character._id}]});
+  if (!trade) return this.ready();
+
+  return Characters.find({_id: {$in: [trade.sellerId, trade.buyerId] } }, {fields: Characters.publicFields});
 });

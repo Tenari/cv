@@ -1,7 +1,12 @@
 <template name="game">
   {{#momentum plugin='fade'}}
     {{#if notification}}
-      <div class="notification notification-{{notification.type}}">{{notification.message}}</div>
+      <div class="notification notification-{{notification.type}}">
+        <p>{{notification.message}}</p>
+        {{#if notification.action}}
+          <a href="{{notification.actionPath}}">{{notification.action}}</a>
+        {{/if}}
+      </div>
     {{/if}}
   {{/momentum}}
   <div class="whole-game-hud-container">
@@ -35,6 +40,9 @@
                   {{/if}}
                 {{else}}
                   <button class="fight" data-id="{{opponent._id}}">Fight</button>
+                  {{#if canTrade opponent._id}}
+                    <button class="trade" data-id="{{opponent._id}}">Trade</button>
+                  {{/if}}
                 {{/if}}
               </div>
             </div>
