@@ -4,19 +4,57 @@
       <div class="offers-container">
         <div class="seller-container">
           <h2>{{seller.name}}</h2>
-          <ul>
+          <ul class="{{#if iAm seller}}remove-offer{{/if}}">
             {{#each offer in trade.sellerOffer}}
-              <li> asdf </li>
+              {{#if offerIs offer 'item'}}
+                <li data-index="{{@index}}">{{> item offer.item}}</li>
+              {{/if}}
+              {{#if offerIs offer 'resource'}}
+                <li data-index="{{@index}}">{{offer.resource}} x {{offer.amount}}</li>
+              {{/if}}
+              {{#if offerIs offer 'money'}}
+                <li data-index="{{@index}}"><img src="/images/money.png"/> {{offer.amount}}</li>
+              {{/if}}
             {{/each}}
           </ul>
         </div>
         <div class="buyer-container">
           <h2>{{buyer.name}}</h2>
-          <ul>
+          <ul class="{{#if iAm buyer}}remove-offer{{/if}}">
             {{#each offer in trade.buyerOffer}}
-              <li> asdf </li>
+              {{#if offerIs offer 'item'}}
+                <li data-index="{{@index}}">{{> item offer.item}}</li>
+              {{/if}}
+              {{#if offerIs offer 'resource'}}
+                <li data-index="{{@index}}">{{offer.resource}} x {{offer.amount}}</li>
+              {{/if}}
+              {{#if offerIs offer 'money'}}
+                <li data-index="{{@index}}"><img src="/images/money.png"/> {{offer.amount}}</li>
+              {{/if}}
             {{/each}}
           </ul>
+        </div>
+      </div>
+      <div class="manage-your-offer-container">
+        <div class="resources">
+          <div>
+            <span class="edit-resource" data-editing="money">Money: {{me.stats.money}}</span>
+            {{#if editing 'money'}}
+              <input type="number" class="amount-to-add" max="{{me.stats.money}}" min="0"/>
+              <button class="offer" data-type="money" data-resource="money">offer</button>
+            {{/if}}
+          </div>
+          {{#each resource in resources}}
+            <div>
+              <span class="edit-resource" data-editing="{{resource.key}}">{{resource.key}}: {{resource.amount}}</span>
+              {{#if editing resource.key}}
+                <input type="number" class="amount-to-add" max="{{resource.amount}}" min="0"/>
+                <button class="offer" data-type="resource" data-resource="{{resource.key}}">offer</button>
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+        <div class="items-list">
         </div>
       </div>
     {{/if}}

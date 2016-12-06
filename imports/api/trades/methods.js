@@ -3,6 +3,7 @@ import { _ } from 'meteor/underscore';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 import { Characters } from '../characters/characters.js';
+import { Items } from '../items/items.js';
 import { Trades } from './trades.js';
 import { getCharacter } from '../../configs/game.js';
 
@@ -25,6 +26,48 @@ Meteor.methods({
       sellerOffer: [],
       buyerOffer: [],
     });
+  },
+  'trades.updateOffer'(tradeId, characterId, offer){
+    const character = Characters.findOne(characterId);
+    if (!character) throw new Meteor.Error('trades.insert.badId','this character doesnt exist, dude');
+
+    if (offer.type == 'money' && offer.amount > character.stats.money)
+      offer.amount = character.stats.money;
+    if (offer.type == 'resource' && offer.amount > character.stats.resources[offer.resource])
+      offer.amount = character.stats.resources[offer.resource];
+
+    let trade = Trades.findOne(tradeId);
+    const label = trade.sellerId == character._id ? 'sellerOffer' : 'buyerOffer';
+    let updated = false;
+    let newFullOffer = _.map(trade[label], function(offerObj){
+      if (offerObj.type == offer.type) {
+        if (offer.type == 'resource' && offer.resource == offerObj.resource ||
+            offer.type == 'money') {
+
+          updated = true;
+          return offer;
+        }
+      }
+      return offerObj;
+    })
+    if (!updated) newFullOffer.push(offer);
+    let updateObj = {buyerAccepts: false, sellerAccepts: false};
+    updateObj[label] = newFullOffer;
+
+    return Trades.update(tradeId, {$set: updateObj});
+  },
+  'trades.removeOffer'(tradeId, characterId, index){
+    const character = Characters.findOne(characterId);
+    if (!character) throw new Meteor.Error('trades.insert.badId','this character doesnt exist, dude');
+
+    let trade = Trades.findOne(tradeId);
+    const label = trade.sellerId == character._id ? 'sellerOffer' : 'buyerOffer';
+
+    let updateObj = {buyerAccepts: false, sellerAccepts: false};
+    trade[label].splice(index, 1);
+    updateObj[label] = trade[label];
+
+    return Trades.update(tradeId, {$set: updateObj});
   },
   'trades.end'(gameId, id) {
     if (!this.userId) throw new Meteor.Error('access', 'log in');
