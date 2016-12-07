@@ -17,6 +17,8 @@ import  '../../api/fights/methods.js';
 import  '../../api/fights/publications.js';
 import  '../../api/trades/methods.js';
 import  '../../api/trades/publications.js';
+import  '../../api/chats/methods.js';
+import  '../../api/chats/publications.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();

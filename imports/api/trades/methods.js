@@ -3,6 +3,7 @@ import { _ } from 'meteor/underscore';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 import { Characters } from '../characters/characters.js';
+import { Chats } from '../chats/chats.js';
 import { Items } from '../items/items.js';
 import { Trades } from './trades.js';
 import { getCharacter } from '../../configs/game.js';
@@ -20,12 +21,14 @@ Meteor.methods({
     const seller = getCharacter(this.userId, gameId, Characters);
     if (buyer.location.roomId != seller.location.roomId || buyer.location.x != seller.location.x || buyer.location.y != seller.location.y) throw new Meteor.Error('trades.insert.invalidOpponent', 'this opponent must have moved or something');
 
-    return Trades.insert({
+    const tradeId = Trades.insert({
       sellerId: seller._id,
       buyerId: buyer._id,
       sellerOffer: [],
       buyerOffer: [],
     });
+    Chats.insert({scope: "trade:"+tradeId, messages: []});
+    return tradeId;
   },
   'trades.updateOffer'(tradeId, characterId, offer){
     const character = Characters.findOne(characterId);

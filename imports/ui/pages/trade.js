@@ -6,23 +6,26 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Trades } from '../../api/trades/trades.js'
+import { Chats } from '../../api/chats/chats.js'
 import { getCharacter } from '../../configs/game.js';
 
 import '../components/item.js';
+import '../components/chat.js';
 import './trade.html';
 
 Template.trade.onCreated(function tradeOnCreated() {
   this.subscribe('characters.trade', FlowRouter.getParam('gameId'));
-  this.subscribe('trades.own', FlowRouter.getParam('gameId'));
+  var trade = this.subscribe('trades.own', FlowRouter.getParam('gameId'));
   this.myOffer = new ReactiveVar(null);
   this.me = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
   this.editing = new ReactiveDict();
 
   this.autorun( () => {
-    if (this.subscriptionsReady()) {
+    if (trade.ready()) {
       if (Trades.find().count() == 0) // if there is no trade, go to the main world page
         FlowRouter.go('game.world', {gameId: FlowRouter.getParam('gameId')});
       else {
+        this.subscribe('chats.scope', "trade:"+Trades.findOne()._id);
         if (Trades.findOne().sellerId == this.me()._id) {
           this.myOffer.set(Trades.findOne().sellerOffer);
         } else {
@@ -63,6 +66,9 @@ Template.trade.helpers({
   },
   iAm(character){
     return character._id == Template.instance().me()._id;
+  },
+  tradeChat(){
+    return Chats.findOne();
   }
 })
 

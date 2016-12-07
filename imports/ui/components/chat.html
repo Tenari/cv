@@ -1,0 +1,15 @@
+<template name="chat">
+  <div class="chat-container">
+    <ul class="chat-messages">
+      {{#each message in messages}}
+        <li class="chat-message"><span class="speaker-name">{{message.sender}}:</span> <span class="message">{{message.content}}</span></li>
+      {{else}}
+        <li>No one has said anything yet!</li>
+      {{/each}}
+    </ul>
+    <div class="send-message-container">
+      <input type="text" class="new-message"/>
+      <button class="send-message">Send</button>
+    </div>
+  </div>
+</template>
