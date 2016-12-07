@@ -27,7 +27,7 @@ Meteor.methods({
       sellerOffer: [],
       buyerOffer: [],
     });
-    Chats.insert({scope: "trade:"+tradeId, messages: []});
+    Chats.insert({scope: "Trades:"+tradeId, messages: []});
     return tradeId;
   },
   'trades.updateOffer'(tradeId, characterId, offer){

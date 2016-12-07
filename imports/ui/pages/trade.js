@@ -25,7 +25,7 @@ Template.trade.onCreated(function tradeOnCreated() {
       if (Trades.find().count() == 0) // if there is no trade, go to the main world page
         FlowRouter.go('game.world', {gameId: FlowRouter.getParam('gameId')});
       else {
-        this.subscribe('chats.scope', "trade:"+Trades.findOne()._id);
+        this.subscribe('chats.scope', "Trades:"+Trades.findOne()._id);
         if (Trades.findOne().sellerId == this.me()._id) {
           this.myOffer.set(Trades.findOne().sellerOffer);
         } else {

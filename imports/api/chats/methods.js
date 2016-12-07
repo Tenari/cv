@@ -9,7 +9,6 @@ import { getCharacter } from '../../configs/game.js';
 
 Meteor.methods({
   'chats.newMessage'(gameId, chatId, message) {
-    console.log(gameId, chatId, message);
     if (!this.userId) {
       throw new Meteor.Error('trades.insert.accessDenied',
         'Gotta be logged in');

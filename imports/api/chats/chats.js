@@ -12,7 +12,7 @@ Chats.deny({
 
 Chats.schema = new SimpleSchema({
   _id: { type: String, regEx: SimpleSchema.RegEx.Id },
-  scope: { type: String },
+  scope: { type: String }, // string of the format "#{Model Name}:#{record _id}" like => "Trades:g12hj3hg3j4hg123k4h" 
   messages: {type: [Object]},
   'messages.$.sender': {type: String},
   'messages.$.content': {type: String},

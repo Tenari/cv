@@ -245,7 +245,6 @@ Template.game.events({
   },
 
   'click button.trade': function(event, template) {
-    console.log('clicked');
     Meteor.call('trades.start', FlowRouter.getParam('gameId'), $(event.target).data('id'), function(error, result){
       if(error) return;
       FlowRouter.go('game.trade', {gameId: FlowRouter.getParam('gameId'), tradeId: result});
