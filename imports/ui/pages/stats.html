@@ -42,9 +42,9 @@
       </div>
       <div class="detail-tabs-container">
         <div class="tab-links">
-          <a href="javascrip:void(0)" data-page="Skills" class="{{page 'Skills'}}">Skills</a>
-          <a href="javascrip:void(0)" data-page="Items" class="{{page 'Items'}}">Items</a>
-          <a href="javascrip:void(0)" data-page="Resources" class="{{page 'Resources'}}">Resources</a>
+          <a href="#" data-page="Skills" class="{{page 'Skills'}}">Skills</a>
+          <a href="#" data-page="Items" class="{{page 'Items'}}">Items</a>
+          <a href="#" data-page="Resources" class="{{page 'Resources'}}">Resources</a>
         </div>
         {{#if page 'Skills'}}
           <div class="skills-display-container">
@@ -81,11 +81,41 @@
         {{/if}}
         {{#if page 'Resources'}}
           <div class="resources-display-container">
-            <li><i class="fa fa-caret-right"></i> Wood: {{character.stats.resources.wood}} lbs</li>
-            <li><i class="fa fa-caret-right"></i> Hide: {{character.stats.resources.hide}} lbs</li>
-            <li><i class="fa fa-caret-right"></i> Leather: {{character.stats.resources.leather}} lbs</li>
-            <li><i class="fa fa-caret-right"></i> Ore: {{character.stats.resources.ore}} lbs</li>
-            <li><i class="fa fa-caret-right"></i> Metal: {{character.stats.resources.metal}} lbs</li>
+            <li>
+              <i class="fa fa-caret-right"></i> Wood: {{character.stats.resources.wood}} lbs 
+              {{#if droppingResource 'wood'}}
+                <input type="text" class="drop-resource-amount"/> 
+              {{/if}}
+              <a href="#" class="drop" data-resource="wood">drop</a>
+            </li>
+            <li>
+              <i class="fa fa-caret-right"></i> Hide: {{character.stats.resources.hide}} lbs 
+              {{#if droppingResource 'hide'}}
+                <input type="text" class="drop-resource-amount"/>
+              {{/if}}
+              <a href="#" class="drop" data-resource="hide">drop</a>
+            </li>
+            <li>
+              <i class="fa fa-caret-right"></i> Leather: {{character.stats.resources.leather}} lbs 
+              {{#if droppingResource 'leather'}}
+                <input type="text" class="drop-resource-amount"/>
+              {{/if}}
+              <a href="#" class="drop" data-resource="leather">drop</a>
+            </li>
+            <li>
+              <i class="fa fa-caret-right"></i> Ore: {{character.stats.resources.ore}} lbs 
+              {{#if droppingResource 'ore'}}
+                <input type="text" class="drop-resource-amount"/>
+              {{/if}}
+              <a href="#" class="drop" data-resource="ore">drop</a>
+            </li>
+            <li>
+              <i class="fa fa-caret-right"></i> Metal: {{character.stats.resources.metal}} lbs 
+              {{#if droppingResource 'metal'}}
+                <input type="text" class="drop-resource-amount"/>
+              {{/if}}
+              <a href="#" class="drop" data-resource="metal">drop</a>
+            </li>
           </div>
         {{/if}}
       </div>

@@ -23,6 +23,7 @@ Template.stats.onCreated(function gameOnCreated() {
     page: 'Skills',
     item: null,
     stat: null,
+    dropping: {},
   });
 
   this.autorun(() => {
@@ -99,6 +100,10 @@ Template.stats.helpers({
     }
     return statDescriptions[category][specific];
   },
+
+  droppingResource(resource) {
+    return Template.instance().state.get('dropping')[resource];
+  }
 });
 
 Template.stats.events({
@@ -142,5 +147,17 @@ Template.stats.events({
   },
   'mouseenter .skills-display-container>li'(e, instance){
     instance.state.set('stat', $(e.currentTarget).data('stat'));
+  },
+  'click a.drop'(e, instance){
+    const resource = $(e.currentTarget).data('resource');
+    let dropping = instance.state.get('dropping');
+    if(dropping[resource]) {
+      const amount = $(e.currentTarget).closest('li').find('input.drop-resource-amount').val();
+      Meteor.call('characters.dropResource', FlowRouter.getParam('gameId'), resource, amount);
+      dropping[resource] = false;
+    } else {
+      dropping[resource] = true;
+    }
+    instance.state.set('dropping', dropping);
   }
 })

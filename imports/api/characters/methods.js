@@ -10,7 +10,7 @@ import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
 import { moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
-import { maxWeight, teamCode, carriedWeight } from '../../configs/game.js';
+import { getCharacter, maxWeight, teamCode, carriedWeight } from '../../configs/game.js';
 import { shittySword, chickenLeg } from '../../configs/items.js';
 
 Meteor.methods({
@@ -68,6 +68,16 @@ Meteor.methods({
     if (this.userId != Characters.findOne(id).userId) throw new Meteor.Error('characters.revive', 'not your character dude');
     if (Characters.find({'stats.hp': {$gt: 0}, userId: this.userId}).count() > 0) throw new Meteor.Error('characters.revive', 'dumbass, you already have a character alive');
     return Characters.update(id, {$set: {'stats.energy': 20, 'stats.hp': 1}});
+  },
+
+  'characters.dropResource'(gameId, resource, amount) {
+    let character = getCharacter(this.userId, gameId, Characters);
+    if(!character.stats.resources[resource]) throw new Meteor.Error('invalid resource');
+
+    character.stats.resources[resource] -= amount;
+    if(character.stats.resources[resource] < 0) character.stats.resources[resource] = 0;
+
+    return Characters.update(character._id, {$set: {'stats.resources': character.stats.resources}});
   }
 });
 
