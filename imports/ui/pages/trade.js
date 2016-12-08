@@ -6,6 +6,7 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Trades } from '../../api/trades/trades.js'
+import { Items } from '../../api/items/items.js'
 import { Chats } from '../../api/chats/chats.js'
 import { getCharacter } from '../../configs/game.js';
 
@@ -14,6 +15,7 @@ import '../components/chat.js';
 import './trade.html';
 
 Template.trade.onCreated(function tradeOnCreated() {
+  this.subscribe('items.own');
   this.subscribe('characters.trade', FlowRouter.getParam('gameId'));
   var trade = this.subscribe('trades.own', FlowRouter.getParam('gameId'));
   this.myOffer = new ReactiveVar(null);
@@ -69,6 +71,9 @@ Template.trade.helpers({
   },
   tradeChat(){
     return Chats.findOne();
+  },
+  items(){
+    return Items.find();
   }
 })
 
@@ -86,7 +91,19 @@ Template.trade.events({
       instance.editing.set($(event.currentTarget).data('resource'), null);
     });
   },
+  'click .items-list .item'(event, instance){
+    Meteor.call('trades.updateOffer', FlowRouter.getParam('tradeId'), instance.me()._id, {
+      type: 'item',
+      item: Items.findOne($(event.currentTarget).data('id')),
+    })
+  },
   'click ul.remove-offer li'(event, instance){
     Meteor.call('trades.removeOffer', FlowRouter.getParam('tradeId'), instance.me()._id, $(event.currentTarget).data('index'));
-  }
+  },
+  'click .accept-trade-container button.cancel'(event, instance) {
+    Meteor.call('trades.end', FlowRouter.getParam('gameId'), FlowRouter.getParam('tradeId'));
+  },
+  'click .accept-trade-container button.accept'(event, instance) {
+    Meteor.call('trades.accept', FlowRouter.getParam('gameId'), FlowRouter.getParam('tradeId'));
+  },
 })

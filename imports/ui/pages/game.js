@@ -8,9 +8,13 @@ import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
 import '../../api/rooms/methods.js'
 import { Fights } from '../../api/fights/fights.js'
+import '../../api/fights/methods.js'
 import { Trades } from '../../api/trades/trades.js'
-import '../../api/trades/trades.js'
+import '../../api/trades/methods.js'
+import { Chats } from '../../api/chats/chats.js'
+import '../../api/chats/methods.js'
 
+import '../components/chat.js';
 import '../components/item.js';
 import '../components/status-bars.js';
 import '../components/misc-status.js';
@@ -38,6 +42,7 @@ Template.game.onCreated(function gameOnCreated() {
       } else {
         this.subscribe('characters.room', this.getRoomId());
         this.subscribe('items.room', this.getRoomId());
+        this.subscribe('chats.scope', "Rooms:"+this.getRoomId());
       }
     }
   })
@@ -200,6 +205,9 @@ Template.game.helpers({
   },
   canTrade: function(characterId){
     return true;
+  },
+  roomChat: function(){
+    return Chats.findOne();
   }
 });
 
@@ -221,6 +229,10 @@ Template.game.rendered = function() {
     }
   });
 };
+
+Template.game.onDestroyed(function(){
+  $('body').unbind('keypress');
+});
 
 var move = function(direction, search){
   var d = direction;

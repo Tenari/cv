@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 import { Rooms } from '../../api/rooms/rooms.js';
 import { Games } from '../../api/games/games.js';
+import { Chats } from '../../api/chats/chats.js';
 import { Characters } from '../../api/characters/characters.js';
 
 import './gameLoop.js';
@@ -28,8 +29,12 @@ Meteor.startup(function (){
     var tokyo = EJSON.parse(Assets.getText('tokyo.json'))  ;
     rome.gameId = gameId;
     tokyo.gameId = gameId;
-    Rooms.upsert({name : "rome"}, { $set : rome});
-    Rooms.upsert({name : "tokyo"}, { $set : tokyo});
+
+    const romeId = Rooms.upsert({name : "rome"}, { $set : rome}).insertedId;
+    const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
+
+    Chats.insert({scope: "Rooms:"+romeId, messages: []});
+    Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
   }
 
 });

@@ -3,7 +3,7 @@
     {{#if trade}}
       <div class="offers-container">
         <div class="seller-container">
-          <h2>{{seller.name}}</h2>
+          <h2>{{seller.name}} {{#if trade.sellerAccepts}}<span class="accepts-trade">Accepts</span>{{/if}}</h2>
           <ul class="{{#if iAm seller}}remove-offer{{/if}}">
             {{#each offer in trade.sellerOffer}}
               {{#if offerIs offer 'item'}}
@@ -19,7 +19,7 @@
           </ul>
         </div>
         <div class="buyer-container">
-          <h2>{{buyer.name}}</h2>
+          <h2>{{buyer.name}} {{#if trade.buyerAccepts}}<span class="accepts-trade">Accepts</span>{{/if}}</h2>
           <ul class="{{#if iAm buyer}}remove-offer{{/if}}">
             {{#each offer in trade.buyerOffer}}
               {{#if offerIs offer 'item'}}
@@ -36,8 +36,8 @@
         </div>
       </div>
       <div class="accept-trade-container">
-        <button>Accept Trade</button>
-        <button>Cancel</button>
+        <button class="accept">Accept Trade</button>
+        <button class="cancel">Cancel</button>
       </div>
       <div class="manage-your-offer-container">
         <div class="resources">
@@ -59,6 +59,9 @@
           {{/each}}
         </div>
         <div class="items-list">
+          {{#each itemX in items}}
+            {{> item itemX}}
+          {{/each}}
         </div>
       </div>
       {{> chat tradeChat}}
