@@ -118,7 +118,7 @@ Meteor.methods({
           buyer.stats.resources[offer.resource] -= offer.amount;
           seller.stats.resources[offer.resource] += offer.amount;
         } else if (offer.type == 'item') {
-          Items.update(offer.item._id, {$set: {ownerId: trade.buyerId}});
+          Items.update(offer.item._id, {$set: {ownerId: trade.sellerId}});
         }
       })
       Characters.update(trade.buyerId, {$set: {'stats.money': buyer.stats.money, 'stats.resources': buyer.stats.resources}});
