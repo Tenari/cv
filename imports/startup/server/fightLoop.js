@@ -16,13 +16,13 @@ export function fightLoop(){
     // handle fleeing
     if (fight.attackerStyle == 'flee' && fight.defenderStyle == 'flee'){
       // if everyone wants to flee, the fight is over
-      Fights.remove(fight._id);
+      endFight(fight, attacker, defender);
       return;
     } else if (fight.attackerStyle == 'flee' && Math.random() < 0.6) { // easier for attacker to flee
-      Fights.remove(fight._id);
+      endFight(fight, attacker, defender);
       return;
     } else if (fight.defenderStyle == 'flee' && Math.random() < 0.5) {
-      Fights.remove(fight._id);
+      endFight(fight, attacker, defender);
       return;
     }
 
@@ -138,8 +138,8 @@ function endFight(fight, first, last) {
     Items.update({ownerId: last._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
   }
   Fights.remove(fight._id);
-  Characters.update(first._id, {$set: {stats: first.stats, 'deaths': first.deaths}});
-  Characters.update(last._id, {$set: {stats: last.stats, 'deaths': last.deaths}});
+  Characters.update(first._id, {$set: {stats: first.stats, 'deaths': first.deaths, lastFightEndedAt: Date.now()}});
+  Characters.update(last._id, {$set: {stats: last.stats, 'deaths': last.deaths, lastFightEndedAt: Date.now()}});
 }
 
 function combatOrder(fight, a, b, aW, bW) {
