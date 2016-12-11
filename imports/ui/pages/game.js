@@ -191,10 +191,12 @@ Template.game.helpers({
     return Template.instance().me();
   },
   usableLocation: function(){
+    const character = Template.instance().me();
     const nextSpace = Template.instance().getMyNextSpace();
     if (!nextSpace || !nextSpace.use) return false;
     let useObj = nextSpace.use;
-    useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
+    if (useObj.type == 'craft')
+      useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
     return useObj;
   },
   notification: function(){
@@ -299,6 +301,10 @@ Template.game.events({
 
   'click .build-in-progress a.add-resources': function(event, instance) {
     Meteor.call('rooms.build', instance.me()._id, $(event.currentTarget).data('type'));
+  },
+
+  'click a.use-space': function(event, instance) {
+    Meteor.call($(event.currentTarget).data('action'), FlowRouter.getParam('gameId'), handleNotification(instance));
   }
 });
 

@@ -72,4 +72,11 @@ export const tiles = {
   'floor': {type: 'floor'},
   'bar': {type: 'bar'},
   'full-building-wall': {type: 'full-building-wall'},
+  'fence-horizontal': {type: 'fence-horizontal'},
+  'fence-vertical': {type: 'fence-vertical'},
+  'fence-bottom-left-corner': {type: 'fence-bottom-left-corner'},
+  'fence-bottom-right-corner': {type: 'fence-bottom-right-corner'},
+  'fence-top-left-corner': {type: 'fence-top-left-corner'},
+  'fence-top-right-corner': {type: 'fence-top-right-corner'},
+  'fence-sign': {type: 'fence-sign', use: {message: 'Buy this parcel of land?', verb: "Buy", cost: 100, action: "rooms.buy"}, dimensions: {topLeft:{x:1,y:0},bottomRight:{x:3, y:2}}},
 };

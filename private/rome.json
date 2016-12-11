@@ -12,6 +12,6 @@
      [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"tree", "resources":{"type":"wood", "amount":10}},{"type":"grass"},{"type":"grass"}],
      [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
      [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}],
-     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"}]
+     [{"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"}, {"type": "grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"grass"},{"type":"door", "data":{"name":"land-sale","x":1,"y":4}}]
    ]
 }

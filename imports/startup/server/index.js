@@ -27,14 +27,18 @@ Meteor.startup(function (){
     var gameId = Games.insert({createdAt: Date.now(), startedAt: Date.now()});
     var rome = EJSON.parse(Assets.getText('rome.json'))  ;
     var tokyo = EJSON.parse(Assets.getText('tokyo.json'))  ;
+    var land = EJSON.parse(Assets.getText('land-sale.json'))  ;
     rome.gameId = gameId;
     tokyo.gameId = gameId;
+    land.gameId = gameId;
 
     const romeId = Rooms.upsert({name : "rome"}, { $set : rome}).insertedId;
     const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
+    const landId = Rooms.upsert({name : "land-sale"}, { $set : land}).insertedId;
 
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
+    Chats.insert({scope: "Rooms:"+landId, messages: []});
   }
 
 });

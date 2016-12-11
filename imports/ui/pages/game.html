@@ -64,8 +64,20 @@
       {{/if}}
       {{#if usableLocation}}
         <div class="collect-resource">
-          <p>{{usableLocation.name}}</p>
-          <a href="{{usableLocation.path}}">USE</a>
+          {{#if usableLocation.name}}
+            <p>{{usableLocation.name}}</p>
+            <a href="{{usableLocation.path}}">USE</a>
+          {{else}}
+            <p>
+              {{usableLocation.message}}
+              {{#if usableLocation.cost}}
+                Cost: {{usableLocation.cost}}
+              {{/if}}
+            </p>
+            {{#if usableLocation.action}}
+              <a href="#" class="use-space" data-action="{{usableLocation.action}}">{{usableLocation.verb}}</a>
+            {{/if}}
+          {{/if}}
         </div>
       {{/if}}
       {{#if lockedDoor}}
@@ -77,6 +89,7 @@
       {{/if}}
       {{#if nextSpaceAcceptsResources}}
         <div class="build-in-progress">
+          <p>Building in progress:</p>
           {{#each requirement in nextSpaceAcceptsResources}}
             <div>{{requirement.type}}: {{requirement.has}} / {{requirement.required}}</div>
             {{#if myResources requirement.type}}

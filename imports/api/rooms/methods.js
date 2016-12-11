@@ -6,7 +6,7 @@ import { Characters } from '../characters/characters.js';
 import { Items } from '../items/items.js';
 
 import { treeStumpTile, nextSpotXY } from '../../configs/locations.js';
-import { doorAttackEnergyCost, canCarry } from '../../configs/game.js';
+import { getCharacter, doorAttackEnergyCost, canCarry } from '../../configs/game.js';
 
 Meteor.methods({
   'rooms.collect'(gameId){
@@ -81,5 +81,23 @@ Meteor.methods({
 
     Rooms.update(room._id, {$set: {map: room.map}});
     return Characters.update(character._id, {$set: {'stats.resources': character.stats.resources}});
+  },
+  'rooms.buy'(gameId){
+    const character = getCharacter(this.userId, gameId, Characters);
+    if (!character) throw new Meteor.Error('rooms', "Character not found");
+    
+    let room = Rooms.findOne(character.location.roomId);
+    if (!room) throw new Meteor.Error('rooms', "room not found");
+
+    const xy = nextSpotXY(character);
+
+    const cost = room.map[xy.y][xy.x].use.cost;
+    if (cost > character.stats.money) throw new Meteor.Error('rooms.buy', "You do not have enough money")
+
+    room.map[xy.y][xy.x].use = {message: "Owned by "+character.name+" ("+character.team+")"};
+    room.map[xy.y][xy.x].ownerId = character._id;
+
+    Rooms.update(room._id, {$set: {map: room.map}});
+    return Characters.update(character._id, {$set: {'stats.money': character.stats.money - cost}});
   }
 })
