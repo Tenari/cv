@@ -9,6 +9,8 @@ export const speeds = {'hands': 4, 'smallBlade': 3, 'axe': 2, 'largeBlade': 1};
 
 export const equipSlots = {hand: 1, head: 2, legs: 3, chest: 4};
 
+export const doorAttackEnergyCost = 80;
+
 // death functions
 const deathWaitTimeMs = 1800000;
 

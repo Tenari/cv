@@ -20,8 +20,8 @@ import '../components/status-bars.js';
 import '../components/misc-status.js';
 import './game.html';
 
-import { nextSpotXY } from '../../configs/locations.js';
-import { getCharacter } from '../../configs/game.js';
+import { doorIsLocked, nextSpotXY } from '../../configs/locations.js';
+import { doorAttackEnergyCost, getCharacter } from '../../configs/game.js';
 
 Template.game.onCreated(function gameOnCreated() {
   var that = this;
@@ -32,6 +32,13 @@ Template.game.onCreated(function gameOnCreated() {
   this.subscribe('items.own');
   var myself = this.subscribe('characters.own');
   this.notification = new ReactiveVar(null);
+  this.getMyNextSpace = function(){
+    const character = that.me();
+    const room = Rooms.findOne(character.location.roomId);
+    if (!room) return false;
+    const xy = nextSpotXY(character);
+    return room.map[xy.y] && room.map[xy.y][xy.x];
+  };
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
@@ -145,8 +152,6 @@ Template.game.helpers({
     const uId = Meteor.userId();
     const character = Template.instance().me();
     if (!character) return null;
-//    var fights = Fights.find({$or: [{initiatorId: u._id}, {opponentId: u._id}]}).fetch();
-//    return u && fights.length == 0 && getPotentialOpponent() != undefined;
     return Characters.find({'location.x': character.location.x, 'location.y': character.location.y, userId: { $ne: uId }}).count() > 0;
   },
   fighting: function(){
@@ -173,11 +178,7 @@ Template.game.helpers({
     return Items.find({'location.x': character.location.x, 'location.y':character.location.y});
   },
   resource: function(){
-    const character = Template.instance().me();
-    const room = Rooms.findOne(character.location.roomId);
-    if (!room) return false;
-    const xy = nextSpotXY(character);
-    const nextSpace = room.map[xy.y] && room.map[xy.y][xy.x];
+    const nextSpace = Template.instance().getMyNextSpace();
     return nextSpace && nextSpace.resources;
   },
   resourceSource: function(){
@@ -190,11 +191,7 @@ Template.game.helpers({
     return Template.instance().me();
   },
   usableLocation: function(){
-    const character = Template.instance().me();
-    const room = Rooms.findOne(character.location.roomId);
-    if (!room) return false;
-    const xy = nextSpotXY(character);
-    const nextSpace = room.map[xy.y] && room.map[xy.y][xy.x];
+    const nextSpace = Template.instance().getMyNextSpace();
     if (!nextSpace || !nextSpace.use) return false;
     let useObj = nextSpace.use;
     useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
@@ -208,6 +205,31 @@ Template.game.helpers({
   },
   roomChat: function(){
     return Chats.findOne();
+  },
+  lockedDoor: function(){
+    const nextSpace = Template.instance().getMyNextSpace();
+    if (!nextSpace || !nextSpace.data) return false;
+    if (doorIsLocked(nextSpace, Template.instance().me()))
+      return nextSpace;
+    return false;
+  },
+  doorAttackEnergyCost: function(){return doorAttackEnergyCost;},
+  nextSpaceAcceptsResources: function(){
+    const nextSpace = Template.instance().getMyNextSpace();
+    if (nextSpace && nextSpace.buildingResources) {
+      if (nextSpace.data){ // this is a door
+        if (nextSpace.stats.hp <= 0) // which can only be built back up if it is destroyed.
+          return nextSpace.buildingResources;
+        else
+          return false;
+      } else // this is a normal building
+        return nextSpace.buildingResources;
+    }
+    return false;
+  },
+  myResources: function(type){
+    const character = Template.instance().me();
+    return character.stats.resources[type] > 0 ? character.stats.resources[type] : false;
   }
 });
 
@@ -249,35 +271,43 @@ Template.game.events({
   'click .g-row>.g-col:last-child' : move(3),
   'click .g-row>.g-col:first-child' : move(4),
 
-  'click button.fight': function(event, template) {
+  'click button.fight': function(event, instance) {
     Meteor.call('fights.start', $(event.target).data('id'), function(error, result){
       if(error) return;
       FlowRouter.go('game.fight', {gameId: FlowRouter.getParam('gameId')});
     });
   },
 
-  'click button.trade': function(event, template) {
+  'click button.trade': function(event, instance) {
     Meteor.call('trades.start', FlowRouter.getParam('gameId'), $(event.target).data('id'), function(error, result){
       if(error) return;
       FlowRouter.go('game.trade', {gameId: FlowRouter.getParam('gameId'), tradeId: result});
     });
   },
 
-  'click button.pick-up-item': function(event, template) {
-    Meteor.call('items.take', $(event.target).data('id'), FlowRouter.getParam('gameId'), handleNotification(template));
+  'click button.pick-up-item': function(event, instance) {
+    Meteor.call('items.take', $(event.target).data('id'), FlowRouter.getParam('gameId'), handleNotification(instance));
   },
 
-  'click button.collect': function(event, template){
-    Meteor.call('rooms.collect', FlowRouter.getParam('gameId'), handleNotification(template));
+  'click button.collect': function(event, instance){
+    Meteor.call('rooms.collect', FlowRouter.getParam('gameId'), handleNotification(instance));
   },
+
+  'click .locked-door a.break-down-door': function(event, instance) {
+    Meteor.call('rooms.attackDoor', instance.me()._id);
+  },
+
+  'click .build-in-progress a.add-resources': function(event, instance) {
+    Meteor.call('rooms.build', instance.me()._id, $(event.currentTarget).data('type'));
+  }
 });
 
-function handleNotification(template) {
+function handleNotification(instance) {
   return function(error, result){
     if(error) {
-      template.notification.set({type:'error', message: error.reason});
+      instance.notification.set({type:'error', message: error.reason});
       Meteor.setTimeout(function(){
-        template.notification.set(null);
+        instance.notification.set(null);
       }, 7777);
     }
   }

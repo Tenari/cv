@@ -9,7 +9,7 @@ import { Trades } from '../trades/trades.js';
 import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
-import { moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
+import { doorIsLocked, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
 import { getCharacter, maxWeight, teamCode, carriedWeight } from '../../configs/game.js';
 import { shittySword, chickenLeg } from '../../configs/items.js';
 
@@ -107,18 +107,20 @@ export function moveCharacter(character, directionInt) {
     Trades.remove({$or: [{sellerId: character._id}, {buyerId: character._id}]}) // if the dude leaves, the trade is cancelled
 
     if (nextSpot.data && nextSpot.data.x > -1 && nextSpot.data.y > -1) { // next spot is a door
-      const roomId = Rooms.findOne({gameId: room.gameId, name: nextSpot.data.name})._id;
+      if (!doorIsLocked(nextSpot, character)) {
+        const roomId = Rooms.findOne({gameId: room.gameId, name: nextSpot.data.name})._id;
 
-      Characters.update(character._id, {
-        $set: {
-          'location.direction': directionInt, 
-          'location.updatedAt': Date.now(),
-          'location.roomId': roomId,
-          'location.x': nextSpot.data.x,
-          'location.y': nextSpot.data.y,
-          'stats.energy': newEnergy,
-        } 
-      });
+        Characters.update(character._id, {
+          $set: {
+            'location.direction': directionInt, 
+            'location.updatedAt': Date.now(),
+            'location.roomId': roomId,
+            'location.x': nextSpot.data.x,
+            'location.y': nextSpot.data.y,
+            'stats.energy': newEnergy,
+          } 
+        });
+      }
     } else { // just move there normally
       Characters.update(character._id, {
         $inc: moveObject, 

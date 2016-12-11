@@ -40,6 +40,16 @@ export function moveCost(character, weight, terrain) {
   return Math.max( 1, Math.round( (moveCosts[terrain] || 10) * (2 * weight / maxWeight(character)) ) );
 }
 
+export function doorIsLocked(nextSpot, character){
+  let locked = false;
+  if (nextSpot.data && nextSpot.data.lock && nextSpot.stats.hp > 0) {
+    if (nextSpot.data.lock.type == 'team') {
+      return nextSpot.data.lock.team == character.team;
+    }
+  }
+  return locked;
+}
+
 
 // objects representing individual tiles which you can _.clone() into a room.map
 export const treeStumpTile = {type: "tree-stump"};

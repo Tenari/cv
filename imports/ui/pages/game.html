@@ -68,6 +68,23 @@
           <a href="{{usableLocation.path}}">USE</a>
         </div>
       {{/if}}
+      {{#if lockedDoor}}
+        <div class="locked-door">
+          <p>The door is locked.</p>
+          {{> hpBar lockedDoor}}
+          <img src="/images/move-cost.png"/> {{doorAttackEnergyCost}} <a href="#" class="break-down-door">Break it down</a>
+        </div>
+      {{/if}}
+      {{#if nextSpaceAcceptsResources}}
+        <div class="build-in-progress">
+          {{#each requirement in nextSpaceAcceptsResources}}
+            <div>{{requirement.type}}: {{requirement.has}} / {{requirement.required}}</div>
+            {{#if myResources requirement.type}}
+              <a href="#" class="add-resources" data-type="{{requirement.type}}">Add {{requirement.type}} (you have {{myResources requirement.type}})</a>
+            {{/if}}
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
   </div>
   {{> chat roomChat}}
