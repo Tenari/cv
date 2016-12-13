@@ -4,9 +4,11 @@ import { _ } from 'meteor/underscore';
 import { Rooms } from './rooms.js';
 import { Characters } from '../characters/characters.js';
 import { Items } from '../items/items.js';
+import { Buildings } from '../buildings/buildings.js';
 
 import { treeStumpTile, nextSpotXY } from '../../configs/locations.js';
 import { getCharacter, doorAttackEnergyCost, canCarry } from '../../configs/game.js';
+import { buildingConfig, doorConfig } from '../../configs/buildings.js';
 
 Meteor.methods({
   'rooms.collect'(gameId){
@@ -93,6 +95,41 @@ Meteor.methods({
 
     const cost = room.map[xy.y][xy.x].use.cost;
     if (cost > character.stats.money) throw new Meteor.Error('rooms.buy', "You do not have enough money")
+
+    const building = Buildings.findOne({
+      roomId: room._id,
+      'upperLeft.x':room.map[xy.y][xy.x].dimensions.topLeft.x,
+      'upperLeft.y':room.map[xy.y][xy.x].dimensions.topLeft.y,
+    })
+    if (building) {
+      room.map[xy.y][xy.x].buildingId = building._id;
+      Buildings.update(building._id, {$set: {ownerId: character._id}});
+    } else {
+      const bId = Buildings.insert({
+        ownerId: character._id,
+        roomId: room._id,
+        upperLeft: {x: room.map[xy.y][xy.x].dimensions.topLeft.x, y: room.map[xy.y][xy.x].dimensions.topLeft.y},
+        bottomRight: {x: room.map[xy.y][xy.x].dimensions.topLeft.x, y: room.map[xy.y][xy.x].dimensions.topLeft.y},
+        type: buildingConfig.types.open,
+        underConstruction: false,
+        resources: {
+          wood: 0,
+          hide: 0,
+          leather: 0,
+          ore: 0,
+          metal: 0,
+        },
+        level: 0,
+        settings: {
+          door: {
+            lock: {
+              type: doorConfig.lockTypes.none
+            }
+          },
+        }
+      });
+      room.map[xy.y][xy.x].buildingId = bId;
+    }
 
     room.map[xy.y][xy.x].use = {message: "Owned by "+character.name+" ("+character.team+")"};
     room.map[xy.y][xy.x].ownerId = character._id;

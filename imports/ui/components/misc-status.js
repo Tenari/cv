@@ -17,5 +17,9 @@ Template.miscStatus.helpers({
 
     const terrain = room.map[this.location.y][this.location.x].type;
     return moveCost(this, weight, terrain);
+  },
+  roomName() {
+    const room = Rooms.findOne(this.location.roomId);
+    return room.name;
   }
 });

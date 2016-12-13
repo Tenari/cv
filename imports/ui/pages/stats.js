@@ -5,9 +5,11 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Characters } from '../../api/characters/characters.js'
 import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
+import { Buildings } from '../../api/buildings/buildings.js'
 
 import '../../api/items/methods.js'; 
 import { equipSlots, statDescriptions } from '../../configs/game.js'; 
+import { buildingConfig } from '../../configs/buildings.js'; 
 
 import '../components/item.js';
 import '../components/status-bars.js';
@@ -18,6 +20,7 @@ Template.stats.onCreated(function gameOnCreated() {
   this.subscribe('game.rooms', FlowRouter.getParam('gameId'));
   this.subscribe('characters.own');
   this.subscribe('items.own');
+  this.subscribe('buildings.own', FlowRouter.getParam('gameId'));
   this.state = new ReactiveDict();
   this.state.setDefault({
     page: 'Skills',
@@ -103,7 +106,19 @@ Template.stats.helpers({
 
   droppingResource(resource) {
     return Template.instance().state.get('dropping')[resource];
-  }
+  },
+
+  hasBuilding(){
+    return Buildings.find().count() > 0;
+  },
+
+  buildings(){
+    return Buildings.find();
+  },
+
+  buildingImage(building){
+    return buildingConfig.images[building.type];
+  },
 });
 
 Template.stats.events({
