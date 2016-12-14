@@ -1,6 +1,9 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
+import { Items } from '../items/items.js';
+import { itemConfigs } from '../../configs/items.js';
+
 export const Characters = new Mongo.Collection('characters');
 
 // Deny all client-side updates since we will be using methods to manage this collection
@@ -142,3 +145,21 @@ Characters.publicFields = {
   deaths: 1,
   lastFightEndedAt: 1,
 };
+
+Characters.helpers({
+  maxWeight() {
+    // with endurance of 100, you can carry 200
+    // with endurance of 1, you can carry 20
+    // ish
+    return 40*Math.log(this.stats.endurance) + 20;
+  },
+  carriedWeight() {
+    let weight = 0;
+    Items.find({ownerId: this._id}).forEach(function(item){weight += itemConfigs[item.type][item.key].weight;});
+    _.each(this.stats.resources, function(amount){weight += amount})
+    return weight;
+  },
+  canCarry(weight) {
+    return this.maxWeight() > (this.carriedWeight() + weight);
+  }
+})

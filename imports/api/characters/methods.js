@@ -10,7 +10,7 @@ import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
-import { getCharacter, maxWeight, teamCode, carriedWeight } from '../../configs/game.js';
+import { getCharacter, teamCode } from '../../configs/game.js';
 
 Meteor.methods({
   'characters.insert'(obj) {
@@ -86,10 +86,10 @@ export function moveCharacter(character, directionInt) {
   if (Fights.find({$or: [{attackerId: character._id},{defenderId: character._id}]}).count() > 0)
     return false;
 
-  const weight = carriedWeight(character, Items);
+  const weight = character.carriedWeight();
   const terrain = room.map[character.location.y][character.location.x].type;
   const newEnergy = character.stats.energy - moveCost(character, weight, terrain);
-  const newEndurance = character.stats.endurance + (0.01 * weight / maxWeight(character));
+  const newEndurance = character.stats.endurance + (0.01 * weight / character.maxWeight());
 
   if (newEnergy < 0) // can't move without energy
     return false;

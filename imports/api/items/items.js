@@ -32,7 +32,7 @@ Items.schema = new SimpleSchema({
 Items.attachSchema(Items.schema);
 
 // This represents the keys from Items objects that should be published
-// to the client. If we add secret properties to Character objects, don't list
+// to the client. If we add secret properties to Item objects, don't list
 // them here to keep them private to the server.
 Items.publicFields = {
   type: 1,

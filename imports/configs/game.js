@@ -22,25 +22,6 @@ export function minutesUntilRevive(character) {
   return character && Math.round(((character.deaths.diedAt + deathWaitTimeMs) - Date.now()) / 60 / 1000); 
 }
 
-// Character functions
-export function carriedWeight(character, Items){
-  let weight = 0;
-  Items.find({ownerId: character._id}).forEach(function(item){weight += itemConfigs[item.type][item.key].weight;});
-  _.each(character.stats.resources, function(amount){weight += amount})
-  return weight;
-}
-
-export function maxWeight(character) {
-  // with endurance of 100, you can carry 200
-  // with endurance of 1, you can carry 20
-  // ish
-  return 40*Math.log(character.stats.endurance) + 20;
-}
-
-export function canCarry(character, weight, Items) {
-  return maxWeight(character) > (carriedWeight(character, Items) + weight);
-}
-
 export const teamCode = {
   romans: 20,
   japs: 30

@@ -3,11 +3,10 @@ import { _ } from 'meteor/underscore';
 
 import { Rooms } from './rooms.js';
 import { Characters } from '../characters/characters.js';
-import { Items } from '../items/items.js';
 import { Buildings } from '../buildings/buildings.js';
 
 import { treeStumpTile, nextSpotXY } from '../../configs/locations.js';
-import { getCharacter, doorAttackEnergyCost, canCarry } from '../../configs/game.js';
+import { getCharacter, doorAttackEnergyCost } from '../../configs/game.js';
 import { buildingConfig, doorConfig } from '../../configs/buildings.js';
 
 Meteor.methods({
@@ -22,7 +21,7 @@ Meteor.methods({
     const nextSpace = room.map[xy.y][xy.x];
     const amountToCollect = 1;
 
-    if (!canCarry(character, amountToCollect, Items)) throw new Meteor.Error('rooms.collect', 'You cannot carry any more resources.');
+    if (!character.canCarry(amountToCollect)) throw new Meteor.Error('rooms.collect', 'You cannot carry any more resources.');
 
     if (nextSpace && nextSpace.resources && nextSpace.resources.amount > 0) {
       character.stats.resources[nextSpace.resources.type] += amountToCollect;

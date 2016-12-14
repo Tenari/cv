@@ -1,9 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Characters } from '../../api/characters/characters.js';
 import { Items } from '../../api/items/items.js';
-import { maxWeight, carriedWeight } from '../../configs/game.js';
+import { getCharacter } from '../../configs/game.js';
 
 import './status-bars.html';
 
@@ -13,27 +14,28 @@ function capitalizeFirstLetter(string) {
 
 Template.statusBars.onCreated(function gameOnCreated() {
   this.subscribe('characters.own');
+  this.me = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
 })
 
 Template.statusBars.helpers({
   character : function(){
-    return Characters.findOne({userId: Meteor.userId()});
+    return Template.instance().me();
   },
 
   characterWeight(){
-    return carriedWeight(Characters.findOne({userId: Meteor.userId()}), Items);
+    return Template.instance().me().carriedWeight();
   },
 
   maxWeight(character){
-    return Math.floor(maxWeight(character));
+    return Math.floor(character.maxWeight());
   },
 
   weightRatio(character){
-    return carriedWeight(Characters.findOne({userId: Meteor.userId()}), Items)/(maxWeight(character)) * 100;
+    return character.carriedWeight() / character.maxWeight() * 100;
   },
 
   statPercent(stat){
-    const character = Characters.findOne({userId: Meteor.userId()})
+    const character = Template.instance().me();
     return character.stats[stat] / character.stats['base'+capitalizeFirstLetter(stat)] * 100;
   }
 

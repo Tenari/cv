@@ -1,4 +1,3 @@
-import { maxWeight } from './game.js';
 // the map of all traversable tile types and their base move cost
 export const moveCosts = {
   grass: 8,
@@ -37,7 +36,7 @@ export function nextSpotXY(character){
 }
 
 export function moveCost(character, weight, terrain) {
-  return Math.max( 1, Math.round( (moveCosts[terrain] || 10) * (2 * weight / maxWeight(character)) ) );
+  return Math.max( 1, Math.round( (moveCosts[terrain] || 10) * (2 * weight / character.maxWeight()) ) );
 }
 
 export function doorIsLocked(nextSpot, character){
