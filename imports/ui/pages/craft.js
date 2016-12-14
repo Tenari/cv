@@ -5,7 +5,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Characters } from '../../api/characters/characters.js';
 import { Rooms } from '../../api/rooms/rooms.js';
-import { craftingLocations } from '../../configs/items.js';
+import { craftingLocations, itemConfigs } from '../../configs/items.js';
 import { nextSpotXY } from '../../configs/locations.js';
 
 import './craft.html';
@@ -43,7 +43,7 @@ Template.craft.helpers({
   },
   craftLocationItems() {
     const itemClass = Template.instance().itemClass.get();
-    return _.values(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass]);
+    return _.map(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass], function(key){return itemConfigs[itemClass][key];});
   },
   classExpanded(key){
     return Template.instance().itemClass.get() == key;
@@ -113,11 +113,11 @@ Template.craft.events({
   },
   'click .menu ul li.item-selector'(event, instance){
     const itemClass = Template.instance().itemClass.get();
-    const item = _.values(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass])[$(event.currentTarget).data('index')];
+    const item = itemConfigs[itemClass][$(event.currentTarget).data('key')];
     instance.itemToCraft.set(item);
   },
   'click .craft-actions .craft'(event, instance) {
-    Meteor.call('items.create', FlowRouter.getParam('characterId'), FlowRouter.getQueryParam('resource'), instance.itemClass.get(), instance.itemToCraft.get().key, function(error, result){
+    Meteor.call('items.create', FlowRouter.getParam('characterId'), instance.itemClass.get(), instance.itemToCraft.get().key, function(error, result){
       console.log(error, result);
       if (error) {return;}
       //show the "you just made a thing" message

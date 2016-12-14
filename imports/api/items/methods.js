@@ -4,7 +4,7 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 import { Characters } from '../characters/characters.js';
 import { Items } from './items.js';
-import { craftingLocations } from '../../configs/items.js'
+import { itemConfigs } from '../../configs/items.js'
 import { canCarry, getCharacter } from '../../configs/game.js'
 
 Meteor.methods({
@@ -45,7 +45,7 @@ Meteor.methods({
     const item = Items.findOne(id);
     const newOwner = getCharacter(this.userId, gameId, Characters);
 
-    if (!canCarry(newOwner, item.weight, Items)) throw new Meteor.Error('items.take.full', 'Item weighs too much to carry');
+    if (!canCarry(newOwner, item.weight(), Items)) throw new Meteor.Error('items.take.full', 'Item weighs too much to carry');
 
     Items.update(id, {$set: {equipped: false, ownerId: newOwner._id, location: null}});
   },
@@ -57,17 +57,17 @@ Meteor.methods({
 
     const item = Items.findOne(id);
     let incObj = {};
-    incObj[item.effectType] = item.effectAmount
+    incObj[item.effectType()] = item.effectAmount()
     Characters.update(item.ownerId, {$inc: incObj});
 
     return Items.remove(id);
   },
-  'items.create'(characterId, location, type, key){
+  'items.create'(characterId, type, key){
     if (!this.userId) {
       throw new Meteor.Error('items.craft.accessDenied', 'Gotta be logged in to craft an item');
     }
     let character = Characters.findOne(characterId);
-    let item = _.clone(craftingLocations[location].items[type][key]);
+    const item = itemConfigs[type][key];
     for(var i = 0; i < _.keys(item.cost).length; i++) {
       const thisResource = _.keys(item.cost)[i];
       const thisCost = item.cost[thisResource];
@@ -85,8 +85,7 @@ Meteor.methods({
       }
     }
 
-    item.ownerId = character._id;
-    Items.insert(item);
-    Characters.update(character._id, {$set: { 'stats': character.stats }});
+    Items.insert({key: key, type: type, ownerId: character._id, condition: 100});
+    return Characters.update(character._id, {$set: { 'stats': character.stats }});
   }
 });

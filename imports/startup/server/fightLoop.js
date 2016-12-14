@@ -5,7 +5,8 @@ import { Fights } from '../../api/fights/fights.js';
 import { Items } from '../../api/items/items.js';
 import { Characters } from '../../api/characters/characters.js';
 
-import { equipSlots, styleFactors, fightEnergyCostFactor, speeds } from '../../configs/game.js';
+import { styleFactors, fightEnergyCostFactor, speeds } from '../../configs/game.js';
+import { equipSlots } from '../../configs/items.js';
 
 export function fightLoop(){
   Fights.find({}).forEach(function(fight, index, cursor){

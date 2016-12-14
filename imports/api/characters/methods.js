@@ -11,7 +11,6 @@ import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
 import { getCharacter, maxWeight, teamCode, carriedWeight } from '../../configs/game.js';
-import { shittySword, chickenLeg } from '../../configs/items.js';
 
 Meteor.methods({
   'characters.insert'(obj) {
@@ -43,13 +42,9 @@ Meteor.methods({
 
     const id = Characters.insert(obj);
 
-    let sword = _.clone(shittySword);
-    sword.ownerId = id;
-    Items.insert(sword);
+    Items.insert({key: 'rustySword', type: 'weapon', ownerId: id, condition: 100});
+    Items.insert({key: 'chickenLeg', type: 'consumable', ownerId: id});
 
-    let food = _.clone(chickenLeg);
-    food.ownerId = id;
-    Items.insert(food);
     return obj.gameId; //return the gameId so the ui knows what url to go to
   },
 

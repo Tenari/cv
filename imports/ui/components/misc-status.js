@@ -20,6 +20,6 @@ Template.miscStatus.helpers({
   },
   roomName() {
     const room = Rooms.findOne(this.location.roomId);
-    return room.name;
+    return room && room.name;
   }
 });

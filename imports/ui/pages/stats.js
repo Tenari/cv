@@ -8,7 +8,8 @@ import { Rooms } from '../../api/rooms/rooms.js'
 import { Buildings } from '../../api/buildings/buildings.js'
 
 import '../../api/items/methods.js'; 
-import { equipSlots, statDescriptions } from '../../configs/game.js'; 
+import { statDescriptions } from '../../configs/game.js'; 
+import { equipSlots } from '../../configs/items.js'; 
 import { buildingConfig } from '../../configs/buildings.js'; 
 
 import '../components/item.js';
@@ -55,40 +56,40 @@ Template.stats.helpers({
   },
 
   selectedItem(){
-    return Template.instance().state.get('item');
+    return Items.findOne(Template.instance().state.get('item'));
   },
 
   itemDescription(){
-    const item = Template.instance().state.get('item');
-    if (item.effectType == 'stats.hp') {
-     return 'Increases your HP by '+ item.effectAmount +' on use. Is consumed in the process.';
+    const item = Items.findOne(Template.instance().state.get('item'));
+    if (item.effectType() == 'stats.hp') {
+     return 'Increases your HP by '+ item.effectAmount() +' on use. Is consumed in the process.';
     }
     return false;
   },
 
   itemSelectedClass(item){
     const stateItem = Template.instance().state.get('item');
-    return stateItem && item._id == stateItem._id ? 'selected' : '';
+    return stateItem && item._id == stateItem ? 'selected' : '';
   },
 
   equippedRightHand(){
-    return Items.findOne({equipped: true, equipSlot: equipSlots.hand});
+    return _.find(Items.find({equipped: true}).fetch(), function(item){ return item.equipSlot() == equipSlots.hand});
   },
 
   equippedLeftHand(){
-    return Items.find({equipped: true, equipSlot: equipSlots.hand}).fetch()[1];
+    return _.filter(Items.find({equipped: true}).fetch(), function(item){ return item.equipSlot() == equipSlots.hand})[1];
   },
 
   equippedHead(){
-    return Items.findOne({equipped: true, equipSlot: equipSlots.head});
+    return _.find(Items.find({equipped: true}).fetch(), function(item){ return item.equipSlot() == equipSlots.head});
   },
 
   equippedChest(){
-    return Items.findOne({equipped: true, equipSlot: equipSlots.chest});
+    return _.find(Items.find({equipped: true}).fetch(), function(item){ return item.equipSlot() == equipSlots.chest});
   },
 
   equippedLegs(){
-    return Items.findOne({equipped: true, equipSlot: equipSlots.legs});
+    return _.find(Items.find({equipped: true}).fetch(), function(item){ return item.equipSlot() == equipSlots.legs});
   },
 
   selectedStat(){
@@ -127,7 +128,7 @@ Template.stats.events({
     instance.state.set('item', false);
   },
   'click .items-display-container>div>.item'(e, instance){
-    instance.state.set('item', instance.state.get('item') ? false : Items.findOne($(e.currentTarget).data('id')));
+    instance.state.set('item', instance.state.get('item') ? false : $(e.currentTarget).data('id'));
   },
   'click .item-actions>.action'(e, instance){
     const action = $(e.currentTarget).data('action');

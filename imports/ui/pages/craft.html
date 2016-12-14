@@ -20,7 +20,7 @@
             {{type.key}}</li>
             {{#if classExpanded type.key}}
               {{#each item in craftLocationItems}}
-                <li class="item-selector" data-index="{{@index}}"><i class="fa fa-caret-right"></i> {{item.name}}</li>
+                <li class="item-selector" data-key="{{item.key}}"><i class="fa fa-caret-right"></i> {{item.name}}</li>
               {{/each}}
             {{/if}}
           {{/each}}

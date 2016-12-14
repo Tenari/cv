@@ -1,3 +1,5 @@
+import { itemConfigs } from './items.js';
+
 // fighting
 export const fightStyles = {'quick':true, 'normal':true, 'heavy':true, 'block':true, 'flee':true};
 
@@ -6,8 +8,6 @@ export const styleFactors = {quick: 3, normal: 4, heavy: 5, block: 1, flee: 1};
 export const fightEnergyCostFactor = 2;
 
 export const speeds = {'hands': 4, 'smallBlade': 3, 'axe': 2, 'largeBlade': 1};
-
-export const equipSlots = {hand: 1, head: 2, legs: 3, chest: 4};
 
 export const doorAttackEnergyCost = 80;
 
@@ -25,7 +25,7 @@ export function minutesUntilRevive(character) {
 // Character functions
 export function carriedWeight(character, Items){
   let weight = 0;
-  Items.find({ownerId: character._id}).forEach(function(item){weight += item.weight;});
+  Items.find({ownerId: character._id}).forEach(function(item){weight += itemConfigs[item.type][item.key].weight;});
   _.each(character.stats.resources, function(amount){weight += amount})
   return weight;
 }
