@@ -182,8 +182,10 @@ function aDamagesB(fight, a, b, aWeapon) {
   const styleFactor = styleFactors[style];
   const strDiff = a.stats.strength - b.stats.toughness;
   const weaponDmg = aWeapon ? aWeapon.effectAmount : 0;
+  const armor = _.filter(Items.find({ownerId: b._id, equipped: true}).fetch(), function(item){return item.type == 'armor' && item.effectType() == 'damage'});
+  const armorDmgReduction = _.reduce(armor, function(memo, item) {return memo + item.effectAmount();}, 0);
   // calc the damage
-  return Math.round((styleFactor + weaponDmg) * Math.pow( Math.E, (strDiff * 0.038)));
+  return Math.max(Math.round((styleFactor + weaponDmg + armorDmgReduction) * Math.pow( Math.E, (strDiff * 0.038))), 0); //never do negative dmg
 }
 
 function skillIncreaseAmount(trainee, trainer) {
