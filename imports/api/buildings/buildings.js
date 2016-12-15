@@ -1,6 +1,9 @@
 import { Mongo } from 'meteor/mongo';
 
 import { Characters } from '../characters/characters.js';
+import { Rooms } from '../rooms/rooms.js';
+
+import { buildingConfig } from '../../configs/buildings.js';
 
 export const Buildings = new Mongo.Collection('buildings');
 
@@ -81,5 +84,17 @@ Buildings.helpers({
   },
   capacity() {
     return this.level * 100;
+  },
+  roomName() {
+    return Rooms.findOne(this.roomId).name;
+  },
+  image() {
+    return buildingConfig[this.type].image;
+  },
+  typeLabel() {
+    return buildingConfig[this.type].label;
+  },
+  canStartBuilding() {
+    return this.type == buildingConfig.open.key;
   }
 })

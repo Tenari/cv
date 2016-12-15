@@ -54,3 +54,26 @@ export const statDescriptions = {
     metal: 'Improves how much metal you get from refining ore.',
   },
 };
+
+export const resourceConfig = {
+  wood: {
+    key: 'wood',
+    label: 'Wood',
+  },
+  hide: {
+    key: 'hide',
+    label: 'Hide',
+  },
+  leather: {
+    key: 'leather',
+    label: 'Leather',
+  },
+  ore: {
+    key: 'ore',
+    label: 'Ore',
+  },
+  metal: {
+    key: 'metal',
+    label: 'Metal',
+  },
+}

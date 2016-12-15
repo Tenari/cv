@@ -124,9 +124,12 @@
         {{#if page 'Buildings'}}
           <div class="buildings-display-container">
             {{#each building in buildings}}
-              <div class="building-card">
-                <img src="{{buildingImage building}}"/>
-                building
+              <div class="building-card" data-id="{{building._id}}">
+                <img src="{{building.image}}"/>
+                <div>
+                  <p>{{building.roomName}} [{{building.upperLeft.x}}, {{building.upperLeft.y}}]</p>
+                  <p>{{building.typeLabel}}</p>
+                </div>
               </div>
             {{/each}}
           </div>
@@ -159,6 +162,30 @@
                 {{/if}}
               {{/if}}
               <div class="action" data-action="drop" data-id="{{selectedItem._id}}"><i class="fa fa-caret-right"></i> Drop</div>
+            </div>
+          </div>
+        {{/if}}
+        {{#if selectedBuilding}}
+          <div class="building-managment-menu">
+            <div class="building-info">
+              {{#if buildingMenu 'create'}}
+                <p>Choose a type of building to construct</p>
+                {{#each type in buildingTypes}}
+                  <div>
+                    <p>{{type.label}}: {{type.description}}</p>
+                    {{#each cost in type.cost}}
+                      <p>{{cost.resource}}: {{cost.amount}}</p>
+                    {{/each}}
+                  </div>
+                {{/each}}
+              {{/if}}
+              {{#if buildingMenu 'description'}}
+                <p>Some basic info about the current state of your building</p>
+              {{/if}}
+            </div>
+            <div class="building-actions-menu">
+              <div class="action-menu" data-menu="create">Start Construction</div>
+              <div class="action-menu" data-menu="description">Cancel</div>
             </div>
           </div>
         {{/if}}

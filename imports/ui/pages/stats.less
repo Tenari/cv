@@ -100,6 +100,21 @@
         border-color: @color-tertiary !important;
       }
     }
+    .buildings-display-container {
+      .building-card {
+        border: 3px solid black;
+        border-radius: 3px;
+        display: flex;
+        padding: 11px;
+        &:hover {
+          border-color: @color-tertiary;
+          cursor: pointer;
+        }
+        img {
+          margin-right: 10px;
+        }
+      }
+    }
   }
   .action-menu-container {
     margin-right: 40px;

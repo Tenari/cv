@@ -109,7 +109,7 @@ Meteor.methods({
         roomId: room._id,
         upperLeft: {x: room.map[xy.y][xy.x].dimensions.topLeft.x, y: room.map[xy.y][xy.x].dimensions.topLeft.y},
         bottomRight: {x: room.map[xy.y][xy.x].dimensions.topLeft.x, y: room.map[xy.y][xy.x].dimensions.topLeft.y},
-        type: buildingConfig.types.open,
+        type: buildingConfig.open.key,
         underConstruction: false,
         resources: {
           wood: 0,

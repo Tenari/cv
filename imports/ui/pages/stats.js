@@ -28,6 +28,8 @@ Template.stats.onCreated(function gameOnCreated() {
     item: null,
     stat: null,
     dropping: {},
+    building: null,
+    buildingMenu: 'description',
   });
 
   this.autorun(() => {
@@ -117,9 +119,18 @@ Template.stats.helpers({
     return Buildings.find();
   },
 
-  buildingImage(building){
-    return buildingConfig.images[building.type];
+  selectedBuilding() {
+    const bId = Template.instance().state.get('building');
+    return bId && Buildings.findOne(bId);
   },
+
+  buildingMenu(menuKey){
+    return Template.instance().state.get('buildingMenu') == menuKey;
+  },
+
+  buildingTypes() {
+    return _.values(buildingConfig);
+  }
 });
 
 Template.stats.events({
@@ -175,5 +186,11 @@ Template.stats.events({
       dropping[resource] = true;
     }
     instance.state.set('dropping', dropping);
+  },
+  'click div.building-card'(event, instance) {
+    instance.state.set('building', $(event.currentTarget).data('id'));
+  },
+  'click .building-actions-menu .action-menu'(event, instance){
+    instance.state.set('buildingMenu', $(event.currentTarget).data('menu'));
   }
 })
