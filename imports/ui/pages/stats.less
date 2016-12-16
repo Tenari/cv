@@ -149,6 +149,32 @@
         }
       }
     }
+    .building-managment-menu {
+      border: 2px solid black;
+      border-radius: 3px;
+      padding: 10px;
+      margin-left: 20px;
+      .building-type {
+        border: 1px solid black;
+        border-radius: 3px;
+        &:hover {
+          background-color: #eee;
+          cursor:pointer;
+        }
+        &.selected {
+          border-color: @color-tertiary;
+        }
+      }
+      .building-actions-menu {
+        display: flex;
+        flex-wrap: wrap;
+        .action, .action-menu {
+          width: 50%;
+          text-align: center;
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 

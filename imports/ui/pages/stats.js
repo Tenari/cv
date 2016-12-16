@@ -30,6 +30,7 @@ Template.stats.onCreated(function gameOnCreated() {
     dropping: {},
     building: null,
     buildingMenu: 'description',
+    buildingTypeToCreate: null,
   });
 
   this.autorun(() => {
@@ -130,6 +131,14 @@ Template.stats.helpers({
 
   buildingTypes() {
     return _.values(buildingConfig);
+  },
+
+  selectedBuildingTypeToCreate(key) {
+    const type = Template.instance().state.get('buildingTypeToCreate');
+    if (key)
+      return type == key;
+    else
+      return type;
   }
 });
 
@@ -192,5 +201,14 @@ Template.stats.events({
   },
   'click .building-actions-menu .action-menu'(event, instance){
     instance.state.set('buildingMenu', $(event.currentTarget).data('menu'));
-  }
+  },
+  'click .building-actions-menu .action'(e, instance){
+    const action = $(e.currentTarget).data('action');
+    const buildingId = $(e.currentTarget).data('id');
+    const params = $(e.currentTarget).data('params');
+    Meteor.call('buildings.'+action, FlowRouter.getParam('gameId'), buildingId, params);
+  },
+  'click .building-info .building-type'(event, instance){
+    instance.state.set('buildingTypeToCreate', $(event.currentTarget).data('key'));
+  },
 })

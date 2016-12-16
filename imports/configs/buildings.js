@@ -9,7 +9,7 @@ export const buildingConfig = {
     description: 'Can be built up into a functioning building, or sold as is.',
   },
   workshop: {
-    key: 'open',
+    key: 'workshop',
     label: 'Wood workshop',
     image: '/images/workbench-left.png',
     cost: [{resource: resourceConfig.wood.key, amount: 10}, {resource: resourceConfig.metal.key, amount: 5}],

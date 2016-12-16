@@ -22,6 +22,7 @@ import  '../../api/trades/publications.js';
 import  '../../api/chats/methods.js';
 import  '../../api/chats/publications.js';
 import  '../../api/buildings/publications.js';
+import  '../../api/buildings/methods.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();

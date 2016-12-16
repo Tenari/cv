@@ -128,7 +128,7 @@
                 <img src="{{building.image}}"/>
                 <div>
                   <p>{{building.roomName}} [{{building.upperLeft.x}}, {{building.upperLeft.y}}]</p>
-                  <p>{{building.typeLabel}}</p>
+                  <p>{{building.typeLabel}} {{#if building.underConstruction}}<span>Under Construction</span>{{/if}}</p>
                 </div>
               </div>
             {{/each}}
@@ -171,11 +171,16 @@
               {{#if buildingMenu 'create'}}
                 <p>Choose a type of building to construct</p>
                 {{#each type in buildingTypes}}
-                  <div>
+                  <div class="{{#if selectedBuildingTypeToCreate type.key}}selected{{/if}} building-type" data-key="{{type.key}}">
                     <p>{{type.label}}: {{type.description}}</p>
-                    {{#each cost in type.cost}}
-                      <p>{{cost.resource}}: {{cost.amount}}</p>
-                    {{/each}}
+                    <ul>
+                      Cost:
+                      {{#each cost in type.cost}}
+                        <li>{{cost.resource}}: {{cost.amount}}</li>
+                      {{else}}
+                        none
+                      {{/each}}
+                    </ul>
                   </div>
                 {{/each}}
               {{/if}}
@@ -184,7 +189,14 @@
               {{/if}}
             </div>
             <div class="building-actions-menu">
-              <div class="action-menu" data-menu="create">Start Construction</div>
+              {{#if buildingMenu 'description'}}
+                <div class="action-menu" data-menu="create">Start Construction</div>
+              {{/if}}
+              {{#if buildingMenu 'create'}}
+                {{#if selectedBuildingTypeToCreate}}
+                  <div class="action" data-action="construct" data-id="{{selectedBuilding._id}}" data-params='["{{selectedBuildingTypeToCreate}}"]'>Create</div>
+                {{/if}}
+              {{/if}}
               <div class="action-menu" data-menu="description">Cancel</div>
             </div>
           </div>
