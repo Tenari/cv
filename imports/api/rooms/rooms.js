@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 
-export const Rooms = new Mongo.Collection('Rooms');
+export const Rooms = new Mongo.Collection('rooms');
 
 // Deny all client-side updates since we will be using methods to manage this collection
 Rooms.deny({

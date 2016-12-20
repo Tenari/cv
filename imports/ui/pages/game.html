@@ -91,9 +91,9 @@
         <div class="build-in-progress">
           <p>Building in progress:</p>
           {{#each requirement in nextSpaceAcceptsResources}}
-            <div>{{requirement.type}}: {{requirement.has}} / {{requirement.required}}</div>
-            {{#if myResources requirement.type}}
-              <a href="#" class="add-resources" data-type="{{requirement.type}}">Add {{requirement.type}} (you have {{myResources requirement.type}})</a>
+            <div>{{requirement.resource}}: {{requirement.has}} / {{requirement.amount}}</div>
+            {{#if myResources requirement.resource}}
+              <a href="#" class="add-resources" data-type="{{requirement.resource}}">Add {{requirement.resource}} (you have {{myResources requirement.resource}})</a>
             {{/if}}
           {{/each}}
         </div>

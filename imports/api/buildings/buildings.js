@@ -96,5 +96,8 @@ Buildings.helpers({
   },
   canStartBuilding() {
     return this.type == buildingConfig.open.key;
+  },
+  typeObj() {
+    return buildingConfig[this.type];
   }
 })

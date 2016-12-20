@@ -186,11 +186,20 @@
               {{/if}}
               {{#if buildingMenu 'description'}}
                 <p>Some basic info about the current state of your building</p>
+                {{#if selectedBuilding.underConstruction}}
+                  <p>Construction:</p>
+                  {{#each needed in buildingConstructionProgress}}
+                    <p>{{needed.resource}}: {{needed.has}} / {{needed.amount}}</p>
+                  {{/each}}
+                {{/if}}
               {{/if}}
             </div>
             <div class="building-actions-menu">
               {{#if buildingMenu 'description'}}
-                <div class="action-menu" data-menu="create">Start Construction</div>
+                {{#if selectedBuilding.underConstruction}}
+                {{else}}
+                  <div class="action-menu" data-menu="create">Start Construction</div>
+                {{/if}}
               {{/if}}
               {{#if buildingMenu 'create'}}
                 {{#if selectedBuildingTypeToCreate}}

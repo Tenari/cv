@@ -55,15 +55,15 @@ Meteor.methods({
     if (!room) throw new Meteor.Error('rooms', "room not found");
 
     const xy = nextSpotXY(character);
-    let resourcesNeededObj = _.find(room.map[xy.y][xy.x].buildingResources, function(obj){return obj.type == type});
-    const amountNeeded = resourcesNeededObj.required - resourcesNeededObj.has;
+    let resourcesNeededObj = _.find(room.map[xy.y][xy.x].buildingResources, function(obj){return obj.resource == type});
+    const amountNeeded = resourcesNeededObj.amount - resourcesNeededObj.has;
     const amountCarrying = character.stats.resources[type];
     const amountToDeposit = amountNeeded > amountCarrying ? amountCarrying : amountNeeded;
     let allResourcesArePresent = true;
     room.map[xy.y][xy.x].buildingResources = _.map(room.map[xy.y][xy.x].buildingResources, function(obj){
-      if (obj.type == type)
+      if (obj.resource == type)
         obj.has += amountToDeposit;
-      if (obj.has < obj.required)
+      if (obj.has < obj.amount)
         allResourcesArePresent = false;
       return obj;
     });
@@ -73,11 +73,23 @@ Meteor.methods({
     if (allResourcesArePresent) {
       if (room.map[xy.y][xy.x].stats) { // we are dealing with a door/repair
         room.map[xy.y][xy.x].stats.hp = room.map[xy.y][xy.x].stats.baseHp;
+        room.map[xy.y][xy.x].buildingResources = _.map(room.map[xy.y][xy.x].buildingResources, function(obj){
+          obj.has = 0;
+          return obj;
+        });
+      } else if (room.map[xy.y][xy.x].buildingId) { // it was a building Construction
+        const building = Buildings.findOne(room.map[xy.y][xy.x].buildingId);
+        // update the map to look like the building
+        const dimensions = room.map[xy.y][xy.x].dimensions;
+        for(let i = dimensions.topLeft.x; i <= dimensions.bottomRight.x; i+=1) {
+          for (let j = dimensions.topLeft.y; j <= dimensions.bottomRight.y; j +=1){
+            room.map[j][i].type = buildingConfig[building.type].getTileTypes(dimensions, i, j);
+          }
+        }
+        room.map[xy.y][xy.x].buildingResources = null;
+        // update the building
+        Buildings.update(building._id, {$set: {underConstruction: false}});
       }
-      room.map[xy.y][xy.x].buildingResources = _.map(room.map[xy.y][xy.x].buildingResources, function(obj){
-        obj.has = 0;
-        return obj;
-      });
     }
 
     Rooms.update(room._id, {$set: {map: room.map}});
@@ -107,8 +119,9 @@ Meteor.methods({
       const bId = Buildings.insert({
         ownerId: character._id,
         roomId: room._id,
-        upperLeft: {x: room.map[xy.y][xy.x].dimensions.topLeft.x, y: room.map[xy.y][xy.x].dimensions.topLeft.y},
-        bottomRight: {x: room.map[xy.y][xy.x].dimensions.topLeft.x, y: room.map[xy.y][xy.x].dimensions.topLeft.y},
+        upperLeft: room.map[xy.y][xy.x].dimensions.topLeft,
+        bottomRight: room.map[xy.y][xy.x].dimensions.bottomRight,
+        door: {x: xy.x, y: xy.y},
         type: buildingConfig.open.key,
         underConstruction: false,
         resources: {

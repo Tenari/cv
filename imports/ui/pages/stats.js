@@ -139,6 +139,12 @@ Template.stats.helpers({
       return type == key;
     else
       return type;
+  },
+
+  buildingConstructionProgress(){
+    const building = Buildings.findOne(Template.instance().state.get('building'));
+    const room = Rooms.findOne(building.roomId);
+    return room.map[building.door.y][building.door.x].buildingResources;
   }
 });
 
