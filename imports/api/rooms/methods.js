@@ -5,9 +5,9 @@ import { Rooms } from './rooms.js';
 import { Characters } from '../characters/characters.js';
 import { Buildings } from '../buildings/buildings.js';
 
-import { treeStumpTile, nextSpotXY } from '../../configs/locations.js';
+import { treeStumpTile, nextSpotXY, doorConfig } from '../../configs/locations.js';
 import { getCharacter, doorAttackEnergyCost } from '../../configs/game.js';
-import { buildingConfig, doorConfig } from '../../configs/buildings.js';
+import { buildingConfig } from '../../configs/buildings.js';
 
 Meteor.methods({
   'rooms.collect'(gameId){
@@ -81,12 +81,18 @@ Meteor.methods({
         const building = Buildings.findOne(room.map[xy.y][xy.x].buildingId);
         // update the map to look like the building
         const dimensions = room.map[xy.y][xy.x].dimensions;
+        const buildingType = building.typeObj();
         for(let i = dimensions.topLeft.x; i <= dimensions.bottomRight.x; i+=1) {
           for (let j = dimensions.topLeft.y; j <= dimensions.bottomRight.y; j +=1){
-            room.map[j][i].type = buildingConfig[building.type].getTileTypes(dimensions, i, j);
+            room.map[j][i].type = buildingType.getTileTypes(dimensions, i, j);
           }
         }
-        room.map[xy.y][xy.x].buildingResources = null;
+        room.map[xy.y][xy.x].stats = doorConfig.stats;
+        room.map[xy.y][xy.x].buildingResources = doorConfig.buildingResources;
+        // make the inside of the building accessible
+        const newRoomName = building.type+":"+building._id;
+        Rooms.insert(buildingType.interior(room.gameId, newRoomName, {name: room.name, x: character.location.x, y: character.location.y}));
+        room.map[xy.y][xy.x].data = {name: newRoomName, x: buildingType.entry.x, y: buildingType.entry.y, lock: {type: doorConfig.lockTypes.none}};
         // update the building
         Buildings.update(building._id, {$set: {underConstruction: false}});
       }

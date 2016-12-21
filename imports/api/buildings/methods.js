@@ -10,7 +10,6 @@ import { buildingConfig } from '../../configs/buildings.js';
 
 Meteor.methods({
   'buildings.construct'(gameId, buildingId, params){
-    console.log(gameId, buildingId, params, params[0]);
     if (!this.userId) throw new Meteor.Error('buildings.construct', 'not logged in');
 
     const character = getCharacter(this.userId, gameId, Characters);
@@ -31,4 +30,22 @@ Meteor.methods({
     Rooms.update(room._id, {$set: {map: room.map}});
     return Buildings.update(buildingId, {$set: {type: type.key, underConstruction: true}});
   },
+  'buildings.lock'(gameId, buildingId, lock, team) {
+    console.log(lock, team);
+    if (!this.userId) throw new Meteor.Error('buildings.construct', 'not logged in');
+
+    const character = getCharacter(this.userId, gameId, Characters);
+    if (!character) throw new Meteor.Error('buildings.construct', 'character not found');
+
+    const building = Buildings.findOne(buildingId);
+    if (!building) throw new Meteor.Error('buildings.construct', 'building not found');
+    if (character._id != building.ownerId) throw new Meteor.Error('buildings.construct', 'character not building owner');
+    console.log(building);
+    
+    let room = Rooms.findOne(building.roomId);
+    console.log(room.map[building.door.y][building.door.x]);
+    room.map[building.door.y][building.door.x].data.lock = {type: lock, team: team};
+    
+    return Rooms.update(room._id, {$set: {map: room.map}});
+  }
 })

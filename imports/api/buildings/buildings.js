@@ -99,5 +99,11 @@ Buildings.helpers({
   },
   typeObj() {
     return buildingConfig[this.type];
+  },
+  doorLockTeam(team) {
+    return Rooms.findOne(this.roomId).map[this.door.y][this.door.x].data.lock.team == team;
+  },
+  doorLockType(type) {
+    return Rooms.findOne(this.roomId).map[this.door.y][this.door.x].data.lock.type == type;
   }
 })

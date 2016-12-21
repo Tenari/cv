@@ -8,9 +8,10 @@ import { Rooms } from '../../api/rooms/rooms.js'
 import { Buildings } from '../../api/buildings/buildings.js'
 
 import '../../api/items/methods.js'; 
-import { statDescriptions } from '../../configs/game.js'; 
+import { teamCode, statDescriptions } from '../../configs/game.js'; 
 import { equipSlots } from '../../configs/items.js'; 
 import { buildingConfig } from '../../configs/buildings.js'; 
+import { doorConfig } from '../../configs/locations.js'; 
 
 import '../components/item.js';
 import '../components/status-bars.js';
@@ -145,13 +146,32 @@ Template.stats.helpers({
     const building = Buildings.findOne(Template.instance().state.get('building'));
     const room = Rooms.findOne(building.roomId);
     return room.map[building.door.y][building.door.x].buildingResources;
-  }
+  },
+
+  doorConfig(){
+    return doorConfig;
+  },
+
+  teams() {
+    return _.keys(teamCode);
+  },
+
+  doorLockTypeSelected(key) {
+    const building = Buildings.findOne(Template.instance().state.get('building'));
+    return building.doorLockType(key) ? {selected:'selected'} : '';
+  },
+
+  doorLockTeamSelected(key) {
+    const building = Buildings.findOne(Template.instance().state.get('building'));
+    return building.doorLockTeam(key) ? {selected:'selected'} : '';
+  },
 });
 
 Template.stats.events({
   'click .tab-links>a'(e, instance) {
     instance.state.set('page', $(e.target).data('page'));
     instance.state.set('item', false);
+    instance.state.set('building', null);
   },
   'click .items-display-container>div>.item'(e, instance){
     instance.state.set('item', instance.state.get('item') ? false : $(e.currentTarget).data('id'));
@@ -212,9 +232,14 @@ Template.stats.events({
     const action = $(e.currentTarget).data('action');
     const buildingId = $(e.currentTarget).data('id');
     const params = $(e.currentTarget).data('params');
-    Meteor.call('buildings.'+action, FlowRouter.getParam('gameId'), buildingId, params);
+    Meteor.call('buildings.'+action, FlowRouter.getParam('gameId'), buildingId, params, function(error, response){
+      instance.state.set('buildingMenu', 'description');
+    });
   },
   'click .building-info .building-type'(event, instance){
     instance.state.set('buildingTypeToCreate', $(event.currentTarget).data('key'));
   },
+  'change .building-lock-setting, .building-lock-setting-team'(event, instance){
+    Meteor.call('buildings.lock', FlowRouter.getParam('gameId'), $('.building-lock-setting').data('id'), $('.building-lock-setting').val(), $('.building-lock-setting-team').val());
+  }
 })

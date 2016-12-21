@@ -39,16 +39,29 @@ export function moveCost(character, weight, terrain) {
   return Math.max( 1, Math.round( (moveCosts[terrain] || 10) * (2 * weight / character.maxWeight()) ) );
 }
 
+export const doorConfig = {
+  lockTypes: {
+    none: 'none',
+    team: 'team',
+    all: 'all',
+  },
+  stats: {hp: 30, baseHp: 30},
+  buildingResources: [{resource:"wood", amount:30, has:0}],
+};
+
 export function doorIsLocked(nextSpot, character){
   let locked = false;
   if (nextSpot.data && nextSpot.data.lock && nextSpot.stats.hp > 0) {
-    if (nextSpot.data.lock.type == 'team') {
+    if (nextSpot.data.lock.type == doorConfig.lockTypes.none) return false;
+
+    if (nextSpot.data.lock.type == doorConfig.lockTypes.all) return true;
+
+    if (nextSpot.data.lock.type == doorConfig.lockTypes.team) {
       return nextSpot.data.lock.team == character.team;
     }
   }
   return locked;
 }
-
 
 // objects representing individual tiles which you can _.clone() into a room.map
 export const treeStumpTile = {type: "tree-stump"};
@@ -57,9 +70,9 @@ export const tiles = {
   treeStump: treeStumpTile,
   tree: treeTile,
   grass: {type: 'grass'},
-  'workbench-left': {type: 'workbench-left', craft: 'wood'},
-  'workbench-right': {type: 'workbench-right', craft: 'wood'},
-  door: {type: 'door', data: {x: 0, y: 0, name: 'rome'}},
+  'workbench-left': {type: "workbench-left", use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
+  'workbench-right': {type: "workbench-right", use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
+  door: {type: 'door', data: {x: 0, y: 0, name: 'rome', lock: {type: doorConfig.lockTypes.none}}, stats: doorConfig.stats, buildingResources: doorConfig.buildingResources},
   mat: {type: 'mat', data: {x: 0, y: 0, name: 'rome'}},
   'vertical-path': {type: 'vertical-path'},
   'hz-path': {type: 'hz-path'},

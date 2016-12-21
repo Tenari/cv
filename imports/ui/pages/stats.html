@@ -193,12 +193,28 @@
                   {{/each}}
                 {{/if}}
               {{/if}}
+              {{#if buildingMenu 'settings'}}
+                <p>lock:
+                  <select class="building-lock-setting" data-id={{selectedBuilding._id}}>
+                    <option {{doorLockTypeSelected doorConfig.lockTypes.none}} value="{{doorConfig.lockTypes.none}}">None</option>
+                    <option {{doorLockTypeSelected doorConfig.lockTypes.team}} value="{{doorConfig.lockTypes.team}}">Team</option>
+                    <option {{doorLockTypeSelected doorConfig.lockTypes.all}} value="{{doorConfig.lockTypes.all}}">All</option>
+                  </select>
+                  <select class="building-lock-setting-team">
+                    {{#each key in teams}}
+                      <option {{doorLockTeamSelected key}} value="{{key}}">{{key}}</option>
+                    {{/each}}
+                  </select>
+                </p>
+              {{/if}}
             </div>
             <div class="building-actions-menu">
               {{#if buildingMenu 'description'}}
                 {{#if selectedBuilding.underConstruction}}
                 {{else}}
-                  <div class="action-menu" data-menu="create">Start Construction</div>
+                  {{#if selectedBuilding.canStartBuilding}}
+                    <div class="action-menu" data-menu="create">Start Construction</div>
+                  {{/if}}
                 {{/if}}
               {{/if}}
               {{#if buildingMenu 'create'}}
@@ -206,6 +222,11 @@
                   <div class="action" data-action="construct" data-id="{{selectedBuilding._id}}" data-params='["{{selectedBuildingTypeToCreate}}"]'>Create</div>
                 {{/if}}
               {{/if}}
+              {{#unless selectedBuilding.canStartBuilding}}
+                {{#unless selectedBuilding.underConstruction}}
+                  <div class="action-menu" data-menu="settings">Settings</div>
+                {{/unless}}
+              {{/unless}}
               <div class="action-menu" data-menu="description">Cancel</div>
             </div>
           </div>

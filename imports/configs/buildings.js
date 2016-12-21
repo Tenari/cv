@@ -1,4 +1,5 @@
 import { resourceConfig } from './game.js';
+import { tiles } from './locations.js';
 
 export const buildingConfig = {
   open: {
@@ -15,25 +16,34 @@ export const buildingConfig = {
     cost: [{resource: resourceConfig.wood.key, amount: 10}],//, {resource: resourceConfig.metal.key, amount: 5}],
     description: 'Lets you build wooden items, and store resources and items. You can enable building trade if you hire a shopkeeper.',
     getTileTypes: function(dimensions, x, y) {
-      var tiles = [
+      var tileTypes = [
         ['full-building-wall','full-building-wall','H'],
         ['full-building-wall','full-building-wall','H'],
         ['1','door','2'],
       ];
       const relativeX = x - dimensions.topLeft.x;
       const relativeY = y - dimensions.topLeft.y;
-      return tiles[relativeY][relativeX];
-    }
+      return tileTypes[relativeY][relativeX];
+    },
+    interior: function(gameId, name, entrance){
+      return {
+        gameId: gameId,
+        name: name,
+        width: 6,
+        height: 6,
+        map:[
+          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+          [tiles.floor,tiles.floor,tiles.floor,tiles['workbench-left'],tiles["workbench-right"],tiles.floor],
+          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+          [tiles.floor,tiles.floor,{type: "mat", data: entrance},{type: "mat", data: entrance},tiles.floor,tiles.floor]
+        ] 
+      };
+    },
+    entry: {x: 2, y: 4},
   },
 //    smithy: 2,
 //    farm: 3,
 //    tannery: 4,
-};
-
-export const doorConfig = {
-  lockTypes: {
-    none: 'none',
-    team: 'team',
-    all: 'all',
-  }
 };
