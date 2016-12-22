@@ -32,6 +32,7 @@ Template.stats.onCreated(function gameOnCreated() {
     building: null,
     buildingMenu: 'description',
     buildingTypeToCreate: null,
+    buildingSellPrice: 100,
   });
 
   this.autorun(() => {
@@ -131,7 +132,11 @@ Template.stats.helpers({
   },
 
   buildingTypes() {
-    return _.values(buildingConfig);
+    return _.filter(_.values(buildingConfig), function(obj){return obj.key != buildingConfig.open.key});
+  },
+
+  buildingDemolishCost(){
+    return buildingConfig.open.energyCost;
   },
 
   selectedBuildingTypeToCreate(key) {
@@ -164,6 +169,10 @@ Template.stats.helpers({
   doorLockTeamSelected(key) {
     const building = Buildings.findOne(Template.instance().state.get('building'));
     return building.doorLockTeam(key) ? {selected:'selected'} : '';
+  },
+
+  buildingSellPrice(){
+    return Template.instance().state.get('buildingSellPrice');
   },
 });
 
@@ -225,7 +234,7 @@ Template.stats.events({
   'click div.building-card'(event, instance) {
     instance.state.set('building', $(event.currentTarget).data('id'));
   },
-  'click .building-actions-menu .action-menu'(event, instance){
+  'click .building-managment-menu .action-menu, click .building-actions-menu .action-menu'(event, instance){
     instance.state.set('buildingMenu', $(event.currentTarget).data('menu'));
   },
   'click .building-actions-menu .action'(e, instance){
@@ -236,10 +245,19 @@ Template.stats.events({
       instance.state.set('buildingMenu', 'description');
     });
   },
+  'click .building-managment-menu .demolish'(e, instance){
+    const buildingId = Template.instance().state.get('building');
+    Meteor.call('buildings.construct', FlowRouter.getParam('gameId'), buildingId, [buildingConfig.open.key], function(error, response){
+      instance.state.set('buildingMenu', 'description');
+    });
+  },
   'click .building-info .building-type'(event, instance){
     instance.state.set('buildingTypeToCreate', $(event.currentTarget).data('key'));
   },
-  'change .building-lock-setting, .building-lock-setting-team'(event, instance){
+  'change .building-lock-setting, change .building-lock-setting-team'(event, instance){
     Meteor.call('buildings.lock', FlowRouter.getParam('gameId'), $('.building-lock-setting').data('id'), $('.building-lock-setting').val(), $('.building-lock-setting-team').val());
-  }
+  },
+  'change .building-managment-menu .sell-price'(e, instance){
+    instance.state.set('buildingSellPrice', Math.abs(parseInt($(e.currentTarget).val()))); // cant be negative retards
+  },
 })

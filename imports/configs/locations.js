@@ -41,9 +41,9 @@ export function moveCost(character, weight, terrain) {
 
 export const doorConfig = {
   lockTypes: {
-    none: 'none',
-    team: 'team',
-    all: 'all',
+    none: 'none', // means no one is allowed in
+    team: 'team', // means only the team specified is allowed in
+    all: 'all', // means all (including animals) may enter
   },
   stats: {hp: 30, baseHp: 30},
   buildingResources: [{resource:"wood", amount:30, has:0}],
@@ -52,12 +52,12 @@ export const doorConfig = {
 export function doorIsLocked(nextSpot, character){
   let locked = false;
   if (nextSpot.data && nextSpot.data.lock && nextSpot.stats.hp > 0) {
-    if (nextSpot.data.lock.type == doorConfig.lockTypes.none) return false;
+    if (nextSpot.data.lock.type == doorConfig.lockTypes.none) return true;
 
-    if (nextSpot.data.lock.type == doorConfig.lockTypes.all) return true;
+    if (nextSpot.data.lock.type == doorConfig.lockTypes.all) return false;
 
     if (nextSpot.data.lock.type == doorConfig.lockTypes.team) {
-      return nextSpot.data.lock.team == character.team;
+      return nextSpot.data.lock.team != character.team;
     }
   }
   return locked;

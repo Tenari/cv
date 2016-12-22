@@ -11,7 +11,7 @@ export const Buildings = new Mongo.Collection('buildings');
 {
   ownerId: characterIdStr,
   roomId: '',
-  upperLeft: {
+  topLeft: {
     x: 1,
     y: 2
   },
@@ -78,8 +78,8 @@ Buildings.helpers({
   },
   dimensions() {
     return {
-      x: this.bottomRight.x - this.upperLeft.x,
-      y: this.bottomRight.y - this.upperLeft.x
+      x: this.bottomRight.x - this.topLeft.x,
+      y: this.bottomRight.y - this.topLeft.x
     };
   },
   capacity() {

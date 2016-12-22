@@ -87,12 +87,14 @@ Meteor.methods({
             room.map[j][i].type = buildingType.getTileTypes(dimensions, i, j);
           }
         }
-        room.map[xy.y][xy.x].stats = doorConfig.stats;
-        room.map[xy.y][xy.x].buildingResources = doorConfig.buildingResources;
-        // make the inside of the building accessible
-        const newRoomName = building.type+":"+building._id;
-        Rooms.insert(buildingType.interior(room.gameId, newRoomName, {name: room.name, x: character.location.x, y: character.location.y}));
-        room.map[xy.y][xy.x].data = {name: newRoomName, x: buildingType.entry.x, y: buildingType.entry.y, lock: {type: doorConfig.lockTypes.none}};
+        if (typeof buildingType.interior === 'function') {
+          room.map[xy.y][xy.x].stats = doorConfig.stats;
+          room.map[xy.y][xy.x].buildingResources = doorConfig.buildingResources;
+          // make the inside of the building accessible
+          const newRoomName = building.type+":"+building._id;
+          Rooms.insert(buildingType.interior(room.gameId, newRoomName, {name: room.name, x: character.location.x, y: character.location.y}));
+          room.map[xy.y][xy.x].data = {name: newRoomName, x: buildingType.entry.x, y: buildingType.entry.y, lock: {type: doorConfig.lockTypes.none}};
+        }
         // update the building
         Buildings.update(building._id, {$set: {underConstruction: false}});
       }
@@ -115,17 +117,19 @@ Meteor.methods({
 
     const building = Buildings.findOne({
       roomId: room._id,
-      'upperLeft.x':room.map[xy.y][xy.x].dimensions.topLeft.x,
-      'upperLeft.y':room.map[xy.y][xy.x].dimensions.topLeft.y,
+      'topLeft.x':room.map[xy.y][xy.x].dimensions.topLeft.x,
+      'topLeft.y':room.map[xy.y][xy.x].dimensions.topLeft.y,
     })
     if (building) {
+      Characters.update(building.ownerId, {$inc: {'stats.money': cost}}); // old owner gets $$$
+      // then building gets new owner
       room.map[xy.y][xy.x].buildingId = building._id;
       Buildings.update(building._id, {$set: {ownerId: character._id}});
     } else {
       const bId = Buildings.insert({
         ownerId: character._id,
         roomId: room._id,
-        upperLeft: room.map[xy.y][xy.x].dimensions.topLeft,
+        topLeft: room.map[xy.y][xy.x].dimensions.topLeft,
         bottomRight: room.map[xy.y][xy.x].dimensions.bottomRight,
         door: {x: xy.x, y: xy.y},
         type: buildingConfig.open.key,

@@ -127,7 +127,7 @@
               <div class="building-card" data-id="{{building._id}}">
                 <img src="{{building.image}}"/>
                 <div>
-                  <p>{{building.roomName}} [{{building.upperLeft.x}}, {{building.upperLeft.y}}]</p>
+                  <p>{{building.roomName}} [{{building.topLeft.x}}, {{building.topLeft.y}}]</p>
                   <p>{{building.typeLabel}} {{#if building.underConstruction}}<span>Under Construction</span>{{/if}}</p>
                 </div>
               </div>
@@ -184,6 +184,14 @@
                   </div>
                 {{/each}}
               {{/if}}
+              {{#if buildingMenu 'sell'}}
+                <p>What price would you sell your land for? <input type="number" class="sell-price" value="{{buildingSellPrice}}"/></p>
+              {{/if}}
+              {{#if buildingMenu 'demolish'}}
+                <p>Demolish your building for {{buildingDemolishCost}} energy?</p>
+                <a href="#" class="demolish">Yes</a>
+                <a href="#" class="action-menu" data-menu="description">No</a>
+              {{/if}}
               {{#if buildingMenu 'description'}}
                 <p>Some basic info about the current state of your building</p>
                 {{#if selectedBuilding.underConstruction}}
@@ -194,7 +202,7 @@
                 {{/if}}
               {{/if}}
               {{#if buildingMenu 'settings'}}
-                <p>lock:
+                <p>allow in:
                   <select class="building-lock-setting" data-id={{selectedBuilding._id}}>
                     <option {{doorLockTypeSelected doorConfig.lockTypes.none}} value="{{doorConfig.lockTypes.none}}">None</option>
                     <option {{doorLockTypeSelected doorConfig.lockTypes.team}} value="{{doorConfig.lockTypes.team}}">Team</option>
@@ -213,7 +221,10 @@
                 {{#if selectedBuilding.underConstruction}}
                 {{else}}
                   {{#if selectedBuilding.canStartBuilding}}
-                    <div class="action-menu" data-menu="create">Start Construction</div>
+                    <div class="action-menu" data-menu="create">New Construction</div>
+                    <div class="action-menu" data-menu="sell">Sell</div>
+                  {{else}}
+                    <div class="action-menu" data-menu="demolish">Demolish</div>
                   {{/if}}
                 {{/if}}
               {{/if}}
@@ -221,6 +232,10 @@
                 {{#if selectedBuildingTypeToCreate}}
                   <div class="action" data-action="construct" data-id="{{selectedBuilding._id}}" data-params='["{{selectedBuildingTypeToCreate}}"]'>Create</div>
                 {{/if}}
+              {{/if}}
+              {{#if buildingMenu 'sell'}}
+                <div class="action" data-action="sell" data-id="{{selectedBuilding._id}}" data-params='["{{buildingSellPrice}}"]'>Post for auction</div>
+                <div class="action" data-action="unsell" data-id="{{selectedBuilding._id}}">Canel auction</div>
               {{/if}}
               {{#unless selectedBuilding.canStartBuilding}}
                 {{#unless selectedBuilding.underConstruction}}
