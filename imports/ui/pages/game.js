@@ -232,6 +232,9 @@ Template.game.helpers({
   myResources: function(type){
     const character = Template.instance().me();
     return character.stats.resources[type] > 0 ? character.stats.resources[type] : false;
+  },
+  npcUrl: function(id){
+    return "/game/"+FlowRouter.getParam('gameId')+"/npc/"+id;
   }
 });
 

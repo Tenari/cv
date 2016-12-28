@@ -32,16 +32,20 @@
               <div class="character i-{{opponentImage opponent}}"></div>
               <div>
                 <p>{{opponent.name}}</p>
-                {{#if fighting}}
-                  {{#if amFighting opponent._id}}
-                    <span class="red">Fighting!</span>
-                  {{else}}
-                    <span>--</span>
-                  {{/if}}
+                {{#if opponent.npc}}
+                  <a class="talk" href="{{npcUrl opponent._id}}">Talk</a>
                 {{else}}
-                  <button class="fight" data-id="{{opponent._id}}">Fight</button>
-                  {{#if canTrade opponent._id}}
-                    <button class="trade" data-id="{{opponent._id}}">Trade</button>
+                  {{#if fighting}}
+                    {{#if amFighting opponent._id}}
+                      <span class="red">Fighting!</span>
+                    {{else}}
+                      <span>--</span>
+                    {{/if}}
+                  {{else}}
+                    <button class="fight" data-id="{{opponent._id}}">Fight</button>
+                    {{#if canTrade opponent._id}}
+                      <button class="trade" data-id="{{opponent._id}}">Trade</button>
+                    {{/if}}
                   {{/if}}
                 {{/if}}
               </div>

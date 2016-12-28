@@ -12,6 +12,7 @@ import '../../ui/pages/trade.js';
 import '../../ui/pages/death.js';
 import '../../ui/pages/craft.js';
 import '../../ui/pages/not-found.js';
+import '../../ui/pages/npc.js';
 
 import '../../ui/pages/mapbuilder.js';
 
@@ -57,6 +58,13 @@ FlowRouter.route('/game/:gameId/trade/:tradeId', {
   name: 'game.trade',
   action() {
     BlazeLayout.render('app', { main: 'trade' });
+  },
+});
+
+FlowRouter.route('/game/:gameId/npc/:npcId', {
+  name: 'game.npc',
+  action() {
+    BlazeLayout.render('app', { main: 'npc' });
   },
 });
 

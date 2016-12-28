@@ -128,6 +128,7 @@ Characters.schema = new SimpleSchema({
   defaultAttackStyle: {type: String, defaultValue: 'quick'},
   deaths: { type: DeathsSchema },
   lastFightEndedAt: { type: Number, optional: true },
+  npc: {type: Boolean, defaultValue: false},
 });
 
 Characters.attachSchema(Characters.schema);
@@ -144,6 +145,7 @@ Characters.publicFields = {
   stats: 1,
   deaths: 1,
   lastFightEndedAt: 1,
+  npc: 1,
 };
 
 Characters.helpers({

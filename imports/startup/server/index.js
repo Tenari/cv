@@ -42,6 +42,22 @@ Meteor.startup(function (){
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
     Chats.insert({scope: "Rooms:"+landId, messages: []});
+
+    // insert NPCs
+    Characters.insert({
+      gameId: gameId,
+      name: 'Marco Polo',
+      team: 'romans',
+      location: {
+        x: 3,
+        y: 5, 
+        direction: 1,
+        classId: 25,
+        roomId: tokyoId,
+        updatedAt: Date.now(),
+      },
+      npc: true
+    })
   }
 
 });

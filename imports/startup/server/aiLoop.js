@@ -35,12 +35,13 @@ function spawnBear(room){
     roomId: room._id,
     updatedAt: Date.now(),
   };
-  Characters.insert({
+  const charId = Characters.insert({
     name: aiNames.bear,
     team: aiTeam,
     gameId: room.gameId,
     location: location,
-  })
+  });
+  // TODO: insert items also, so they drop stuff when you kill them
 }
 
 function moveBear(bear){
