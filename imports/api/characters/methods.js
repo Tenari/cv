@@ -73,6 +73,39 @@ Meteor.methods({
     if(character.stats.resources[resource] < 0) character.stats.resources[resource] = 0;
 
     return Characters.update(character._id, {$set: {'stats.resources': character.stats.resources}});
+  },
+
+  'characters.trade'(characterId, npcId, giving, getting){ // giving = {type: 'money', amount: 100} getting = {type: 'resource', resource: 'metal', amount: 5}
+    console.log(arguments);
+    const character = Characters.findOne(characterId);
+    if (giving.type == 'money' && giving.amount > character.stats.money) return false;
+    if (giving.type == 'resource' && giving.amount > character.stats.resources[giving.resource]) return false;
+
+    const npc = Characters.findOne(npcId);
+    if (getting.type == 'resource' && getting.amount > npc.stats.resources[getting.resource]) return false;
+    if (getting.type == 'money' && getting.amount > npc.stats.money) return false;
+
+    if (giving.type == 'money') {
+      Characters.update(characterId, {$inc: {'stats.money': (-1 * Math.abs(giving.amount)) }}) //ensure money decrements
+      Characters.update(npcId, {$inc: {'stats.money': (Math.abs(giving.amount)) }}) //ensure money decrements
+      if (getting.type == 'resource'){
+        let incObj = {};
+        incObj['stats.resources.'+getting.resource] = Math.abs(getting.amount);
+        Characters.update(characterId, {$inc: incObj });
+        incObj['stats.resources.'+getting.resource] = -1 * Math.abs(getting.amount);
+        Characters.update(npcId, {$inc: incObj });
+      }
+    } else if (giving.type == 'resource') {
+      Characters.update(npcId, {$inc: {'stats.money': -1 * Math.abs(getting.amount) }});
+      Characters.update(characterId, {$inc: {'stats.money': Math.abs(getting.amount) }});
+      if (giving.type == 'resource'){
+        let incObj = {};
+        incObj['stats.resources.'+giving.resource] = -1 * Math.abs(giving.amount);
+        Characters.update(characterId, {$inc: incObj });
+        incObj['stats.resources.'+giving.resource] = Math.abs(giving.amount);
+        Characters.update(npcId, {$inc: incObj });
+      }
+    }
   }
 });
 

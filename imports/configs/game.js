@@ -59,21 +59,26 @@ export const resourceConfig = {
   wood: {
     key: 'wood',
     label: 'Wood',
+    cost: 1,
   },
   hide: {
     key: 'hide',
     label: 'Hide',
+    cost: 4,
   },
   leather: {
     key: 'leather',
     label: 'Leather',
+    cost: 8,
   },
   ore: {
     key: 'ore',
     label: 'Ore',
+    cost: 3,
   },
   metal: {
     key: 'metal',
     label: 'Metal',
+    cost: 6,
   },
 }

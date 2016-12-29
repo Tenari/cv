@@ -59,6 +59,7 @@ Meteor.startup(function (){
       npc: true,
       npcKey: 'marcoPolo',
       stats: {
+        money: 10000,
         resources: {
           metal: 5,
         }

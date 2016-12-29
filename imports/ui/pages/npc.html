@@ -13,6 +13,7 @@
   {{/if}}
   {{#if dialog.trade}}
     <div>
+      <div><img src="/images/money.png"/> {{npc.stats.money}}</div>
       <div class="tab-container">
         <div class="tab" data-tab="items">Items</div>
         <div class="tab" data-tab="resources">Resources</div>
@@ -24,13 +25,23 @@
         {{/if}}
         {{#if tab 'resources'}}
           {{#each resource in resources}}
-            <div data-resource="{{resource.key}}">{{resource.label}}: {{resource.amount}}</div>
+            <div class="trade-resource" data-resource="{{resource.key}}">{{resource.label}}: {{resource.amount}} @ ${{resource.cost}} / lb</div>
+            {{#if tradeResource resource.key}}
+              <div>
+                <select class="resource-trade-type">
+                  <option value="buy">Buy</option>
+                  <option value="sell">Sell</option>
+                </select>
+                <input class="resource-trade-amount" type="number" min="0" value="1"/>
+              </div>
+            {{/if}}
           {{/each}}
         {{/if}}
       </div>
     </div>
     <ul class="response-options">
-        <li class="response-option" data-option='{"action":"cancel"}'>CANCEL</li>
+      <li class="response-option" data-option='{"action":"trade"}'>TRADE</li>
+      <li class="response-option" data-option='{"action":"cancel"}'>CANCEL</li>
     </ul>
   {{/if}}
 </template>

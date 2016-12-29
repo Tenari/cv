@@ -21,6 +21,7 @@ Template.npc.onCreated(function gameOnCreated() {
   var myself = this.subscribe('characters.own');
   this.dialog = new ReactiveVar(null);
   this.tab = new ReactiveVar(null);
+  this.tradeResource = new ReactiveVar(null);
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
@@ -71,6 +72,9 @@ Template.npc.helpers({
       return obj;
     });
   },
+  tradeResource(key){
+    return Template.instance().tradeResource.get() == key;
+  }
 })
 
 Template.npc.events({
@@ -84,9 +88,31 @@ Template.npc.events({
     } else if (action == 'npc trade') {
       instance.dialog.set({trade: true});
       instance.tab.set('items');
+    } else if (action == 'trade') {
+      const type = $('.resource-trade-type').val();
+      const amount = $('.resource-trade-amount').val();
+      const money = {
+        type: 'money',
+        amount: amount * resourceConfig[instance.tradeResource.get()].cost,
+      };
+      const resource = {
+        type: 'resource',
+        resource: instance.tradeResource.get(),
+        amount: amount,
+      };
+      var giving = money, getting = resource;
+      if (type == 'sell') {
+        giving = resource; getting = money;
+      }
+      Meteor.call('characters.trade', instance.me()._id, FlowRouter.getParam('npcId'), giving, getting, function (){
+        instance.dialog.set({trade: true});
+      })
     }
   },
   'click .tab-container .tab'(e, instance){
     instance.tab.set($(e.currentTarget).data('tab'));
+  },
+  'click .tab-displays .trade-resource'(e, instance){
+    instance.tradeResource.set($(e.currentTarget).data('resource'));
   },
 })
