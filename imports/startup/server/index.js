@@ -56,7 +56,13 @@ Meteor.startup(function (){
         roomId: tokyoId,
         updatedAt: Date.now(),
       },
-      npc: true
+      npc: true,
+      npcKey: 'marcoPolo',
+      stats: {
+        resources: {
+          metal: 5,
+        }
+      }
     })
   }
 

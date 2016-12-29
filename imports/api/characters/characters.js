@@ -129,6 +129,7 @@ Characters.schema = new SimpleSchema({
   deaths: { type: DeathsSchema },
   lastFightEndedAt: { type: Number, optional: true },
   npc: {type: Boolean, defaultValue: false},
+  npcKey: {type: String, optional: true }
 });
 
 Characters.attachSchema(Characters.schema);
@@ -146,6 +147,7 @@ Characters.publicFields = {
   deaths: 1,
   lastFightEndedAt: 1,
   npc: 1,
+  npcKey: 1,
 };
 
 Characters.helpers({

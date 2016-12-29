@@ -10,7 +10,7 @@ import { Rooms } from '../../api/rooms/rooms.js'
 import './npc.html';
 
 import { npcConfig } from '../../configs/ai.js';
-import { getCharacter } from '../../configs/game.js';
+import { resourceConfig, getCharacter } from '../../configs/game.js';
 
 Template.npc.onCreated(function gameOnCreated() {
   var that = this;
@@ -19,7 +19,8 @@ Template.npc.onCreated(function gameOnCreated() {
   this.getRoomId = () => Meteor.userId() && that.me() && that.me().location.roomId;
   this.subscribe('items.own');
   var myself = this.subscribe('characters.own');
-  this.notification = new ReactiveVar(null);
+  this.dialog = new ReactiveVar(null);
+  this.tab = new ReactiveVar(null);
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
@@ -36,6 +37,7 @@ Template.npc.onCreated(function gameOnCreated() {
             'location.y': myLocation.y,
           });
           if(!npc) FlowRouter.go('/'); // must be on the same space as npc to stay on this page.
+          this.dialog.set(npcConfig[npc.npcKey].dialog);
         }
       }
     }
@@ -49,5 +51,42 @@ Template.npc.helpers({
   image(){
     const npc = Characters.findOne(FlowRouter.getParam('npcId'))
     return npc && npc.location.classId + 2;
+  },
+  dialog(){
+    return Template.instance().dialog.get();
+  },
+  encode(obj){
+    return JSON.stringify(obj);
+  },
+  tab(key){
+    return Template.instance().tab.get() == key;
+  },
+  items(){
+    return [];
+  },
+  resources(){
+    const npc = Characters.findOne(FlowRouter.getParam('npcId'));
+    return _.map(resourceConfig, function(obj, key){
+      obj.amount = npc.stats.resources[key];
+      return obj;
+    });
+  },
+})
+
+Template.npc.events({
+  'click li.response-option'(e, instance){
+    const option = JSON.parse($(e.currentTarget).attr('data-option'));
+    const action = option.action;
+    if (action == 'dialog') {
+      instance.dialog.set(option.dialog);
+    } else if (action == 'cancel') {
+      instance.dialog.set(npcConfig[Characters.findOne(FlowRouter.getParam('npcId')).npcKey].dialog);
+    } else if (action == 'npc trade') {
+      instance.dialog.set({trade: true});
+      instance.tab.set('items');
+    }
+  },
+  'click .tab-container .tab'(e, instance){
+    instance.tab.set($(e.currentTarget).data('tab'));
   },
 })

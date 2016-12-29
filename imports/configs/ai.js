@@ -19,11 +19,13 @@ export const npcConfig = {
         },
         {
           option: "Help",
+          action: 'dialog',
           dialog: {
             text: "What do you need help with?",
             options: [
               {
                 option: "Fighting",
+                action: 'dialog',
                 dialog: {
                   text: "To fight someone, simply stand on the same space as them, and click the fight button next to their name.",
                   options: [
@@ -36,6 +38,7 @@ export const npcConfig = {
               },
               {
                 option: "Trading",
+                action: 'dialog',
                 dialog: {
                   text: "To trade with someone, simply stand on the same space as them, and click the trade button next to their name.",
                   options: [

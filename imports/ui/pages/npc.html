@@ -1,4 +1,36 @@
 <template name="npc">
   {{npc.name}}
   <img src="/images/{{image}}.png"/>
+  {{#if dialog.text}}
+    <div>
+      {{dialog.text}}
+    </div>
+    <ul class="response-options">
+      {{#each option in dialog.options}}
+        <li class="response-option" data-option="{{encode option}}">{{option.option}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
+  {{#if dialog.trade}}
+    <div>
+      <div class="tab-container">
+        <div class="tab" data-tab="items">Items</div>
+        <div class="tab" data-tab="resources">Resources</div>
+      </div>
+      <div class="tab-displays">
+        {{#if tab 'items'}}
+          {{#each item in items}}
+          {{/each}}
+        {{/if}}
+        {{#if tab 'resources'}}
+          {{#each resource in resources}}
+            <div data-resource="{{resource.key}}">{{resource.label}}: {{resource.amount}}</div>
+          {{/each}}
+        {{/if}}
+      </div>
+    </div>
+    <ul class="response-options">
+        <li class="response-option" data-option='{"action":"cancel"}'>CANCEL</li>
+    </ul>
+  {{/if}}
 </template>
