@@ -5,6 +5,7 @@ import { Games } from '../../api/games/games.js';
 import { Chats } from '../../api/chats/chats.js';
 import { Characters } from '../../api/characters/characters.js';
 import { Buildings } from '../../api/buildings/buildings.js';
+import { Items } from '../../api/items/items.js';
 
 import './gameLoop.js';
 
@@ -44,7 +45,7 @@ Meteor.startup(function (){
     Chats.insert({scope: "Rooms:"+landId, messages: []});
 
     // insert NPCs
-    Characters.insert({
+    const marcoPoloId = Characters.insert({
       gameId: gameId,
       name: 'Marco Polo',
       team: 'romans',
@@ -65,6 +66,8 @@ Meteor.startup(function (){
         }
       }
     })
+    Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
+    Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
   }
 
 });

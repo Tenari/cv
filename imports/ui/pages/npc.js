@@ -8,8 +8,10 @@ import { Items } from '../../api/items/items.js'
 import { Rooms } from '../../api/rooms/rooms.js'
 
 import './npc.html';
+import '../components/item.js';
 
 import { npcConfig } from '../../configs/ai.js';
+import { itemConfigs } from '../../configs/items.js';
 import { resourceConfig, getCharacter } from '../../configs/game.js';
 
 Template.npc.onCreated(function gameOnCreated() {
@@ -22,6 +24,8 @@ Template.npc.onCreated(function gameOnCreated() {
   this.dialog = new ReactiveVar(null);
   this.tab = new ReactiveVar(null);
   this.tradeResource = new ReactiveVar(null);
+  this.item = new ReactiveVar(null);
+  this.playerItem = new ReactiveVar(null);
 
   this.autorun(() => {
     this.subscribe('game.rooms', this.getGameId());
@@ -39,6 +43,7 @@ Template.npc.onCreated(function gameOnCreated() {
           });
           if(!npc) FlowRouter.go('/'); // must be on the same space as npc to stay on this page.
           this.dialog.set(npcConfig[npc.npcKey].dialog);
+          this.subscribe('items.character', FlowRouter.getParam('npcId'));
         }
       }
     }
@@ -62,9 +67,6 @@ Template.npc.helpers({
   tab(key){
     return Template.instance().tab.get() == key;
   },
-  items(){
-    return [];
-  },
   resources(){
     const npc = Characters.findOne(FlowRouter.getParam('npcId'));
     return _.map(resourceConfig, function(obj, key){
@@ -74,7 +76,33 @@ Template.npc.helpers({
   },
   tradeResource(key){
     return Template.instance().tradeResource.get() == key;
-  }
+  },
+  items(){
+    return _.map(Items.find({ownerId: FlowRouter.getParam('npcId')}).fetch(), function(item){
+      item.price = parseInt(itemConfigs[item.type][item.key].npcSellFactor * item.condition);
+      return item;
+    });
+  },
+  itemSelectedClass(item){
+    const stateItem = Template.instance().item.get();
+    return stateItem && item._id == stateItem ? 'selected' : '';
+  },
+  selectedItem(){
+    return Template.instance().item.get();
+  },
+  playerItems(){
+    return _.map(Items.find({ownerId: Template.instance().me()._id}).fetch(), function(item){
+      item.price = parseInt(itemConfigs[item.type][item.key].npcBuyFactor * (item.condition || 100));
+      return item;
+    });
+  },
+  playerItemSelectedClass(item){
+    const stateItem = Template.instance().playerItem.get();
+    return stateItem && item._id == stateItem ? 'selected' : '';
+  },
+  playerSelectedItem(){
+    return Template.instance().playerItem.get();
+  },
 })
 
 Template.npc.events({
@@ -107,6 +135,18 @@ Template.npc.events({
       Meteor.call('characters.trade', instance.me()._id, FlowRouter.getParam('npcId'), giving, getting, function (){
         instance.dialog.set({trade: true});
       })
+    } else if (action == 'buy item') {
+      const item = Items.findOne(instance.item.get());
+      const price = parseInt(itemConfigs[item.type][item.key].npcSellFactor * (item.condition || 100));
+      Meteor.call('characters.trade', instance.me()._id, FlowRouter.getParam('npcId'), {type: 'money', amount: price}, {type: 'item', itemId: item._id}, function (){
+        instance.dialog.set({trade: true});
+      })
+    } else if (action == 'sell item') {
+      const item = Items.findOne(instance.playerItem.get());
+      const price = parseInt(itemConfigs[item.type][item.key].npcBuyFactor * (item.condition || 100));
+      Meteor.call('characters.trade', instance.me()._id, FlowRouter.getParam('npcId'), {type: 'item', itemId: item._id}, {type: 'money', amount: price}, function (){
+        instance.dialog.set({trade: true});
+      })
     }
   },
   'click .tab-container .tab'(e, instance){
@@ -114,5 +154,21 @@ Template.npc.events({
   },
   'click .tab-displays .trade-resource'(e, instance){
     instance.tradeResource.set($(e.currentTarget).data('resource'));
+  },
+  'click .tab-displays .npc-items .item'(e, instance){
+    instance.playerItem.set(false);
+    if (instance.item.get()) {
+      instance.item.set(false);
+    } else {
+      instance.item.set($(e.currentTarget).data('id'));
+    }
+  },
+  'click .tab-displays .player-items .item'(e, instance){
+    instance.item.set(false);
+    if (instance.playerItem.get()) {
+      instance.playerItem.set(false);
+    } else {
+      instance.playerItem.set($(e.currentTarget).data('id'));
+    }
   },
 })

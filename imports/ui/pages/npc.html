@@ -1,4 +1,5 @@
 <template name="npc">
+<div class="npc-interaction-container">
   {{npc.name}}
   <img src="/images/{{image}}.png"/>
   {{#if dialog.text}}
@@ -20,8 +21,22 @@
       </div>
       <div class="tab-displays">
         {{#if tab 'items'}}
-          {{#each item in items}}
-          {{/each}}
+          <div class="npc-items">
+            <p>{{npc.name}}'s items:</p>
+            {{#each itemX in items}}
+              <div class="{{itemSelectedClass itemX}}">
+                {{> item itemX}}
+              </div>
+            {{/each}}
+          </div>
+          <div class="player-items">
+            <p>Your Items:</p>
+            {{#each itemX in playerItems}}
+              <div class="{{playerItemSelectedClass itemX}}">
+                {{> item itemX}}
+              </div>
+            {{/each}}
+          </div>
         {{/if}}
         {{#if tab 'resources'}}
           {{#each resource in resources}}
@@ -40,8 +55,19 @@
       </div>
     </div>
     <ul class="response-options">
-      <li class="response-option" data-option='{"action":"trade"}'>TRADE</li>
+      {{#if tab 'items'}}
+        {{#if selectedItem}}
+          <li class="response-option" data-option='{"action":"buy item"}'>BUY</li>
+        {{/if}}
+        {{#if playerSelectedItem}}
+          <li class="response-option" data-option='{"action":"sell item"}'>SELL</li>
+        {{/if}}
+      {{/if}}
+      {{#if tab 'resources'}}
+        <li class="response-option" data-option='{"action":"trade"}'>TRADE</li>
+      {{/if}}
       <li class="response-option" data-option='{"action":"cancel"}'>CANCEL</li>
     </ul>
   {{/if}}
+</div>
 </template>

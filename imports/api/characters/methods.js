@@ -76,7 +76,7 @@ Meteor.methods({
   },
 
   'characters.trade'(characterId, npcId, giving, getting){ // giving = {type: 'money', amount: 100} getting = {type: 'resource', resource: 'metal', amount: 5}
-    console.log(arguments);
+    // could also be: {type: 'item', itemId: 'alkdsjfh'}
     const character = Characters.findOne(characterId);
     if (giving.type == 'money' && giving.amount > character.stats.money) return false;
     if (giving.type == 'resource' && giving.amount > character.stats.resources[giving.resource]) return false;
@@ -94,8 +94,10 @@ Meteor.methods({
         Characters.update(characterId, {$inc: incObj });
         incObj['stats.resources.'+getting.resource] = -1 * Math.abs(getting.amount);
         Characters.update(npcId, {$inc: incObj });
+      } else if (getting.type == 'item') {
+        Items.update(getting.itemId, {$set: {ownerId: characterId}});
       }
-    } else if (giving.type == 'resource') {
+    } else if (getting.type == 'money') {
       Characters.update(npcId, {$inc: {'stats.money': -1 * Math.abs(getting.amount) }});
       Characters.update(characterId, {$inc: {'stats.money': Math.abs(getting.amount) }});
       if (giving.type == 'resource'){
@@ -104,6 +106,8 @@ Meteor.methods({
         Characters.update(characterId, {$inc: incObj });
         incObj['stats.resources.'+giving.resource] = Math.abs(giving.amount);
         Characters.update(npcId, {$inc: incObj });
+      } else if (giving.type == 'item') {
+        Items.update(giving.itemId, {$set: {ownerId: npcId}});
       }
     }
   }

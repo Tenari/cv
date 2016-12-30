@@ -7,7 +7,12 @@
         <p>Equipped</p>
       {{else}}
         {{#if ownerId}}
-          <p>Weight: {{weight}}</p>
+          <p>
+            Weight: {{weight}}
+            {{#if price}}
+              $ {{price}}
+            {{/if}}
+          </p>
         {{else}}
           <button class="pick-up-item" data-id="{{_id}}">Take</button>
         {{/if}}

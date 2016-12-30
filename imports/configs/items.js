@@ -30,6 +30,8 @@ export const itemConfigs = {
       cost: {
         wood: 1, metal: 10, energy: 200
       },
+      npcSellFactor: 0.5,
+      npcBuyFactor: 0.4,
     },
     woodenKnuckles: {
       key: 'woodenKnuckles',
@@ -65,6 +67,8 @@ export const itemConfigs = {
       weight: 1,
       effectType: 'stats.hp',
       effectAmount: 5,
+      npcSellFactor: 0.1,
+      npcBuyFactor: 0.08,
     }
   }
 };
