@@ -28,7 +28,7 @@
             <p class="prompt">What will you do next?</p>
             <div class="next-move-description">
               {{#if nextIsAttack}}
-                <span class="attack">{{nextAttack}}</span> attack<br/><span class="sub-prompt">with your</span><br/>{{currentWeapon}}
+                <span class="attack">{{nextAttack}}</span> attack<br/><span class="sub-prompt">with your</span><br/>{{currentWeapon.name}}
               {{else}}
                 attempt to <span class="attack">{{nextAttack}}</span>
               {{/if}}

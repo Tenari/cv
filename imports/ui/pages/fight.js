@@ -5,6 +5,10 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Fights } from '../../api/fights/fights.js'
+import { Items } from '../../api/items/items.js'
+
+import { getCharacter } from '../../configs/game.js';
+import { equipSlots } from '../../configs/items.js';
 
 import '../components/status-bars.js';
 import './fight.html';
@@ -20,8 +24,9 @@ Template.fight.onCreated(function fightOnCreated() {
   })
   var state = this.state;
   this.subscribe('fights.own');
+  this.subscribe('items.own');
   this.subscribe('characters.fight');
-  this.character = () => Characters.findOne({userId: Meteor.userId()});
+  this.character = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
 
   Meteor.setInterval(()=>{
     state.set('timeLeft', state.get('timeLeft') - 1);
@@ -96,6 +101,10 @@ Template.fight.helpers({
   },
   timeLeft(){
     return Template.instance().state.get('timeLeft');
+  },
+  currentWeapon(){
+    const character = Template.instance().character();
+    return Items.findOne({ownerId: character._id, equipped: true, type: 'weapon'}) || {name: 'bare hands'};
   }
 })
 

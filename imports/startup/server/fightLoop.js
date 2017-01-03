@@ -46,8 +46,8 @@ export function fightLoop(){
     defender.stats.toughness = defender.stats.baseToughness;
 
     // determine combat order (based on attackspeed, which comes from their weapon and proficiency)
-    const attackerWeapon = Items.findOne({ownerId: attacker._id, equipped: true, equipSlot: equipSlots.hand});
-    const defenderWeapon = Items.findOne({ownerId: defender._id, equipped: true, equipSlot: equipSlots.hand});
+    const attackerWeapon = Items.findOne({ownerId: attacker._id, equipped: true, type: 'weapon'});
+    const defenderWeapon = Items.findOne({ownerId: defender._id, equipped: true, type: 'weapon'});
     var order = combatOrder(fight, attacker, defender, attackerWeapon, defenderWeapon);
     var first = order[0];
     var last = order[1];
