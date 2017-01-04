@@ -31,6 +31,17 @@ export function getCharacter(userId, gameId, Characters) {
   return Characters.findOne({userId: userId, gameId: gameId, 'stats.hp':{$gt: 0}})
 }
 
+export function recalculateStats(character) {
+  _.each(_.keys(speeds), function(weaponType){
+    character.stats.weapon[weaponType] = character.stats.weapon[weaponType+'Base'];
+  })
+  character.stats.strength = character.stats.baseStrength; // + weapon modifications, buffs, etc..
+  character.stats.accuracy = character.stats.baseAccuracy;
+  character.stats.agility = character.stats.baseAgility;
+  character.stats.toughness = character.stats.baseToughness;
+  return character;
+}
+
 // copy/text constants
 export const statDescriptions = {
   fighting: {

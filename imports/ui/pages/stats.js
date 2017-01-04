@@ -66,8 +66,8 @@ Template.stats.helpers({
 
   itemDescription(){
     const item = Items.findOne(Template.instance().state.get('item'));
-    if (item.effectType() == 'stats.hp') {
-     return 'Increases your HP by '+ item.effectAmount() +' on use. Is consumed in the process.';
+    if (item.type == 'consumable') {
+     return item.effectDescription() +' on use. Is consumed in the process.';
     }
     return false;
   },

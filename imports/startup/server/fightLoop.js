@@ -5,7 +5,7 @@ import { Fights } from '../../api/fights/fights.js';
 import { Items } from '../../api/items/items.js';
 import { Characters } from '../../api/characters/characters.js';
 
-import { styleFactors, fightEnergyCostFactor, speeds } from '../../configs/game.js';
+import { styleFactors, fightEnergyCostFactor, speeds, recalculateStats } from '../../configs/game.js';
 import { equipSlots } from '../../configs/items.js';
 
 export function fightLoop(){
@@ -32,18 +32,8 @@ export function fightLoop(){
     defender.stats.energy = defender.stats.energy - (fightEnergyCostFactor * styleFactors[fight.defenderStyle]);
 
     // calculate the user's functional/current stats
-    _.each(_.keys(speeds), function(weaponType){
-      attacker.stats.weapon[weaponType] = attacker.stats.weapon[weaponType+'Base'];
-      defender.stats.weapon[weaponType] = defender.stats.weapon[weaponType+'Base'];
-    })
-    attacker.stats.strength = attacker.stats.baseStrength; // + weapon modifications, buffs, etc..
-    attacker.stats.accuracy = attacker.stats.baseAccuracy;
-    attacker.stats.agility = attacker.stats.baseAgility;
-    attacker.stats.toughness = attacker.stats.baseToughness;
-    defender.stats.strength = defender.stats.baseStrength;
-    defender.stats.accuracy = defender.stats.baseAccuracy;
-    defender.stats.agility = defender.stats.baseAgility;
-    defender.stats.toughness = defender.stats.baseToughness;
+    attacker = recalculateStats(attacker);
+    defender = recalculateStats(defender);
 
     // determine combat order (based on attackspeed, which comes from their weapon and proficiency)
     const attackerWeapon = Items.findOne({ownerId: attacker._id, equipped: true, type: 'weapon'});
@@ -70,7 +60,7 @@ export function fightLoop(){
       firstHit = rollToHit(first, last, firstWeapon);
       first.stats.baseAccuracy += skillIncreaseAmount(first.stats.baseAccuracy, last);
       if (firstWeapon)
-        first.stats.weapon[firstWeapon.type+'Base'] += skillIncreaseAmount(first.stats.weapon[firstWeapon.type+'Base'], last);
+        first.stats.weapon[firstWeapon.weaponType()+'Base'] += skillIncreaseAmount(first.stats.weapon[firstWeapon.weaponType()+'Base'], last);
       last.stats.baseAgility += skillIncreaseAmount(last.stats.baseAgility, first);
     }
     roundLog[firstIs+'Hit'] = firstHit;
@@ -96,7 +86,7 @@ export function fightLoop(){
       lastHit = rollToHit(last, first, lastWeapon, firstHit);
       last.stats.baseAccuracy += skillIncreaseAmount(last.stats.baseAccuracy, first);
       if (lastWeapon)
-        last.stats.weapon[lastWeapon.type+'Base'] += skillIncreaseAmount(last.stats.weapon[lastWeapon.type+'Base'], last);
+        last.stats.weapon[lastWeapon.weaponType()+'Base'] += skillIncreaseAmount(last.stats.weapon[lastWeapon.weaponType()+'Base'], last);
       first.stats.baseAgility += skillIncreaseAmount(first.stats.baseAgility, last);
     }
     roundLog[lastIs+'Hit'] = lastHit;
@@ -156,7 +146,7 @@ function combatOrder(fight, a, b, aW, bW) {
 function attackSpeed(style, character, weapon) {
   var weaponClassSpeed = speeds.hands;
   if (weapon)
-    weaponClassSpeed = speeds[weapon.type];
+    weaponClassSpeed = speeds[weapon.weaponType()];
   return (10 - styleFactors[style]) * weaponClassSpeed;
 }
 
@@ -164,7 +154,7 @@ function attackSpeed(style, character, weapon) {
 // b is the defender
 // missBonus is a boolean for if the odds are easier because someone missed previously.
 function rollToHit(a, b, aWeapon, missBonus) {
-  const skillDiff = a.stats.accuracy + a.stats.weapon[aWeapon ? aWeapon.type : 'hands'] - b.stats.agility; // should essentially be bounded from 200 to -100
+  const skillDiff = a.stats.accuracy + a.stats.weapon[aWeapon ? aWeapon.weaponType() : 'hands'] - b.stats.agility; // should essentially be bounded from 200 to -100
   // special equation makes skill differentials exponentially more important
   let maximumRollToHit = 12 * Math.pow( Math.E, (skillDiff * 0.0203)) + 7;
   if (missBonus == true)
@@ -181,9 +171,9 @@ function aDamagesB(fight, a, b, aWeapon) {
   const style = fight.attackerId == a._id ? fight.attackerStyle : fight.defenderStyle;
   const styleFactor = styleFactors[style];
   const strDiff = a.stats.strength - b.stats.toughness;
-  const weaponDmg = aWeapon ? aWeapon.effectAmount : 0;
-  const armor = _.filter(Items.find({ownerId: b._id, equipped: true}).fetch(), function(item){return item.type == 'armor' && item.effectType() == 'damage'});
-  const armorDmgReduction = _.reduce(armor, function(memo, item) {return memo + item.effectAmount();}, 0);
+  const weaponDmg = aWeapon ? aWeapon.damageDealt() : 0;
+  const items = Items.find({ownerId: b._id, equipped: true}).fetch();
+  const armorDmgReduction = _.reduce(items, function(memo, item) {return memo + item.damageTaken();}, 0);
   // calc the damage
   return Math.max(Math.round((styleFactor + weaponDmg + armorDmgReduction) * Math.pow( Math.E, (strDiff * 0.038))), 0); //never do negative dmg
 }

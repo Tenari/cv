@@ -73,13 +73,7 @@ Template.craft.helpers({
   },
   effectMessage(){
     const item = Template.instance().itemToCraft.get();
-    let str = '';
-    if (item.effectAmount > 0) {
-      str= 'increases '+item.effectType+' given by ';
-    } else {
-      str= 'reduces '+item.effectType+' taken by ';
-    }
-    return str + Math.abs(item.effectAmount);
+    return item.effectDescription();
   },
   canCreate(){
     let can = true;

@@ -57,7 +57,9 @@ Meteor.methods({
 
     const item = Items.findOne(id);
     let incObj = {};
-    incObj[item.effectType()] = item.effectAmount()
+    _.each(item.effects(), function(effect){
+      incObj[effect.type] = effect.amount;
+    })
     Characters.update(item.ownerId, {$inc: incObj});
 
     return Items.remove(id);

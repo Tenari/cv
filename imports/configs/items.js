@@ -9,8 +9,10 @@ export const itemConfigs = {
       img: '/images/wooden-helmet.png',
       weight: 5,
       equipSlot: equipSlots.head,
-      effectType: 'damage',
-      effectAmount: -2,
+      effects: [{
+        type: 'damageTaken',
+        amount: 1,
+      }],
       cost: {
         wood: 6, energy: 20
       },
@@ -25,8 +27,10 @@ export const itemConfigs = {
       img: '/images/shitty-sword.png',
       weight: 10,
       equipSlot: equipSlots.hand,
-      effectType: 'damage',
-      effectAmount: 2,
+      effects: [{
+        type: 'damageDealt',
+        amount: 3,
+      }],
       cost: {
         wood: 1, metal: 10, energy: 200
       },
@@ -41,8 +45,10 @@ export const itemConfigs = {
       img: '/images/wooden-knuckles.png',
       weight: 2,
       equipSlot: equipSlots.hand,
-      effectType: 'damage',
-      effectAmount: 1,
+      effects: [{
+        type: 'damageDealt',
+        amount: 1,
+      }],
       cost: {wood: 3, energy: 25},
     },
     woodenSword: {
@@ -53,8 +59,10 @@ export const itemConfigs = {
       img: '/images/wooden-sword.png',
       weight: 3,
       equipSlot: equipSlots.hand,
-      effectType: 'damage',
-      effectAmount: 1,
+      effects: [{
+        type: 'damageDealt',
+        amount: 2,
+      }],
       cost: {wood: 4, energy: 25},
     },
   },
@@ -65,13 +73,25 @@ export const itemConfigs = {
       name: 'Chicken leg',
       img: '/images/chicken-leg.png',
       weight: 1,
-      effectType: 'stats.hp',
-      effectAmount: 5,
+      effects: [{
+        type: 'stats.hp',
+        amount: 2,
+      },{
+        type: 'stats.energy',
+        amount: -15,
+      }],
       npcSellFactor: 0.1,
       npcBuyFactor: 0.08,
     }
   }
 };
+
+export const effectDescriptions = {
+  damageDealt: 'damage you give',
+  'stats.hp': 'your current health',
+  'stats.energy': 'your current energy',
+  damageTaken: 'damage you take',
+}
 
 export const craftingLocations = {
   wood: {
