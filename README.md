@@ -17,6 +17,23 @@ The game is meant to be very competitive/harsh in nature in contrast to runescap
 
 The game is not an "endless open world." It starts and ends in rounds (of say, 2 weeks). This is to prevent political stagnation and to make introducing new features easier.
 
+# Tone/Feel
+- competitive (there is a winner/loser)
+- hard (the game is relatively un-forgiving + penalizes you fairly hard for dying)
+- co-operative (you cannot win/dominate by yourself)
+- nostalgic (like pokemon)
+
+I think firefly is a good model for tone here. There will be jokes built into it, but generally it is a more serious kind of feel.
+
+The tone is NOT:
+
+- happy-go-lucky like my little pony
+- pure comedy like south park
+- devils and darkness like diablo 2
+- mass spastic chaos like doom video games or hardcore henry
+
+In one sentence I would describe it as "slightly more self-aware, competitive pokemon"
+
 # Design specifications for beta candidate
 
 _(in no particular order)_
