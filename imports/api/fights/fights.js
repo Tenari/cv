@@ -15,6 +15,12 @@ Fights.schema = new SimpleSchema({
   attackerId: { type: String, regEx: SimpleSchema.RegEx.Id },
   defenderId: { type: String, regEx: SimpleSchema.RegEx.Id },
   createdAt: {type: Number },
+  updatedAt: {
+    type: Number,
+    autoValue: function() {
+      return Date.now();
+    },
+  },
   round: {type: Number, defaultValue: 0},
   rounds: {type: [Object]},
   'rounds.$.round': {type: Number},
@@ -22,8 +28,11 @@ Fights.schema = new SimpleSchema({
   'rounds.$.defenderDealt': {type: Number},
   'rounds.$.attackerHit': {type: Boolean},
   'rounds.$.attackerDealt': {type: Number},
+  'rounds.$.firstId': {type: String, regEx: SimpleSchema.RegEx.Id },
   attackerStyle: {type: String},
   defenderStyle: {type: String},
+  attackerReady: {type: Boolean, defaultValue: false},
+  defenderReady: {type: Boolean, defaultValue: false},
 });
 
 Fights.attachSchema(Fights.schema);
@@ -39,5 +48,7 @@ Fights.publicFields = {
   rounds: 1,
   attackerStyle: 1,
   defenderStyle: 1,
+  attackerReady: 1,
+  defenderReady: 1,
 };
 
