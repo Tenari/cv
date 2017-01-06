@@ -1,3 +1,5 @@
+import { moveCharacter } from '../api/characters/methods.js';
+
 export const aiTeam = 'nature';
 
 export const aiNames = {
@@ -54,5 +56,39 @@ export const npcConfig = {
         }
       ]
     }
+  }
+}
+
+export const bearConfig = {
+  spawn: function (room){
+    const location = {
+      x: 4, // TODO: more complicated location algorithm
+      y: 4,
+      direction: 1,
+      classId: 100,
+      roomId: room._id,
+      updatedAt: Date.now(),
+    };
+    const charId = Characters.insert({
+      name: aiNames.bear,
+      team: aiTeam,
+      gameId: room.gameId,
+      location: location,
+    });
+    // TODO: insert items also, so they drop stuff when you kill them
+  },
+  move: function(bear){
+    // this function can get more complicated if we want bears to move in a non-random drift pattern
+    moveCharacter(bear, _.random(1,4));
+  },
+  setFightStrategy: function(fight, bear, Fights){
+    // just maintains the current attack-mode and auto-readies
+    let updateObj = {};
+    if (fight.attackerId == bear._id) {
+      updateObj.attackerReady = true;
+    } else {
+      updateObj.defenderReady = true;
+    }
+    Fights.update(fight._id, {$set: updateObj})
   }
 }

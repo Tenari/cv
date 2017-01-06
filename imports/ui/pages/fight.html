@@ -22,6 +22,9 @@
           <div class="countdown">
             <p>Next round in:</p>
             <div class="time-left">{{timeLeft}}</div>
+            {{#if ready}}
+              <div class="ready-marker">Ready</div>
+            {{/if}}
           </div>
 
           <div class="up-next">
@@ -39,6 +42,7 @@
             {{#if menu 'base'}}
               <div class="option fight-option"><i class="fa fa-caret-right"></i> FIGHT</div>
               <div class="option attack flee-option" data-style="flee"><i class="fa fa-caret-right"></i> FLEE</div>
+              <div class="option ready-option"><i class="fa fa-caret-right"></i> READY</div>
             {{/if}}
 
             {{#if menu 'attack'}}

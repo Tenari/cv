@@ -8,6 +8,7 @@ import { Characters } from '../api/characters/characters.js';
 
 import { styleFactors, fightEnergyCostFactor, speeds, recalculateStats } from './game.js';
 import { equipSlots } from './items.js';
+import { aiTeam, bearConfig } from './ai.js';
 
 export function countDownToRound(fightId){
   const fight = Fights.findOne(fightId)
@@ -29,33 +30,193 @@ export function fightNextRound(fightId){
   // either it has been 5 seconds, and it doesn't matter if they are ready, 
   //   OR
   // they must both be ready
-  if ((fight.updatedAt + 5000) > Date.now() && (!fight.attackerReady || !fight.defenderReady)) return;
+  if ((fight.lastRoundAt + 4900) > Date.now() && (!fight.attackerReady || !fight.defenderReady)) return;
 
   // we actually are going to fight now, so clear the timer to prevent any other occurrence of this;
-  if ((fight.updatedAt + 5000) > Date.now()) // only clear the timer if it is early. otherwise we'll be cancelling ourselves
+  if ((fight.lastRoundAt + 4900) > Date.now()) // only clear the timer if it is early. otherwise we'll be cancelling ourselves
     SyncedCron.remove('Fights:'+fightId+':'+fight.round)
 
   var roundLog = {round: fight.round};
   let attacker = Characters.findOne(fight.attackerId);
   let defender = Characters.findOne(fight.defenderId);
 
-  //TODO replace with real logic
-  let first = attacker;
-  let last = defender;
-  first.stats.hp -= 1;
-  last.stats.hp -= 1;
-  roundLog.defenderHit = true;
-  roundLog.defenderDealt = 1;
-  roundLog.attackerHit = true;
-  roundLog.attackerDealt = 1;
+  // handle fleeing
+  if (fight.attackerStyle == 'flee' && fight.defenderStyle == 'flee'){
+    // if everyone wants to flee, the fight is over
+    endFight(fight, attacker, defender);
+    return;
+  } else if (fight.attackerStyle == 'flee' && Math.random() < 0.6) { // easier for attacker to flee
+    endFight(fight, attacker, defender);
+    return;
+  } else if (fight.defenderStyle == 'flee' && Math.random() < 0.5) {
+    endFight(fight, attacker, defender);
+    return;
+  }
+
+  // lower energies by appropriate amounts
+  attacker.stats.energy = attacker.stats.energy - (fightEnergyCostFactor * styleFactors[fight.attackerStyle]);
+  defender.stats.energy = defender.stats.energy - (fightEnergyCostFactor * styleFactors[fight.defenderStyle]);
+
+  // calculate the user's functional/current stats
+  attacker = recalculateStats(attacker);
+  defender = recalculateStats(defender);
+
+  // determine combat order (based on attackspeed, which comes from their weapon and proficiency)
+  const attackerWeapon = Items.findOne({ownerId: attacker._id, equipped: true, type: 'weapon'});
+  const defenderWeapon = Items.findOne({ownerId: defender._id, equipped: true, type: 'weapon'});
+  var order = combatOrder(fight, attacker, defender, attackerWeapon, defenderWeapon);
+  var first = order[0];
+  var last = order[1];
   roundLog.firstId = first._id;
-  // end TODO
+  var firstIs, lastIs, firstWeapon, lastWeapon;
+  if (first._id == attacker._id) {
+    firstIs = 'attacker';
+    lastIs = 'defender';
+    firstWeapon = attackerWeapon;
+    lastWeapon = defenderWeapon;
+  } else {
+    firstIs = 'defender';
+    lastIs = 'attacker';
+    firstWeapon = defenderWeapon;
+    lastWeapon = attackerWeapon;
+  }
+
+  // roll first guy's attempt to hit
+  let firstHit = false;
+  if (fight[firstIs+'Style'] != 'flee') {
+    firstHit = rollToHit(first, last, firstWeapon);
+    first.stats.baseAccuracy += skillIncreaseAmount(first.stats.baseAccuracy, last);
+    if (firstWeapon)
+      first.stats.weapon[firstWeapon.weaponType()+'Base'] += skillIncreaseAmount(first.stats.weapon[firstWeapon.weaponType()+'Base'], last);
+    last.stats.baseAgility += skillIncreaseAmount(last.stats.baseAgility, first);
+  }
+  roundLog[firstIs+'Hit'] = firstHit;
+
+  if (firstHit) { // calc damage
+    const damage = aDamagesB(fight, first, last, firstWeapon);
+    last.stats.hp -= damage;
+    roundLog[firstIs+'Dealt'] = damage;
+    first.stats.baseStrength += powerIncreaseAmount(first.stats.baseStrength, last);
+    last.stats.baseToughness += powerIncreaseAmount(last.stats.baseToughness, first);
+  } else { // first guy missed
+    roundLog[firstIs+'Dealt'] = 0;
+  }
+
+  if (last.stats.hp <= 0) { // the last is dead!!!
+    endFight(fight, first, last);
+    return;
+  }
+
+  // last guy's turn to roll
+  let lastHit = false;
+  if (fight[lastIs+'Style'] != 'flee') {
+    lastHit = rollToHit(last, first, lastWeapon, firstHit);
+    last.stats.baseAccuracy += skillIncreaseAmount(last.stats.baseAccuracy, first);
+    if (lastWeapon)
+      last.stats.weapon[lastWeapon.weaponType()+'Base'] += skillIncreaseAmount(last.stats.weapon[lastWeapon.weaponType()+'Base'], last);
+    first.stats.baseAgility += skillIncreaseAmount(first.stats.baseAgility, last);
+  }
+  roundLog[lastIs+'Hit'] = lastHit;
+
+  if( lastHit ) {
+    const damage = aDamagesB(fight, last, first, lastWeapon);
+    first.stats.hp -= damage
+    roundLog[lastIs+'Dealt'] = damage;
+    last.stats.baseStrength += powerIncreaseAmount(last.stats.baseStrength, first);
+    first.stats.baseToughness += powerIncreaseAmount(first.stats.baseToughness, last);
+  } else {
+    roundLog[lastIs+'Dealt'] = 0;
+  }
+
+  if (first.stats.hp <= 0) { // the first is dead!!!
+    endFight(fight, first, last);
+    return;
+  }
 
   // update all the users records in Mongo
   Characters.update(first._id, {$set: {stats: first.stats}});
   Characters.update(last._id, {$set: {stats: last.stats}});
-  Fights.update(fightId, {$inc: {round: 1}, $push: {rounds: roundLog}});
+  Fights.update(fightId, {$inc: {round: 1}, $push: {rounds: roundLog}, $set: {attackerReady: false, defenderReady: false}});
+
+  // handle AIs making their next move
+  _.each([first,last], function(character){
+    if (character.team == aiTeam) {
+      bearConfig.setFightStrategy(fight, character, Fights);
+    }
+  });
 
   // and finally, trigger the countDown again
   countDownToRound(fightId);
+}
+
+function endFight(fight, first, last) {
+  if (first.stats.hp <= 0) {
+    first.deaths.recentlyDead = true;
+    first.deaths.diedAt = Date.now();
+    first.deaths.count += 1;
+    const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
+    Items.update({ownerId: first._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
+  }
+  if (last.stats.hp <= 0) {
+    last.deaths.recentlyDead = true;
+    last.deaths.diedAt = Date.now();
+    last.deaths.count += 1;
+    const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};
+    Items.update({ownerId: last._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
+  }
+  Fights.remove(fight._id);
+  Characters.update(first._id, {$set: {stats: first.stats, 'deaths': first.deaths, lastFightEndedAt: Date.now()}});
+  Characters.update(last._id, {$set: {stats: last.stats, 'deaths': last.deaths, lastFightEndedAt: Date.now()}});
+}
+
+function combatOrder(fight, a, b, aW, bW) {
+  var aSpeed = attackSpeed(fight.attackerStyle, a, aW);
+  var bSpeed = attackSpeed(fight.defenderStyle, b, bW);
+
+  if (aSpeed > bSpeed) // higher speed means faster
+    return [a, b];
+  else
+    return [b, a];
+}
+
+function attackSpeed(style, character, weapon) {
+  var weaponClassSpeed = speeds.hands;
+  if (weapon)
+    weaponClassSpeed = speeds[weapon.weaponType()];
+  return (10 - styleFactors[style]) * weaponClassSpeed;
+}
+
+// a is the attacker
+// b is the defender
+// missBonus is a boolean for if the odds are easier because someone missed previously.
+function rollToHit(a, b, aWeapon, missBonus) {
+  const skillDiff = a.stats.accuracy + a.stats.weapon[aWeapon ? aWeapon.weaponType() : 'hands'] - b.stats.agility; // should essentially be bounded from 200 to -100
+  // special equation makes skill differentials exponentially more important
+  let maximumRollToHit = 12 * Math.pow( Math.E, (skillDiff * 0.0203)) + 7;
+  if (missBonus == true)
+    maximumRollToHit += 10; // easier to hit someone who just missed
+  else if (missBonus === false)
+    maximumRollToHit -= 20; // really hard to hit someone who just hit you
+
+  const roll = (Math.random() * 100);
+
+  return roll < maximumRollToHit;
+}
+
+function aDamagesB(fight, a, b, aWeapon) {
+  const style = fight.attackerId == a._id ? fight.attackerStyle : fight.defenderStyle;
+  const styleFactor = styleFactors[style];
+  const strDiff = a.stats.strength - b.stats.toughness;
+  const weaponDmg = aWeapon ? aWeapon.damageDealt() : 0;
+  const items = Items.find({ownerId: b._id, equipped: true}).fetch();
+  const armorDmgReduction = _.reduce(items, function(memo, item) {return memo + item.damageTaken();}, 0);
+  // calc the damage
+  return Math.max(Math.round((styleFactor + weaponDmg + armorDmgReduction) * Math.pow( Math.E, (strDiff * 0.038))), 0); //never do negative dmg
+}
+
+function skillIncreaseAmount(trainee, trainer) {
+  return Math.pow( Math.E, (-1 * trainee / 20) );
+}
+function powerIncreaseAmount(trainee, trainer) {
+  return Math.pow( Math.E, (-1 * trainee / 10) );
 }

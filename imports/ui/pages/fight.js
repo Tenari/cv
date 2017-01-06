@@ -83,13 +83,16 @@ Template.fight.helpers({
   },
   enemyMainImage() {
     const enemy = Characters.findOne({userId: {$ne: Meteor.userId()}});
-    return enemy.location.classId + 2;
+    return enemy && enemy.location.classId + 2;
   },
   ownMainImage() {
     return Template.instance().character().location.classId + 1;
   },
   fight(){
     return Fights.findOne();
+  },
+  ready(){
+    return Fights.findOne().ready(Template.instance().character()._id);
   },
   opponentDamageTaken(){
     const dmg = Template.instance().state.get('opponentDamage');
@@ -111,6 +114,9 @@ Template.fight.helpers({
 Template.fight.events({
   'click .fight-option'(e, instance){
     instance.state.set('menu', 'attack');
+  },
+  'click .ready-option'(e, instance){
+    Meteor.call('fights.ready', Fights.findOne()._id, instance.character()._id)
   },
   'click .option.attack'(e, instance){
     Meteor.call('fights.changeStyle', Fights.findOne()._id, instance.character()._id, $(e.target).data('style'));

@@ -15,10 +15,13 @@ Fights.schema = new SimpleSchema({
   attackerId: { type: String, regEx: SimpleSchema.RegEx.Id },
   defenderId: { type: String, regEx: SimpleSchema.RegEx.Id },
   createdAt: {type: Number },
-  updatedAt: {
+  lastRoundAt: {
     type: Number,
     autoValue: function() {
-      return Date.now();
+      if (this.field('round').isSet)
+        return Date.now();
+      else
+        this.unset();
     },
   },
   round: {type: Number, defaultValue: 0},
@@ -44,6 +47,7 @@ Fights.publicFields = {
   attackerId: 1,
   defenderId: 1,
   createdAt: 1,
+  lastRoundAt: 1,
   round: 1,
   rounds: 1,
   attackerStyle: 1,
@@ -52,3 +56,12 @@ Fights.publicFields = {
   defenderReady: 1,
 };
 
+Fights.helpers({
+  ready(characterId) {
+    if (this.attackerId == characterId){
+      return this.attackerReady;
+    } else {
+      return this.defenderReady;
+    }
+  },
+})

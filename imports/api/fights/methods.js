@@ -23,6 +23,7 @@ Meteor.methods({
       attackerId: attacker._id,
       defenderId: defender._id,
       createdAt: Date.now(),
+      round: 0,
       rounds: [],
       attackerStyle: attacker.defaultAttackStyle,
       defenderStyle: defender.defaultAttackStyle,
