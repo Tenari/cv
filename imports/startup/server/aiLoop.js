@@ -21,7 +21,7 @@ export function aiSpawnLoop(){
     const bearsToSpawn = maxAiOfType.bear - totalBears;
     for (let i = 0; i < bearsToSpawn; i++){
       const room = Rooms.findOne({gameId: game._id, name: 'rome'})
-      bearConfig.spawn(room);
+      bearConfig.spawn(room, Characters);
     }
   });
 }

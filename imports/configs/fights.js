@@ -192,7 +192,7 @@ function attackSpeed(style, character, weapon) {
 function rollToHit(a, b, aWeapon, missBonus) {
   const skillDiff = a.stats.accuracy + a.stats.weapon[aWeapon ? aWeapon.weaponType() : 'hands'] - b.stats.agility; // should essentially be bounded from 200 to -100
   // special equation makes skill differentials exponentially more important
-  let maximumRollToHit = 12 * Math.pow( Math.E, (skillDiff * 0.0203)) + 7;
+  let maximumRollToHit = 75 + (0.125 * skillDiff) ;
   if (missBonus == true)
     maximumRollToHit += 10; // easier to hit someone who just missed
   else if (missBonus === false)
@@ -211,7 +211,7 @@ function aDamagesB(fight, a, b, aWeapon) {
   const items = Items.find({ownerId: b._id, equipped: true}).fetch();
   const armorDmgReduction = _.reduce(items, function(memo, item) {return memo + item.damageTaken();}, 0);
   // calc the damage
-  return Math.max(Math.round((styleFactor + weaponDmg + armorDmgReduction) * Math.pow( Math.E, (strDiff * 0.038))), 0); //never do negative dmg
+  return Math.max(Math.round(styleFactor + weaponDmg - armorDmgReduction + (0.125 * strDiff)), 0); //never do negative dmg
 }
 
 function skillIncreaseAmount(trainee, trainer) {

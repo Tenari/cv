@@ -60,7 +60,7 @@ export const npcConfig = {
 }
 
 export const bearConfig = {
-  spawn: function (room){
+  spawn: function (room, Characters){
     const location = {
       x: 4, // TODO: more complicated location algorithm
       y: 4,
