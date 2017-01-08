@@ -57,7 +57,7 @@ const CollectingSchema = new SimpleSchema({
 const StatsSchema = new SimpleSchema({
   hp: {
     type: Number, 
-    // this fucntion will overwrite the value of the hp to never be more than the baseHp of the same document
+    // this fucntion will overwrite the value of the hp to never be more than the hpBase of the same document
     autoValue: function(){
       //default to 30
       if (!this.isSet && this.isInsert) {
@@ -66,30 +66,30 @@ const StatsSchema = new SimpleSchema({
       const doc = Characters.findOne(this.docId);
       if (!doc) return undefined;
 
-      if (this.isSet && doc.stats.baseHp && this.operator == '$set' && this.value > doc.stats.baseHp) {
-        return doc.stats.baseHp;
+      if (this.isSet && doc.stats.hpBase && this.operator == '$set' && this.value > doc.stats.hpBase) {
+        return doc.stats.hpBase;
       }
-      if (this.isSet && doc.stats.baseHp && this.operator == '$inc') {
-        if (doc.stats.hp + this.value > doc.stats.baseHp) {
-          return this.value - ((doc.stats.hp + this.value) - doc.stats.baseHp);
+      if (this.isSet && doc.stats.hpBase && this.operator == '$inc') {
+        if (doc.stats.hp + this.value > doc.stats.hpBase) {
+          return this.value - ((doc.stats.hp + this.value) - doc.stats.hpBase);
         }
       }
     }
   },
-  baseHp: {type: Number, defaultValue: 30},
+  hpBase: {type: Number, defaultValue: 30},
   strength: {type: Number, defaultValue: 1, decimal: true},
-  baseStrength: {type: Number, defaultValue: 1, decimal: true},
+  strengthBase: {type: Number, defaultValue: 1, decimal: true},
   accuracy: {type: Number, defaultValue: 1, decimal: true},
-  baseAccuracy: {type: Number, defaultValue: 1, decimal: true},
+  accuracyBase: {type: Number, defaultValue: 1, decimal: true},
   agility: {type: Number, defaultValue: 1, decimal: true},
-  baseAgility: {type: Number, defaultValue: 1, decimal: true},
+  agilityBase: {type: Number, defaultValue: 1, decimal: true},
   toughness: {type: Number, defaultValue: 1, decimal: true},
-  baseToughness: {type: Number, defaultValue: 1, decimal: true},
+  toughnessBase: {type: Number, defaultValue: 1, decimal: true},
   weapon: {type: WeaponStatsSchema},
   resources: { type: ResourcesSchema },
   collecting: { type: CollectingSchema },
   energy: {type: Number, decimal: true, autoValue: function(){
-    // this fucntion will overwrite the value of the energy to never be more than the baseEnergy of the same document
+    // this fucntion will overwrite the value of the energy to never be more than the energyBase of the same document
     //default to 10000
     if (!this.isSet && this.isInsert) {
       return 10000;
@@ -97,16 +97,16 @@ const StatsSchema = new SimpleSchema({
     const doc = Characters.findOne(this.docId);
     if (!doc) return undefined;
 
-    if (this.isSet && doc.stats.baseEnergy && this.operator == '$set' && this.value > doc.stats.baseEnergy) {
-      return doc.stats.baseEnergy;
+    if (this.isSet && doc.stats.energyBase && this.operator == '$set' && this.value > doc.stats.energyBase) {
+      return doc.stats.energyBase;
     }
-    if (this.isSet && doc.stats.baseEnergy && this.operator == '$inc') {
-      if (doc.stats.energy + this.value > doc.stats.baseEnergy) {
-        return this.value - ((doc.stats.energy + this.value) - doc.stats.baseEnergy);
+    if (this.isSet && doc.stats.energyBase && this.operator == '$inc') {
+      if (doc.stats.energy + this.value > doc.stats.energyBase) {
+        return this.value - ((doc.stats.energy + this.value) - doc.stats.energyBase);
       }
     }
   }},
-  baseEnergy: {type: Number, defaultValue: 10000},
+  energyBase: {type: Number, defaultValue: 10000},
   endurance: {type: Number, defaultValue: 1, decimal: true},
   money: {type: Number, defaultValue: 100},
 });

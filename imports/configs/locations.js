@@ -45,7 +45,7 @@ export const doorConfig = {
     team: 'team', // means only the team specified is allowed in
     all: 'all', // means all (including animals) may enter
   },
-  stats: {hp: 30, baseHp: 30},
+  stats: {hp: 30, hpBase: 30},
   buildingResources: [{resource:"wood", amount:30, has:0}],
 };
 

@@ -85,10 +85,10 @@ export function fightNextRound(fightId){
   let firstHit = false;
   if (fight[firstIs+'Style'] != 'flee') {
     firstHit = rollToHit(first, last, firstWeapon);
-    first.stats.baseAccuracy += skillIncreaseAmount(first.stats.baseAccuracy, last);
+    first.stats.accuracyBase += skillIncreaseAmount(first.stats.accuracyBase, last);
     if (firstWeapon)
       first.stats.weapon[firstWeapon.weaponType()+'Base'] += skillIncreaseAmount(first.stats.weapon[firstWeapon.weaponType()+'Base'], last);
-    last.stats.baseAgility += skillIncreaseAmount(last.stats.baseAgility, first);
+    last.stats.agilityBase += skillIncreaseAmount(last.stats.agilityBase, first);
   }
   roundLog[firstIs+'Hit'] = firstHit;
 
@@ -96,8 +96,8 @@ export function fightNextRound(fightId){
     const damage = aDamagesB(fight, first, last, firstWeapon);
     last.stats.hp -= damage;
     roundLog[firstIs+'Dealt'] = damage;
-    first.stats.baseStrength += powerIncreaseAmount(first.stats.baseStrength, last);
-    last.stats.baseToughness += powerIncreaseAmount(last.stats.baseToughness, first);
+    first.stats.strengthBase += powerIncreaseAmount(first.stats.strengthBase, last);
+    last.stats.toughnessBase += powerIncreaseAmount(last.stats.toughnessBase, first);
   } else { // first guy missed
     roundLog[firstIs+'Dealt'] = 0;
   }
@@ -111,10 +111,10 @@ export function fightNextRound(fightId){
   let lastHit = false;
   if (fight[lastIs+'Style'] != 'flee') {
     lastHit = rollToHit(last, first, lastWeapon, firstHit);
-    last.stats.baseAccuracy += skillIncreaseAmount(last.stats.baseAccuracy, first);
+    last.stats.accuracyBase += skillIncreaseAmount(last.stats.accuracyBase, first);
     if (lastWeapon)
       last.stats.weapon[lastWeapon.weaponType()+'Base'] += skillIncreaseAmount(last.stats.weapon[lastWeapon.weaponType()+'Base'], last);
-    first.stats.baseAgility += skillIncreaseAmount(first.stats.baseAgility, last);
+    first.stats.agilityBase += skillIncreaseAmount(first.stats.agilityBase, last);
   }
   roundLog[lastIs+'Hit'] = lastHit;
 
@@ -122,8 +122,8 @@ export function fightNextRound(fightId){
     const damage = aDamagesB(fight, last, first, lastWeapon);
     first.stats.hp -= damage
     roundLog[lastIs+'Dealt'] = damage;
-    last.stats.baseStrength += powerIncreaseAmount(last.stats.baseStrength, first);
-    first.stats.baseToughness += powerIncreaseAmount(first.stats.baseToughness, last);
+    last.stats.strengthBase += powerIncreaseAmount(last.stats.strengthBase, first);
+    first.stats.toughnessBase += powerIncreaseAmount(first.stats.toughnessBase, last);
   } else {
     roundLog[lastIs+'Dealt'] = 0;
   }

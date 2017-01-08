@@ -2,7 +2,7 @@
   {{#if character}}
     {{> hpBar character}}
     <div class="stat-meter-container">
-      <p class="stat-meter-title">ENERGY <span>{{character.stats.energy}} / {{character.stats.baseEnergy}}</span></p>
+      <p class="stat-meter-title">ENERGY <span>{{character.stats.energy}} / {{character.stats.energyBase}}</span></p>
       <div class="stat-meter">
         <div class="stat-meter-filling energy" style="width: {{statPercent 'energy'}}%"></div>
       </div>
@@ -19,7 +19,7 @@
 <template name="hpBar">
   {{#if stats}}
     <div class="stat-meter-container">
-      <p class="stat-meter-title">HP <span>{{stats.hp}} / {{stats.baseHp}}</span></p>
+      <p class="stat-meter-title">HP <span>{{stats.hp}} / {{stats.hpBase}}</span></p>
       <div class="stat-meter">
         <div class="stat-meter-filling hp" style="width: {{statPercent}}%"></div>
       </div>

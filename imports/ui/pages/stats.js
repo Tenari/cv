@@ -52,8 +52,38 @@ Template.stats.helpers({
     return Template.instance().state.get('page') == key ? 'active' : false;
   },
 
-  decimal(stat){
-    return stat.toFixed(2);
+  level(stat){
+    const character = Characters.findOne({userId: Meteor.userId()})
+    if (character.stats[stat])
+      return parseInt(character.stats[stat]);
+    else if (character.stats.weapon[stat])
+      return parseInt(character.stats.weapon[stat]);
+    else if (character.stats.collecting[stat])
+      return parseInt(character.stats.collecting[stat]);
+  },
+
+  progressToNextLevel(stat) {
+    const character = Characters.findOne({userId: Meteor.userId()})
+    let statValue;
+    if (character.stats[stat+'Base'])
+      statValue = character.stats[stat+'Base'];
+    else if (character.stats.weapon[stat+'Base'])
+      statValue = character.stats.weapon[stat+'Base'];
+    else if (character.stats.collecting[stat+'Base'])
+      statValue = character.stats.collecting[stat+'Base'];
+    return (statValue - parseInt(statValue)) * 100;
+  },
+
+  basicCombatSkills(){
+    return ['strength', 'accuracy', 'toughness', 'agility'];
+  },
+
+  weaponSkills(){
+    return ['hands', 'smallBlade', 'largeBlade', 'axe'];
+  },
+
+  collectingSkills(){
+    return ['wood', 'hide', 'leather', 'ore', 'metal'];
   },
 
   items(){
@@ -216,7 +246,7 @@ Template.stats.events({
     if (item) 
       Meteor.call('items.unequip', item._id);
   },
-  'mouseenter .skills-display-container>li'(e, instance){
+  'mouseenter .skills-display-container li'(e, instance){
     instance.state.set('stat', $(e.currentTarget).data('stat'));
   },
   'click a.drop'(e, instance){

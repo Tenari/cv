@@ -72,7 +72,7 @@ Meteor.methods({
 
     if (allResourcesArePresent) {
       if (room.map[xy.y][xy.x].stats) { // we are dealing with a door/repair
-        room.map[xy.y][xy.x].stats.hp = room.map[xy.y][xy.x].stats.baseHp;
+        room.map[xy.y][xy.x].stats.hp = room.map[xy.y][xy.x].stats.hpBase;
         room.map[xy.y][xy.x].buildingResources = _.map(room.map[xy.y][xy.x].buildingResources, function(obj){
           obj.has = 0;
           return obj;

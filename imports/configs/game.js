@@ -35,10 +35,10 @@ export function recalculateStats(character) {
   _.each(_.keys(speeds), function(weaponType){
     character.stats.weapon[weaponType] = character.stats.weapon[weaponType+'Base'];
   })
-  character.stats.strength = character.stats.baseStrength; // + weapon modifications, buffs, etc..
-  character.stats.accuracy = character.stats.baseAccuracy;
-  character.stats.agility = character.stats.baseAgility;
-  character.stats.toughness = character.stats.baseToughness;
+  character.stats.strength = character.stats.strengthBase; // + weapon modifications, buffs, etc..
+  character.stats.accuracy = character.stats.accuracyBase;
+  character.stats.agility = character.stats.agilityBase;
+  character.stats.toughness = character.stats.toughnessBase;
   return character;
 }
 

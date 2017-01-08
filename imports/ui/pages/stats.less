@@ -77,6 +77,11 @@
     }
     .skills-display-container {
       width: 500px;
+      .skill-block {
+        display: flex;
+        flex-wrap: wrap;
+        li {width: 50%;}
+      }
       li {
         text-transform: uppercase;
         list-style: none;
@@ -85,6 +90,16 @@
         .fa {display: none;}
         &:hover {
           .fa {display: inline;}
+        }
+        .progress-container {
+          width: 180px;
+          height: 18px;
+          border: 1px solid black;
+          border-radius: 2px;
+          .progress-marker {
+            height: 100%;
+            background-color: @color-primary;
+          }
         }
       }
     }
