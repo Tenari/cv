@@ -3,6 +3,9 @@
   <div class="opponent-status-bars">
     <h2>{{enemy.name}}</h2>
     {{> hpBar enemy}}
+    {{#if opponentReady}}
+      <div class="ready-marker">Ready</div>
+    {{/if}}
   </div>
   {{/if}}
   <div class="game-status-bars">
@@ -56,8 +59,15 @@
       </div>
     </div>
   </div>
-  {{#each round in fight.rounds}}
-    <p>attacker did {{round.attackerDealt}}</p>
-    <p>defender did {{round.defenderDealt}}</p>
-  {{/each}}
+  {{#if roundSummary}}
+    <div class="round-summary">
+      {{#if roundSummary.amFirst}}
+        <p>Your attack {{roundSummary.yourAttack}}</p>
+        <p>{{enemy.name}}'s attack {{roundSummary.theirAttack}}</p>
+      {{else}}
+        <p>{{enemy.name}}'s attack {{roundSummary.theirAttack}}</p>
+        <p>Your attack {{roundSummary.yourAttack}}</p>
+      {{/if}}
+    </div>
+  {{/if}}
 </template>

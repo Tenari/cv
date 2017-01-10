@@ -16,6 +16,17 @@ Meteor.publish ("characters.room", function() {
   }
 });
 
+Meteor.publish ("characters.team", function() {
+  // only get to see users if you're logged in
+  if (this.userId) {
+    // only publish the users in the same room. Don't need to know about those other fuckers.
+    const team = Characters.findOne({userId: this.userId}).team;
+    return Characters.find({$or: [{userId: this.userId}, {"team": roomId}], 'stats.hp': {$gt: 0}}, {fields: Characters.publicFields});
+  } else {
+    this.ready();
+  }
+});
+
 Meteor.publish ("characters.own", function(showDead) {
   if (this.userId) {
     var search = {userId: this.userId};

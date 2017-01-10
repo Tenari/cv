@@ -39,6 +39,26 @@ Template.fight.onCreated(function fightOnCreated() {
     const round = fight.rounds[fight.rounds.length-1];
     if (!round) return;
 
+    var yourMessage = 'missed';
+    var theirMessage = 'missed';
+    var amFirst = true;
+    if (this.character()._id == fight.attackerId) {
+      if (round.attackerDealt > 0)
+        yourMessage = 'did '+ round.attackerDealt +' damage.';
+      if (round.defenderDealt > 0)
+        theirMessage = 'did '+ round.defenderDealt +' damage.';
+    } else {
+      if (round.attackerDealt > 0)
+        theirMessage = 'did '+ round.attackerDealt +' damage.';
+      if (round.defenderDealt > 0)
+        yourMessage = 'did '+ round.defenderDealt +' damage.';
+      amFirst = false;
+    }
+    this.state.set('roundSummary', {
+      yourAttack: yourMessage,
+      theirAttack: theirMessage,
+      amFirst: amFirst,
+    });
     const damage = this.character()._id == fight.attackerId ? round.attackerDealt : round.defenderDealt;
     this.state.set('opponentDamage', damage);
 
@@ -48,7 +68,8 @@ Template.fight.onCreated(function fightOnCreated() {
     Meteor.setTimeout(function(){
       state.set('opponentDamage', 0);
       state.set('ownDamage', 0);
-    }, 2000) 
+      state.set('roundSummary', null);
+    }, 3500) 
   })
 
   this.autorun(()=> {
@@ -94,6 +115,9 @@ Template.fight.helpers({
   ready(){
     return Fights.findOne().ready(Template.instance().character()._id);
   },
+  opponentReady(){
+    return Fights.findOne().ready(Characters.findOne({userId: {$ne: Meteor.userId()}})._id);
+  },
   opponentDamageTaken(){
     const dmg = Template.instance().state.get('opponentDamage');
     return dmg > 0 ? ("-"+dmg) : "";
@@ -108,7 +132,10 @@ Template.fight.helpers({
   currentWeapon(){
     const character = Template.instance().character();
     return Items.findOne({ownerId: character._id, equipped: true, type: 'weapon'}) || {name: 'bare hands'};
-  }
+  },
+  roundSummary(){
+     return Template.instance().state.get('roundSummary');
+  },
 })
 
 Template.fight.events({
