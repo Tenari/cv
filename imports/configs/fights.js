@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
+import { Games } from '../api/games/games.js';
 import { Fights } from '../api/fights/fights.js';
 import { Items } from '../api/items/items.js';
 import { Characters } from '../api/characters/characters.js';
@@ -154,6 +155,12 @@ function endFight(fight, first, last) {
     first.deaths.recentlyDead = true;
     first.deaths.diedAt = Date.now();
     first.deaths.count += 1;
+    var obj = {};
+    obj[last.team+'.kills'] = 1;
+    if (first.team != aiTeam && last.team != first.team) {
+      obj[last.team+'.score'] = first.stats.rank; // you gain as many points as the opponent's rank in his team
+    }
+    Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: first._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
   }
@@ -161,6 +168,12 @@ function endFight(fight, first, last) {
     last.deaths.recentlyDead = true;
     last.deaths.diedAt = Date.now();
     last.deaths.count += 1;
+    var obj = {};
+    obj[first.team+'.kills'] = 1;
+    if (last.team != aiTeam && last.team != first.team) {
+      obj[first.team+'.score'] = last.stats.rank;
+    }
+    Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: last._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
   }

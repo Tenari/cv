@@ -1,0 +1,25 @@
+<template name="team">
+  <div class="team-page">
+    <a href="#">Chat</a> 
+    <a href="#">Rank</a> 
+    <a href="#">Missions</a> 
+    <div class="scoreboard">
+      <div class="{{team.key}}">
+        <div class="team-name">{{team.name}}</div>
+        <div class="team-score">{{team.score}}</div>
+      </div>
+      <div class="{{otherTeam.key}}">
+        <div class="team-name">{{otherTeam.name}}</div>
+        <div class="team-score">{{otherTeam.score}}</div>
+      </div>
+    </div>
+    <div class="rank-container">
+      
+    </div>
+    <ul class="team-status">
+      <li>Online players: 40</li>
+      <li>Team kills: {{team.kills}}</li>
+      <li>Team deaths: 40</li>
+    </ul>
+  </div>
+</template>

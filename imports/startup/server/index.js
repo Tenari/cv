@@ -28,7 +28,22 @@ import  '../../api/buildings/methods.js';
 Meteor.startup(function (){
   var game = Games.findOne();
   if ( !game ) { // ensure that there is one game with some rooms always
-    var gameId = Games.insert({createdAt: Date.now(), startedAt: Date.now()});
+    var gameId = Games.insert({
+      createdAt: Date.now(),
+      startedAt: Date.now(),
+      romans: {
+        score: 0,
+        key: 'romans',
+        name: 'The Holy Roman Empire',
+        kills: 0,
+      },
+      japs: {
+        score: 0,
+        key: 'japs',
+        name: 'Land of the Rising Sun',
+        kills: 0,
+      },
+    });
     var rome = EJSON.parse(Assets.getText('rome.json'))  ;
     var tokyo = EJSON.parse(Assets.getText('tokyo.json'))  ;
     var land = EJSON.parse(Assets.getText('land-sale.json'))  ;

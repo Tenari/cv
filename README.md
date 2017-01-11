@@ -50,6 +50,7 @@ _(in no particular order)_
     - 2 cities + wildernes in between
     - stat progressions/display page
     - character item equips
+    - [teams](#teams)
     - game-wide events/plot (find the [MacGuffin](http://tvtropes.org/pmwiki/pmwiki.php/Main/MacGuffin), then fight over it/steal it for your team)
 - account + character management screens
 - pay to play past your first game/character
@@ -84,3 +85,9 @@ _(in no particular order)_
 - Single use
     - food: heals HP
     - drinks: restore energy
+
+## Teams
+
+Every player is on one of two teams. Players actions earn points for their team. The team with the most points at the end of the game wins.
+
+Each team is a hierarchical command structure. Of course, players within this structure are free to ignore commands from above, it's just that incentives and priveleges depend on it. Example: a king has the ability to set the team-wide strategy by adding/removing mission objectives, and setting a personal message on the team page. A peasant gets none of those abilities. Team rank is dependant on a combination of how powerful your character is individually (ie, money + fighting ability) and how much you have co-operated with your team members (killed anyone? completed any missions a higher up set?
