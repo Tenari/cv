@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { itemConfigs, effectDescriptions } from '../../configs/items.js';
+import { itemConfigs, effectsDescription } from '../../configs/items.js';
 
 export const Items = new Mongo.Collection('items');
 
@@ -75,10 +75,6 @@ Items.helpers({
     return itemConfigs[this.type][this.key].equipSlot;
   },
   effectDescription(){
-    let str = '';
-    _.each(this.effects(), function(effect){
-      str += effect.amount + ' to ' + effectDescriptions[effect.type] + '. ';
-    })
-    return str;
+    return effectsDescription(this.effects());
   }
 })

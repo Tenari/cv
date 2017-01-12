@@ -12,7 +12,7 @@ export const teamConfigs = {
   romans: {
     key: 'romans',
     startingCharacterCode: 20,
-    name: 'Holy Roman Empire',
+    name: 'Roman Empire',
   },
 };
 

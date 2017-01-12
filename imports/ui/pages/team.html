@@ -14,7 +14,19 @@
       </div>
     </div>
     <div class="rank-container">
-      
+      {{#each rank in ranks}}
+        <div class="rank-display">
+          <div class="rank-name">{{rank.name}}</div>
+          <div class="rank-count">{{rank.number}}</div>
+          {{#each player in rank.players}}
+            <div class="rank-holder">
+              <div class="player-name">{{player.name}}</div>
+              <img src="{{player.image}}" class="player-image"/>
+              <div class="player-team-power">{{player.teamPower}}</div>
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
     </div>
     <ul class="team-status">
       <li>Online players: 40</li>

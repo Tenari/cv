@@ -8,10 +8,11 @@ import { Rooms } from '../../api/rooms/rooms.js'
 import { Buildings } from '../../api/buildings/buildings.js'
 
 import '../../api/items/methods.js'; 
-import { teamCode, statDescriptions } from '../../configs/game.js'; 
+import { statDescriptions } from '../../configs/game.js'; 
 import { equipSlots } from '../../configs/items.js'; 
 import { buildingConfig } from '../../configs/buildings.js'; 
 import { doorConfig } from '../../configs/locations.js'; 
+import { teamConfigs } from '../../configs/ranks.js';
 
 import '../components/item.js';
 import '../components/status-bars.js';
@@ -188,7 +189,7 @@ Template.stats.helpers({
   },
 
   teams() {
-    return _.keys(teamCode);
+    return _.values(teamConfigs);
   },
 
   doorLockTypeSelected(key) {

@@ -5,7 +5,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Characters } from '../../api/characters/characters.js';
 import { Rooms } from '../../api/rooms/rooms.js';
-import { craftingLocations, itemConfigs } from '../../configs/items.js';
+import { craftingLocations, itemConfigs, effectsDescription } from '../../configs/items.js';
 import { nextSpotXY } from '../../configs/locations.js';
 
 import './craft.html';
@@ -73,7 +73,7 @@ Template.craft.helpers({
   },
   effectMessage(){
     const item = Template.instance().itemToCraft.get();
-    return item.effectDescription();
+    return effectsDescription(item.effects);
   },
   canCreate(){
     let can = true;

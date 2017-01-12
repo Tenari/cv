@@ -220,8 +220,8 @@
                     <option {{doorLockTypeSelected doorConfig.lockTypes.all}} value="{{doorConfig.lockTypes.all}}">All</option>
                   </select>
                   <select class="building-lock-setting-team">
-                    {{#each key in teams}}
-                      <option {{doorLockTeamSelected key}} value="{{key}}">{{key}}</option>
+                    {{#each obj in teams}}
+                      <option {{doorLockTeamSelected obj.key}} value="{{obj.key}}">{{obj.name}}</option>
                     {{/each}}
                   </select>
                 </p>

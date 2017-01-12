@@ -10,7 +10,8 @@ import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
-import { getCharacter, teamCode } from '../../configs/game.js';
+import { getCharacter } from '../../configs/game.js';
+import { teamConfigs } from '../../configs/ranks.js';
 
 Meteor.methods({
   'characters.insert'(obj) {
@@ -31,7 +32,7 @@ Meteor.methods({
       x: 3,
       y: 5,
       direction: 1,
-      classId: teamCode[obj.team],
+      classId: teamConfigs[obj.team].startingCharacterCode,
       roomId: room._id,
       updatedAt: Date.now(),
     };

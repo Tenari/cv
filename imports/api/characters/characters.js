@@ -166,5 +166,13 @@ Characters.helpers({
   },
   canCarry(weight) {
     return this.maxWeight() > (this.carriedWeight() + weight);
-  }
+  },
+  power(){
+    const that = this;
+    const moneyPower = (this.stats.money / 10);
+    const collectingPower = _.reduce(['woodBase','oreBase','leatherBase', 'hideBase', 'metalBase'], function(memo, key){return memo + that.stats.collecting[key];}, 0);
+    const fightingPower = _.reduce(['strengthBase','agilityBase','toughnessBase', 'accuracyBase'], function(memo, key){return memo + that.stats[key];}, 0);
+    const weaponPower = _.reduce(['handsBase','smallBladeBase','largeBladeBase', 'axeBase'], function(memo, key){return memo + that.stats.weapon[key];}, 0);
+    return moneyPower + collectingPower + fightingPower + weaponPower;
+  },
 })

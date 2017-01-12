@@ -158,7 +158,8 @@ function endFight(fight, first, last) {
     var obj = {};
     obj[last.team+'.kills'] = 1;
     if (first.team != aiTeam && last.team != first.team) {
-      obj[last.team+'.score'] = first.stats.rank; // you gain as many points as the opponent's rank in his team
+      obj[last.team+'.score'] = first.stats.rank; // your team gains as many points as the opponent's rank in his team
+      last.stats.rank += 1; // you gain rank for killing an opponent
     }
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
@@ -172,6 +173,7 @@ function endFight(fight, first, last) {
     obj[first.team+'.kills'] = 1;
     if (last.team != aiTeam && last.team != first.team) {
       obj[first.team+'.score'] = last.stats.rank;
+      first.stats.rank += 1;
     }
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};
@@ -222,9 +224,9 @@ function aDamagesB(fight, a, b, aWeapon) {
   const strDiff = a.stats.strength - b.stats.toughness;
   const weaponDmg = aWeapon ? aWeapon.damageDealt() : 0;
   const items = Items.find({ownerId: b._id, equipped: true}).fetch();
-  const armorDmgReduction = _.reduce(items, function(memo, item) {return memo + item.damageTaken();}, 0);
+  const armorDmgEffect = _.reduce(items, function(memo, item) {return memo + item.damageTaken();}, 0);
   // calc the damage
-  return Math.max(Math.round(styleFactor + weaponDmg - armorDmgReduction + (0.125 * strDiff)), 0); //never do negative dmg
+  return Math.max(Math.round(styleFactor + weaponDmg + armorDmgEffect + (0.125 * strDiff)), 0); //never do negative dmg
 }
 
 function skillIncreaseAmount(trainee, trainer) {

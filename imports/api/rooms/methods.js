@@ -6,7 +6,7 @@ import { Characters } from '../characters/characters.js';
 import { Buildings } from '../buildings/buildings.js';
 
 import { treeStumpTile, nextSpotXY, doorConfig } from '../../configs/locations.js';
-import { getCharacter, doorAttackEnergyCost } from '../../configs/game.js';
+import { getCharacter, doorAttackEnergyCost, resourceConfig, collectingSkillGrowthAmount } from '../../configs/game.js';
 import { buildingConfig } from '../../configs/buildings.js';
 
 Meteor.methods({
@@ -30,7 +30,9 @@ Meteor.methods({
         room.map[xy.y][xy.x] = _.clone(treeStumpTile);
       }
       Rooms.update(room._id, {$set: {map: room.map}});
-      Characters.update(character._id, {$set: {'stats.resources': character.stats.resources, 'stats.energy': character.stats.energy - 10}});
+      const newEnergy = character.stats.energy - Math.max(resourceConfig[nextSpace.resources.type].baseCostToCollect - parseInt(character.stats.collecting[nextSpace.resources.type]), 1);
+      character.stats.collecting[nextSpace.resources.type] += collectingSkillGrowthAmount(character.stats.collecting[nextSpace.resources.type+'Base']);
+      Characters.update(character._id, {$set: {'stats.resources': character.stats.resources, 'stats.energy': newEnergy, 'stats.collecting': character.stats.collecting}});
     }
   },
   'rooms.attackDoor'(characterId) {

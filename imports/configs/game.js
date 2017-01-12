@@ -22,11 +22,6 @@ export function minutesUntilRevive(character) {
   return character && Math.round(((character.deaths.diedAt + deathWaitTimeMs) - Date.now()) / 60 / 1000); 
 }
 
-export const teamCode = {
-  romans: 20,
-  japs: 30
-}
-
 export function getCharacter(userId, gameId, Characters) {
   return Characters.findOne({userId: userId, gameId: gameId, 'stats.hp':{$gt: 0}})
 }
@@ -71,25 +66,34 @@ export const resourceConfig = {
     key: 'wood',
     label: 'Wood',
     cost: 1,
+    baseCostToCollect: 50,
   },
   hide: {
     key: 'hide',
     label: 'Hide',
     cost: 4,
+    baseCostToCollect: 60,
   },
   leather: {
     key: 'leather',
     label: 'Leather',
     cost: 8,
+    baseCostToCollect: 100,
   },
   ore: {
     key: 'ore',
     label: 'Ore',
     cost: 3,
+    baseCostToCollect: 70,
   },
   metal: {
     key: 'metal',
     label: 'Metal',
     cost: 6,
+    baseCostToCollect: 120,
   },
+};
+
+export function collectingSkillGrowthAmount(stat) {
+  return 0.1;
 }

@@ -1,5 +1,13 @@
 export const equipSlots = {hand: 1, head: 2, legs: 3, chest: 4};
 
+export function effectsDescription(effects){
+  let str = '';
+  _.each(effects, function(effect){
+    str += effect.amount + ' to ' + effectDescriptions[effect.type] + '. ';
+  })
+  return str;
+}
+
 export const itemConfigs = {
   armor: {
     woodenHelmet: {
@@ -11,7 +19,7 @@ export const itemConfigs = {
       equipSlot: equipSlots.head,
       effects: [{
         type: 'damageTaken',
-        amount: 1,
+        amount: -1,
       }],
       cost: {
         wood: 6, energy: 20
