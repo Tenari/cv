@@ -7,12 +7,13 @@ import { Items } from '../../api/items/items.js';
 import { Characters } from '../../api/characters/characters.js';
 import { Fights } from '../../api/fights/fights.js';
 
-import { bearConfig, aiTeam, aiNames, maxAiOfType } from '../../configs/ai.js';
+import { squirrelConfig, bearConfig, aiTeam, aiNames, maxAiOfType } from '../../configs/ai.js';
 import { countDownToRound } from '../../configs/fights.js';
 
 export function aiActLoop(){
   Characters.find({team: aiTeam}).forEach(attack);
   Characters.find({team: aiTeam, name: aiNames.bear}).forEach(bearConfig.move);
+  Characters.find({team: aiTeam, name: aiNames.squirrel}).forEach(squirrelConfig.move);
 }
 
 export function aiSpawnLoop(){
@@ -22,6 +23,13 @@ export function aiSpawnLoop(){
     for (let i = 0; i < bearsToSpawn; i++){
       const room = Rooms.findOne({gameId: game._id, name: 'rome'})
       bearConfig.spawn(room, Characters);
+    }
+
+    const totalSquirrels = Characters.find({team: aiTeam, name: aiNames.squirrel}).count();
+    const squirrelsToSpawn = maxAiOfType.squirrel - totalSquirrels;
+    for (let i = 0; i < squirrelsToSpawn; i++){
+      const room = Rooms.findOne({gameId: game._id, name: 'rome'})
+      squirrelConfig.spawn(room, Characters);
     }
   });
 }

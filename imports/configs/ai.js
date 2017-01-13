@@ -4,10 +4,12 @@ export const aiTeam = 'nature';
 
 export const aiNames = {
   bear: 'bear',
+  squirrel: 'Measly squirrel',
 };
 
 export const maxAiOfType = {
   bear: 3,
+  squirrel: 5,
 };
 
 export const npcConfig = {
@@ -85,6 +87,49 @@ export const bearConfig = {
     // just maintains the current attack-mode and auto-readies
     let updateObj = {};
     if (fight.attackerId == bear._id) {
+      updateObj.attackerReady = true;
+    } else {
+      updateObj.defenderReady = true;
+    }
+    Fights.update(fight._id, {$set: updateObj})
+  }
+}
+
+export const squirrelConfig = {
+  classId: 110,
+  spawn: function (room, Characters){
+    const location = {
+      x: 4, // TODO: more complicated location algorithm
+      y: 6,
+      direction: 1,
+      classId: 110,
+      roomId: room._id,
+      updatedAt: Date.now(),
+    };
+    const stats = {
+      hp: 10,
+      hpBase: 10,
+    };
+    const charId = Characters.insert({
+      name: aiNames.squirrel,
+      team: aiTeam,
+      gameId: room.gameId,
+      location: location,
+      stats: stats,
+    });
+    // TODO: insert items also, so they drop stuff when you kill them
+  },
+  move: function(character){
+    if (_.random(1,2) > 1) { // then just spin
+      moveCharacter(character, ((character.location.direction + 1) % 4) || 4);
+    } else {
+      moveCharacter(character, character.location.direction);
+    }
+  },
+  setFightStrategy: function(fight, character, Fights){
+    // just maintains the current attack-mode and auto-readies
+    let updateObj = {};
+    if (fight.attackerId == character._id) {
       updateObj.attackerReady = true;
     } else {
       updateObj.defenderReady = true;

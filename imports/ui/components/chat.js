@@ -10,7 +10,6 @@ Template.chat.onRendered(function(){
   var that = this;
   var oldMessages = (this.data && this.data.messages.length) || 0;
   this.autorun(function(){
-    console.log('asdf');
     if (Template.currentData() && Template.currentData().messages.length > oldMessages) {
       oldMessages = Template.currentData().messages.length;
       const box = that.$('.chat-messages');
@@ -22,6 +21,7 @@ Template.chat.onRendered(function(){
 Template.chat.events({
   'click button.send-message': sendMessage,
   'keypress .send-message-container input.new-message'(event, instance) {
+    event.stopPropagation();
     if (event.keyCode == 13) // 'ENTER'
       sendMessage(event, instance);
   }
