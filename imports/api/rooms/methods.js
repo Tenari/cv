@@ -32,6 +32,7 @@ Meteor.methods({
       Rooms.update(room._id, {$set: {map: room.map}});
       const newEnergy = character.stats.energy - Math.max(resourceConfig[nextSpace.resources.type].baseCostToCollect - parseInt(character.stats.collecting[nextSpace.resources.type]), 1);
       character.stats.collecting[nextSpace.resources.type] += collectingSkillGrowthAmount(character.stats.collecting[nextSpace.resources.type+'Base']);
+      character.stats.collecting[nextSpace.resources.type+'Base'] += collectingSkillGrowthAmount(character.stats.collecting[nextSpace.resources.type+'Base']);
       Characters.update(character._id, {$set: {'stats.resources': character.stats.resources, 'stats.energy': newEnergy, 'stats.collecting': character.stats.collecting}});
     }
   },
