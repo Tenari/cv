@@ -2,11 +2,13 @@ import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
+import { Games } from '../games/games.js';
+import { Effects } from '../effects/effects.js';
 import { Characters } from '../characters/characters.js';
 import { Notifications } from '../notifications/notifications.js';
 import { Items } from './items.js';
 import { itemConfigs } from '../../configs/items.js'
-import { getCharacter } from '../../configs/game.js'
+import { recalculateStats, getCharacter } from '../../configs/game.js'
 import { playerTeamKeys, teamConfigs } from '../../configs/ranks.js'
 
 Meteor.methods({
@@ -49,23 +51,45 @@ Meteor.methods({
 
     if (!newOwner.canCarry(item.weight())) throw new Meteor.Error('items.take.full', 'Item weighs too much to carry');
     
-    if (item.key == 'maguffin') { // send everyone a notification that the maguffin has been found
-      Notifications.insertAsyncByQuery({
-        title: 'The game has changed',
-        message: 'The long lost maguffin has been found. What powers it holds, no one knows for sure, but the '+teamConfigs[newOwner.team].name+' is about to find out.'
-      }, {team: {$in: playerTeamKeys}});
+    if (item.key == itemConfigs.misc.maguffin.key) {
+      // send everyone a notification that the maguffin has been found
+      Notifications.insert({
+        title: 'You found the maguffin!',
+        message: 'As long as you or someone on your team holds this item, your team will steadily gain points.',
+        characterId: newOwner._id,
+      });
+      if (!item.foundAt) {
+        Notifications.insertAsyncByQuery({
+          title: 'The game has changed',
+          message: 'The long lost maguffin has been found. What powers it holds, no one knows for sure, but the '+teamConfigs[newOwner.team].name+' is about to find out.'
+        }, {team: {$in: playerTeamKeys}});
+        // first finder earns his team a bunch of points
+        let incObj = {};
+        incObj[newOwner.team + '.score'] = 100;
+        Games.update(newOwner.gameId, {$inc: incObj});
+      }
     }
 
-    Items.update(id, {$set: {equipped: false, ownerId: newOwner._id, location: null}});
+    Items.update(id, {$set: {equipped: false, ownerId: newOwner._id, location: null, foundAt: item.foundAt || Date.now()}});
   },
-  'items.use'(id) {
+  'items.use'(id, gameId) {
     if (!this.userId) {
       throw new Meteor.Error('items.use.accessDenied',
         'Gotta be logged in to use an item');
     }
 
     const item = Items.findOne(id);
-    if (item.key == 'maguffin') {
+    const character = getCharacter(this.userId, gameId, Characters);
+    if (!item || !character || item.ownerId != character._id) throw new Meteor.Error('items.use.accessDenied', 'That is not your item to use');
+
+    if (item.key == itemConfigs.misc.maguffin.key) {
+      if (!item.usedAt || (Date.now() - item.usedAt) > itemConfigs.misc.maguffin.useDelay) {
+        Effects.insert({characterId: item.ownerId, statPath: 'strength', amount: character.stats.strength*0.5, expiresAt: Date.now() + 1000*60*60 });
+        Effects.insert({characterId: item.ownerId, statPath: 'agility', amount: character.stats.agility*0.5, expiresAt: Date.now() + 1000*60*60 });
+        Effects.insert({characterId: item.ownerId, statPath: 'accuracy', amount: character.stats.accuracy*0.5, expiresAt: Date.now() + 1000*60*60 });
+        Effects.insert({characterId: item.ownerId, statPath: 'toughness', amount: character.stats.toughness*0.5, expiresAt: Date.now() + 1000*60*60 });
+        Characters.update(character._id, {$set: {'stats': recalculateStats(character).stats}});
+      }
     } else {
       let incObj = {};
       _.each(item.effects(), function(effect){
@@ -78,6 +102,7 @@ Meteor.methods({
       return Items.remove(id);
     } else {
       // re-usable items get handled;
+      return Items.update(item._id, {$set: {usedAt: Date.now()}});
     }
   },
   'items.create'(characterId, type, key){

@@ -1,3 +1,4 @@
+import { Effects } from '../api/effects/effects.js';
 import { itemConfigs } from './items.js';
 
 // fighting
@@ -27,13 +28,20 @@ export function getCharacter(userId, gameId, Characters) {
 }
 
 export function recalculateStats(character) {
-  _.each(_.keys(speeds), function(weaponType){
-    character.stats.weapon[weaponType] = character.stats.weapon[weaponType+'Base'];
+  const effects = Effects.find({characterId: character._id, expiresAt: {$gt: Date.now()}}).fetch();
+  let byPath = {};
+  _.each(effects, function(effect){
+    byPath[effect.statPath] = effect;
   })
-  character.stats.strength = character.stats.strengthBase; // + weapon modifications, buffs, etc..
-  character.stats.accuracy = character.stats.accuracyBase;
-  character.stats.agility = character.stats.agilityBase;
-  character.stats.toughness = character.stats.toughnessBase;
+
+  _.each(_.keys(speeds), function(weaponType){
+    const effectBuff = (byPath['weapon.'+weaponType] && byPath['weapon.'+weaponType].amount) || 0;
+    character.stats.weapon[weaponType] = character.stats.weapon[weaponType+'Base'] + effectBuff;
+  })
+  _.each(['strength','accuracy','agility','toughness'], function(statKey){
+    const effectBuff = (byPath[statKey] && byPath[statKey].amount) || 0;
+    character.stats[statKey] = character.stats[statKey+'Base'] + effectBuff;
+  })
   return character;
 }
 

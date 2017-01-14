@@ -27,6 +27,8 @@ Items.schema = new SimpleSchema({
   ownerId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true }, // items do not have this if they are un-owned
   location: {type: LocationSchema, optional: true}, // items only have a location when they are not owned
   condition: {type: Number, optional: true}, //only wearables tend to have condition (0-100)
+  usedAt: {type: Number, optional: true}, // marked the last timestamp that this was used at
+  foundAt: {type: Number, optional: true}, // marked the first timestamp that this was found
 });
 
 Items.attachSchema(Items.schema);

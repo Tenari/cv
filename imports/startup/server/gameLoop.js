@@ -1,6 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
+import { Games } from '../../api/games/games.js';
+import { Items } from '../../api/items/items.js';
+import { Characters } from '../../api/characters/characters.js';
+import { itemConfigs } from '../../configs/items.js';
+
 import { regenLoop } from './regenLoop.js';
 import { aiActLoop, aiSpawnLoop } from './aiLoop.js';
 
@@ -11,7 +16,7 @@ SyncedCron.add({
   },
   job: regenLoop,
 })
-SyncedCron.add({
+/*SyncedCron.add({
   name: 'aiAct',
   schedule: function(parser) {
     return parser.text('every 2 seconds')
@@ -24,5 +29,20 @@ SyncedCron.add({
     return parser.text('every 2 minutes')
   },
   job: aiSpawnLoop,
-})
+})*/
+SyncedCron.add({
+  name: 'maguffin point-tick',
+  schedule: function(parser){
+    return parser.text('every 1 minute');
+  },
+  job: function(){
+    Items.find({key: itemConfigs.misc.maguffin.key}).forEach(function(maguffin){
+      if (!maguffin.ownerId) return;
+      const owner = Characters.findOne(maguffin.ownerId);
+      let incObj = {};
+      incObj[owner.team+'.score'] = 1;
+      Games.update(owner.gameId, {$inc: incObj});
+    });
+  }
+});
 SyncedCron.start();

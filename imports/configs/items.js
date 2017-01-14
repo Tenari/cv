@@ -108,6 +108,7 @@ export const itemConfigs = {
       }],
       npcSellFactor: 100,
       npcBuyFactor: 1,
+      useDelay: 1000*60*60*6, // only usable 1 per 6 hours
     }
   }
 };

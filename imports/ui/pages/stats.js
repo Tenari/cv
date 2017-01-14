@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Items } from '../../api/items/items.js'
@@ -55,12 +56,23 @@ Template.stats.helpers({
 
   level(stat){
     const character = Characters.findOne({userId: Meteor.userId()})
-    if (character.stats[stat])
-      return parseInt(character.stats[stat]);
-    else if (character.stats.weapon[stat])
-      return parseInt(character.stats.weapon[stat]);
-    else if (character.stats.collecting[stat])
-      return parseInt(character.stats.collecting[stat]);
+    let mainStat;
+    let bonus;
+    if (character.stats[stat]) {
+      mainStat = parseInt(character.stats[stat]);
+      bonus = (character.stats[stat] - character.stats[stat+'Base']).toFixed(2);
+    } else if (character.stats.weapon[stat]) {
+      mainStat = parseInt(character.stats.weapon[stat]);
+      bonus = (character.stats.weapon[stat] - character.stats.weapon[stat+'Base']).toFixed(2);
+    } else if (character.stats.collecting[stat]) {
+      mainStat = parseInt(character.stats.collecting[stat]);
+      bonus = (character.stats.collecting[stat] - character.stats.collecting[stat+'Base']).toFixed(2);
+    }
+
+    if (bonus > 0)
+      return mainStat + ' + '+ bonus;
+    else
+      return mainStat;
   },
 
   progressToNextLevel(stat) {
@@ -219,7 +231,7 @@ Template.stats.events({
   'click .item-actions>.action'(e, instance){
     const action = $(e.currentTarget).data('action');
     const itemId = $(e.currentTarget).data('id');
-    Meteor.call('items.'+action, itemId);
+    Meteor.call('items.'+action, itemId, FlowRouter.getParam('gameId'));
     instance.state.set('item', false);
   },
   'click .right-arm-box>img'(e, instance){
