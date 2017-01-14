@@ -1,0 +1,40 @@
+@import '../stylesheets/variables.less';
+
+.scoreboard {
+  display: flex;
+  border: 3px solid black;
+  border-radius: 2px;
+  width: 760px;
+
+  .romans, .japs {
+    display: flex;
+    flex-grow: 2;
+    border-right: 2px solid black;
+    .team-name {
+      padding: 20px;
+      width: 100%;
+    }
+    .team-score {
+      padding: 20px;
+    }
+  }
+  .romans {
+    .team-name {
+      border-right: 1px solid black;
+      background-color: @color-contrast;
+    }
+  }
+  .japs {
+    .team-name {
+      background-color: @color-tertiary;
+    }
+    .team-score {
+      border-right: 1px solid black;
+    }
+  }
+  .time-left {
+    padding: 20px;
+    background-color: @color-secondary;
+  }
+}
+
