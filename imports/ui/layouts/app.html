@@ -35,6 +35,18 @@
     {{/if}}
   </div>
 
+  {{#if notification}}
+    <div class="global-notification">
+      <div class="message">
+        <h1>{{notification.title}}</h1>
+        <p>{{notification.message}}</p>
+      </div>
+      <div class="dismiss-container">
+        <i class="fa fa-times"></i>
+      </div>
+    </div>
+  {{/if}}
+
   <div id="content">
     {{#if Template.subscriptionsReady}}
       {{> Template.dynamic template=main}}

@@ -3,9 +3,11 @@ import { _ } from 'meteor/underscore';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 import { Characters } from '../characters/characters.js';
+import { Notifications } from '../notifications/notifications.js';
 import { Items } from './items.js';
 import { itemConfigs } from '../../configs/items.js'
 import { getCharacter } from '../../configs/game.js'
+import { playerTeamKeys, teamConfigs } from '../../configs/ranks.js'
 
 Meteor.methods({
   'items.equip'(id) {
@@ -46,6 +48,13 @@ Meteor.methods({
     const newOwner = getCharacter(this.userId, gameId, Characters);
 
     if (!newOwner.canCarry(item.weight())) throw new Meteor.Error('items.take.full', 'Item weighs too much to carry');
+    
+    if (item.key == 'maguffin') { // send everyone a notification that the maguffin has been found
+      Notifications.insertAsyncByQuery({
+        title: 'The game has changed',
+        message: 'The long lost maguffin has been found. What powers it holds, no one knows for sure, but the '+teamConfigs[newOwner.team].name+' is about to find out.'
+      }, {team: {$in: playerTeamKeys}});
+    }
 
     Items.update(id, {$set: {equipped: false, ownerId: newOwner._id, location: null}});
   },
@@ -56,13 +65,20 @@ Meteor.methods({
     }
 
     const item = Items.findOne(id);
-    let incObj = {};
-    _.each(item.effects(), function(effect){
-      incObj[effect.type] = effect.amount;
-    })
-    Characters.update(item.ownerId, {$inc: incObj});
+    if (item.key == 'maguffin') {
+    } else {
+      let incObj = {};
+      _.each(item.effects(), function(effect){
+        incObj[effect.type] = effect.amount;
+      })
+      Characters.update(item.ownerId, {$inc: incObj});
+    }
 
-    return Items.remove(id);
+    if (item.type == 'consumable') {
+      return Items.remove(id);
+    } else {
+      // re-usable items get handled;
+    }
   },
   'items.create'(characterId, type, key){
     if (!this.userId) {

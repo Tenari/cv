@@ -16,6 +16,8 @@ export const teamConfigs = {
   },
 };
 
+export const playerTeamKeys = _.select(_.keys(teamConfigs), function(key) {return key != 'nature';});
+
 export const ranksConfig = {
   king: {
     japs: 'Shogun',

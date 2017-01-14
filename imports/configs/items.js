@@ -3,7 +3,11 @@ export const equipSlots = {hand: 1, head: 2, legs: 3, chest: 4};
 export function effectsDescription(effects){
   let str = '';
   _.each(effects, function(effect){
-    str += effect.amount + ' to ' + effectDescriptions[effect.type] + '. ';
+    if (effect.amount){
+      str += effect.amount + ' to ' + effectDescriptions[effect.type] + '. ';
+    } else {
+      str += effectDescriptions[effect.type];
+    }
   })
   return str;
 }
@@ -91,6 +95,20 @@ export const itemConfigs = {
       npcSellFactor: 0.1,
       npcBuyFactor: 0.08,
     }
+  },
+  misc: {
+    maguffin: {
+      key: 'maguffin',
+      type: 'misc',
+      name: 'Mysterious Maguffin',
+      img: '/images/maguffin.png',
+      weight: 10,
+      effects: [{
+        type: 'maguffin',
+      }],
+      npcSellFactor: 100,
+      npcBuyFactor: 1,
+    }
   }
 };
 
@@ -99,6 +117,7 @@ export const effectDescriptions = {
   'stats.hp': 'your current health',
   'stats.energy': 'your current energy',
   damageTaken: 'damage you take',
+  maguffin: 'unknown',
 }
 
 export const craftingLocations = {

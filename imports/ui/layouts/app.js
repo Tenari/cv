@@ -10,6 +10,7 @@ import { _ } from 'meteor/underscore';
 import { $ } from 'meteor/jquery';
 
 import { Characters } from '../../api/characters/characters.js';
+import { Notifications } from '../../api/notifications/notifications.js';
 import { Fights } from '../../api/fights/fights.js';
 
 import '../components/loading.js';
@@ -42,6 +43,13 @@ Template.app.onCreated(function appBodyOnCreated() {
     menuOpen: false,
     userMenuOpen: false,
   });
+
+  this.autorun(() => {
+    console.log(Notifications.find().fetch());
+    if (FlowRouter.getParam('gameId')) {
+      this.subscribe('notifications.own', FlowRouter.getParam('gameId'));
+    }
+  })
 });
 
 Template.app.helpers({
@@ -74,6 +82,9 @@ Template.app.helpers({
   fight() {
     return Fights.findOne();
   },
+  notification(){
+    return Notifications.findOne();
+  },
 });
 
 Template.app.events({
@@ -99,5 +110,9 @@ Template.app.events({
   'click .js-logout'() {
     Meteor.logout();
     FlowRouter.go('App.home');
+  },
+
+  'click .global-notification .dismiss-container .fa'() {
+    Meteor.call('notifications.dismiss', FlowRouter.getParam('gameId'), Notifications.findOne()._id);
   },
 });

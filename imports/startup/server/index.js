@@ -6,6 +6,7 @@ import { Chats } from '../../api/chats/chats.js';
 import { Characters } from '../../api/characters/characters.js';
 import { Buildings } from '../../api/buildings/buildings.js';
 import { Items } from '../../api/items/items.js';
+import { Notifications } from '../../api/notifications/notifications.js';
 
 import './gameLoop.js';
 
@@ -24,6 +25,8 @@ import  '../../api/chats/methods.js';
 import  '../../api/chats/publications.js';
 import  '../../api/buildings/publications.js';
 import  '../../api/buildings/methods.js';
+import  '../../api/notifications/publications.js';
+import  '../../api/notifications/methods.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();
@@ -83,6 +86,15 @@ Meteor.startup(function (){
     })
     Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
     Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
+
+
+    const maguffinLocation = {
+      x: 8,
+      y: 6,
+      roomId: romeId,
+      updatedAt: Date.now()
+    };
+    Items.insert({key: 'maguffin', type: 'misc', location: maguffinLocation});
   }
 
 });
