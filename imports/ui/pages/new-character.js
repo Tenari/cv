@@ -14,6 +14,7 @@ Template.newCharacter.onCreated(function newCharacterOnCreated() {
   this.state.setDefault({
     name: '',
     named: false,
+    team: null,
   });
   this.subscribe('characters.own');
 });
@@ -24,6 +25,9 @@ Template.newCharacter.helpers({
   },
   name() {
     return Template.instance().state.get('name');
+  },
+  team() {
+    return Template.instance().state.get('team');
   },
 });
 
@@ -39,10 +43,19 @@ Template.newCharacter.events({
 
   'click img.join-img'(event, instance) {
     const team = $(event.target).data('team');
+    instance.state.set('team', team);
+  },
+
+  'click a.tutorial'(e, instance){
+  
+  },
+
+  'click a.game'(e, instance){
+    const team = instance.state.get('team');
     const name = instance.state.get('name');
 
     Meteor.call('characters.insert', {team: team, name: name}, function(err, gameId){
       FlowRouter.go('game.world', {gameId: gameId});
     });
-  }
+  },
 });

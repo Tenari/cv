@@ -33,10 +33,14 @@
           <div class="up-next">
             <p class="prompt">What will you do next?</p>
             <div class="next-move-description">
-              {{#if nextIsAttack}}
-                <span class="attack">{{nextAttack}}</span> attack<br/><span class="sub-prompt">with your</span><br/>{{currentWeapon.name}}
+              {{#if outOfEnergy}}
+                <span class="out-of-energy">Out of energy!</span>
               {{else}}
-                attempt to <span class="attack">{{nextAttack}}</span>
+                {{#if nextIsAttack}}
+                  <span class="attack">{{nextAttack}}</span> attack<br/><span class="sub-prompt">with your</span><br/>{{currentWeapon.name}}
+                {{else}}
+                  attempt to <span class="attack">{{nextAttack}}</span>
+                {{/if}}
               {{/if}}
             </div>
           </div>

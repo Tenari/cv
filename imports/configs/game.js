@@ -1,6 +1,7 @@
 import { Effects } from '../api/effects/effects.js';
 import { itemConfigs } from './items.js';
 
+export const gameLength = 1000*60*60*24*14;
 // fighting
 export const fightStyles = {'quick':true, 'normal':true, 'heavy':true, 'block':true, 'flee':true};
 

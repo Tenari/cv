@@ -16,7 +16,8 @@ SyncedCron.add({
   },
   job: regenLoop,
 })
-/*SyncedCron.add({
+/*
+SyncedCron.add({
   name: 'aiAct',
   schedule: function(parser) {
     return parser.text('every 2 seconds')
@@ -29,7 +30,8 @@ SyncedCron.add({
     return parser.text('every 2 minutes')
   },
   job: aiSpawnLoop,
-})*/
+})
+*/
 SyncedCron.add({
   name: 'maguffin point-tick',
   schedule: function(parser){

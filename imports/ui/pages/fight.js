@@ -136,6 +136,9 @@ Template.fight.helpers({
   roundSummary(){
      return Template.instance().state.get('roundSummary');
   },
+  outOfEnergy(){
+    return Template.instance().character().stats.energy <= 0;
+  }
 })
 
 Template.fight.events({

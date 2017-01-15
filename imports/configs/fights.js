@@ -55,8 +55,10 @@ export function fightNextRound(fightId){
   }
 
   // lower energies by appropriate amounts
-  attacker.stats.energy = attacker.stats.energy - (fightEnergyCostFactor * styleFactors[fight.attackerStyle]);
-  defender.stats.energy = defender.stats.energy - (fightEnergyCostFactor * styleFactors[fight.defenderStyle]);
+  if (attacker.stats.energy > 0)
+    attacker.stats.energy = attacker.stats.energy - (fightEnergyCostFactor * styleFactors[fight.attackerStyle]);
+  if (defender.stats.energy > 0)
+    defender.stats.energy = defender.stats.energy - (fightEnergyCostFactor * styleFactors[fight.defenderStyle]);
 
   // calculate the user's functional/current stats
   attacker = recalculateStats(attacker);
@@ -84,7 +86,7 @@ export function fightNextRound(fightId){
 
   // roll first guy's attempt to hit
   let firstHit = false;
-  if (fight[firstIs+'Style'] != 'flee') {
+  if (fight[firstIs+'Style'] != 'flee' && first.stats.energy >= 0) {
     firstHit = rollToHit(first, last, firstWeapon);
     first.stats.accuracyBase += skillIncreaseAmount(first.stats.accuracyBase, last);
     if (firstWeapon)
@@ -110,7 +112,7 @@ export function fightNextRound(fightId){
 
   // last guy's turn to roll
   let lastHit = false;
-  if (fight[lastIs+'Style'] != 'flee') {
+  if (fight[lastIs+'Style'] != 'flee' && last.stats.energy >= 0) {
     lastHit = rollToHit(last, first, lastWeapon, firstHit);
     last.stats.accuracyBase += skillIncreaseAmount(last.stats.accuracyBase, first);
     if (lastWeapon)

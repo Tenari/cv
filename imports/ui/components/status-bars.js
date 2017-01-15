@@ -8,10 +8,6 @@ import { getCharacter } from '../../configs/game.js';
 
 import './status-bars.html';
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 Template.statusBars.onCreated(function gameOnCreated() {
   this.subscribe('characters.own');
   this.me = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
@@ -36,7 +32,7 @@ Template.statusBars.helpers({
 
   statPercent(stat){
     const character = Template.instance().me();
-    return character.stats[stat] / character.stats['base'+capitalizeFirstLetter(stat)] * 100;
+    return Math.max(character.stats[stat] / character.stats[stat+'Base'] * 100, 0);
   }
 
 });

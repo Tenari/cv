@@ -7,7 +7,7 @@ import { Characters } from '../../api/characters/characters.js'
 import { Fights } from '../../api/fights/fights.js'
 import { Games } from '../../api/games/games.js'
 
-import { getCharacter } from '../../configs/game.js';
+import { gameLength, getCharacter } from '../../configs/game.js';
 import { ranksConfig } from '../../configs/ranks.js';
 
 import './team.html';
@@ -20,15 +20,6 @@ Template.team.onCreated(function fightOnCreated() {
   this.subscribe('characters.team');
   this.subscribe('games');
   this.character = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
-  const gameLength = 1000*60*60*24*14;
-
-  this.autorun(()=> {
-    if (this.subscriptionsReady()) {
-      const game = Games.findOne(FlowRouter.getParam('gameId'));
-      const left = gameLength - (Date.now() - game.startedAt);
-      this.state.set('timeLeft', dhm(left));
-    }
-  })
 
   var that = this;
   Meteor.setInterval(function(){
