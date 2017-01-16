@@ -30,7 +30,7 @@ export const buildingConfig = {
       var tileTypes = [
         ['full-building-wall','full-building-wall','H'],
         ['full-building-wall','full-building-wall','H'],
-        ['1','door','2'],
+        ['building-front-wall','door','2'],
       ];
       const relativeX = x - dimensions.topLeft.x;
       const relativeY = y - dimensions.topLeft.y;
