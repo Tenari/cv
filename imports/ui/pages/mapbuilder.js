@@ -29,6 +29,10 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
 
   this.selected = new ReactiveVar('grass');
   this.door = new ReactiveVar({name: 'tokyo', x: 3, y:5});
+  this.dataDimensions = new ReactiveVar(tiles['fence-sign'].dimensions);
+
+  this.currentX = new ReactiveVar(0);
+  this.currentY = new ReactiveVar(0);
 })
 
 Template.mapbuilder.helpers({
@@ -45,7 +49,19 @@ Template.mapbuilder.helpers({
   },
   showDoor(){
     return tiles[Template.instance().selected.get()].data;
-  }
+  },
+  hasDimensions(){
+    return tiles[Template.instance().selected.get()].dimensions;
+  },
+  width(){
+    return Template.instance().map.get()[0].length * 70;
+  },
+  currentX(){
+    return Template.instance().currentX.get();
+  },
+  currentY(){
+    return Template.instance().currentY.get();
+  },
 });
 
 Template.mapbuilder.events({
@@ -83,6 +99,9 @@ Template.mapbuilder.events({
     if (newTile.data) {
       newTile.data = _.clone(instance.door.get());
     }
+    if (newTile.dimensions) {
+      newTile.dimensions = $.extend(true, {}, instance.dataDimensions.get()); // deep clone
+    }
     const row = $(e.currentTarget).closest('.g-row').data('index');
     const col = $(e.currentTarget).data('index');
     let map = instance.map.get();
@@ -104,5 +123,23 @@ Template.mapbuilder.events({
     let doorData = instance.door.get();
     doorData.y = parseInt($(e.currentTarget).val());
     instance.door.set(doorData)
+  },
+  'change .dimensions .dimension-input'(e, instance) {
+    const coord = $(e.target).attr('data-coord');
+    const part = $(e.target).attr('data-part');
+    let dimensions = instance.dataDimensions.get();
+    dimensions[coord][part] = parseInt($(e.currentTarget).val());
+    instance.dataDimensions.set(dimensions);
+  },
+  'click button.import-btn'(e, instance){
+    instance.map.set(JSON.parse($('input.import').val()));
+    instance.dimensions.set('rows', instance.map.get().length);
+    instance.dimensions.set('cols', instance.map.get()[0].length);
+  },
+  'mouseenter .map .g-col'(e, instance){
+    const row = $(e.currentTarget).closest('.g-row').data('index');
+    const col = $(e.currentTarget).data('index');
+    instance.currentX.set(col);
+    instance.currentY.set(row);
   },
 });

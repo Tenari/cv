@@ -1,4 +1,10 @@
 .mapbuilder {
+  .control-panel {
+    background-color: white;
+    position: fixed;
+    top: 0;
+    border-bottom: 3px solid black;
+  }
   .tiles {
     overflow-y: scroll;
     padding-top: 10px;
@@ -7,6 +13,13 @@
       &.selected, &:hover {
         border: 2px solid blue;
       }
+    }
+  }
+  .map {
+    margin-top: 70px;
+    .g-col:hover {
+      border: 1px solid blue;
+      margin: -1px;
     }
   }
 }

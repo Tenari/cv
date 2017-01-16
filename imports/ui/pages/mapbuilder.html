@@ -1,24 +1,34 @@
 <template name="mapbuilder">
   <div class="mapbuilder">
-    <input type="number" class="rows" value="4"/>
-    <input type="number" class="cols" value="4"/>
-    <button class="export">Export</button>
-    {{#if showDoor}}
-    <div class="door-data">
-      Name: <input type="text" class="name"/>
-      x: <input type="number" class="x"/>
-      y: <input type="number" class="y"/>
-    </div>
-    {{/if}}
-    <div class="tiles g-row">
-      {{#each tiles}}
-        <div class="g-col i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
-      {{/each}}
+    <div class="control-panel">
+      <input type="number" class="rows" value="4"/>
+      <input type="number" class="cols" value="4"/>
+      <button class="export">Export</button>
+      <input class="import" type="text"/><button class="import-btn">Import</button>
+      <span>[{{currentX}}, {{currentY}}]</span>
+      {{#if showDoor}}
+      <div class="door-data">
+        Name: <input type="text" class="name"/>
+        x: <input type="number" class="x"/>
+        y: <input type="number" class="y"/>
+      </div>
+      {{/if}}
+      {{#if hasDimensions}}
+        <div class="dimensions">
+          topLeft: x<input type="number" class="dimension-input" data-coord="topLeft" data-part="x"/> y<input type="number" class="dimension-input" data-coord="topLeft" data-part="y"/>
+          bottomRight: x<input type="number" class="dimension-input" data-coord="bottomRight" data-part="x"/> y<input type="number" class="dimension-input" data-coord="bottomRight" data-part="y"/>
+        </div>
+      {{/if}}
+      <div class="tiles g-row">
+        {{#each tiles}}
+          <div class="g-col i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
+        {{/each}}
+      </div>
     </div>
     <hr/>
     <div class="map">
       {{#each row in map}}
-        <div class="g-row" data-index="{{@index}}">
+        <div class="g-row" style="width: {{width}}px" data-index="{{@index}}">
           {{#each tile in row}}
             <div class="g-col i-{{tile.type}}" data-index="{{@index}}"></div>
           {{/each}}
