@@ -62,10 +62,10 @@ export const statDescriptions = {
     axe: 'Your Axe skill increases the amount of damage and the likelyhood to hit when using an axe in combat.',
   },
   collecting: {
-    wood: 'Improves how much wood you collect in one chop.',
-    hide: 'Improves how much hide you collect from animals.',
+    wood: 'Improves how much energy you spend to chop wood.',
+    hide: 'Improves how much energy you spend to collect from animals.',
     leather: 'Improves how much leather you make from hide.',
-    ore: 'Improves how much ore you mine from rocks.',
+    ore: 'Improves how much energy you spend to mine ore from rocks.',
     metal: 'Improves how much metal you get from refining ore.',
   },
 };

@@ -4,6 +4,7 @@ import { _ } from 'meteor/underscore';
 import { Rooms } from './rooms.js';
 import { Characters } from '../characters/characters.js';
 import { Buildings } from '../buildings/buildings.js';
+import { Chats } from '../chats/chats.js';
 
 import { treeStumpTile, nextSpotXY, doorConfig } from '../../configs/locations.js';
 import { getCharacter, doorAttackEnergyCost, resourceConfig, collectingSkillGrowthAmount } from '../../configs/game.js';
@@ -95,8 +96,10 @@ Meteor.methods({
           room.map[xy.y][xy.x].buildingResources = doorConfig.buildingResources;
           // make the inside of the building accessible
           const newRoomName = building.type+":"+building._id;
-          Rooms.insert(buildingType.interior(room.gameId, newRoomName, {name: room.name, x: character.location.x, y: character.location.y}));
-          room.map[xy.y][xy.x].data = {name: newRoomName, x: buildingType.entry.x, y: buildingType.entry.y, lock: {type: doorConfig.lockTypes.none}};
+          const newRoomId = Rooms.insert(buildingType.interior(room.gameId, newRoomName, {name: room.name, x: character.location.x, y: character.location.y}));
+          room.map[xy.y][xy.x].data = {name: newRoomName, x: buildingType.entry.x, y: buildingType.entry.y, lock: {type: doorConfig.lockTypes.team, team: character.team}};
+          // create the chat
+          Chats.insert({scope: "Rooms:"+newRoomId, messages: []});
         }
         // update the building
         Buildings.update(building._id, {$set: {underConstruction: false}});

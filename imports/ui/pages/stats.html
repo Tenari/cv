@@ -79,7 +79,7 @@
               {{/each}}
             </div>
             <h2>Miscellaneous skills</h2>
-            <li data-stat="endurance"><i class="fa fa-caret-right"></i> Endurance: {{character.stats.endurance}}</li>
+            <li data-stat="endurance"><i class="fa fa-caret-right"></i> Endurance: {{decimal character.stats.endurance}}</li>
           </div>
         {{/if}}
         {{#if page 'Items'}}
@@ -232,28 +232,28 @@
                 {{#if selectedBuilding.underConstruction}}
                 {{else}}
                   {{#if selectedBuilding.canStartBuilding}}
-                    <div class="action-menu" data-menu="create">New Construction</div>
-                    <div class="action-menu" data-menu="sell">Sell</div>
+                    <div class="action-menu" data-menu="create"><i class="fa fa-caret-right"></i> New Construction</div>
+                    <div class="action-menu" data-menu="sell"><i class="fa fa-caret-right"></i> Sell</div>
                   {{else}}
-                    <div class="action-menu" data-menu="demolish">Demolish</div>
+                    <div class="action-menu" data-menu="demolish"><i class="fa fa-caret-right"></i> Demolish</div>
                   {{/if}}
                 {{/if}}
               {{/if}}
               {{#if buildingMenu 'create'}}
                 {{#if selectedBuildingTypeToCreate}}
-                  <div class="action" data-action="construct" data-id="{{selectedBuilding._id}}" data-params='["{{selectedBuildingTypeToCreate}}"]'>Create</div>
+                  <div class="action" data-action="construct" data-id="{{selectedBuilding._id}}" data-params='["{{selectedBuildingTypeToCreate}}"]'><i class="fa fa-caret-right"></i> Create</div>
                 {{/if}}
               {{/if}}
               {{#if buildingMenu 'sell'}}
-                <div class="action" data-action="sell" data-id="{{selectedBuilding._id}}" data-params='["{{buildingSellPrice}}"]'>Post for auction</div>
-                <div class="action" data-action="unsell" data-id="{{selectedBuilding._id}}">Canel auction</div>
+                <div class="action" data-action="sell" data-id="{{selectedBuilding._id}}" data-params='["{{buildingSellPrice}}"]'><i class="fa fa-caret-right"></i> Post for sale</div>
+                <div class="action" data-action="unsell" data-id="{{selectedBuilding._id}}"><i class="fa fa-caret-right"></i> Canel sale</div>
               {{/if}}
               {{#unless selectedBuilding.canStartBuilding}}
                 {{#unless selectedBuilding.underConstruction}}
-                  <div class="action-menu" data-menu="settings">Settings</div>
+                  <div class="action-menu" data-menu="settings"><i class="fa fa-caret-right"></i> Settings</div>
                 {{/unless}}
               {{/unless}}
-              <div class="action-menu" data-menu="description">Cancel</div>
+              <div class="action-menu" data-menu="description"><i class="fa fa-caret-right"></i> Cancel</div>
             </div>
           </div>
         {{/if}}

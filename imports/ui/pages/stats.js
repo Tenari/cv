@@ -87,6 +87,10 @@ Template.stats.helpers({
     return (statValue - parseInt(statValue)) * 100;
   },
 
+  decimal(stat){
+    return stat.toFixed(2);
+  },
+
   basicCombatSkills(){
     return ['strength', 'accuracy', 'toughness', 'agility'];
   },
