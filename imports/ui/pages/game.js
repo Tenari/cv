@@ -14,6 +14,7 @@ import '../../api/trades/methods.js'
 import { Chats } from '../../api/chats/chats.js'
 import '../../api/chats/methods.js'
 
+import '../components/npcTalk.js';
 import '../components/chat.js';
 import '../components/item.js';
 import '../components/status-bars.js';
@@ -32,6 +33,7 @@ Template.game.onCreated(function gameOnCreated() {
   this.subscribe('items.own');
   var myself = this.subscribe('characters.own');
   this.notification = new ReactiveVar(null);
+  this.npc = new ReactiveVar(null);
   this.getMyNextSpace = function(){
     const character = that.me();
     const room = Rooms.findOne(character.location.roomId);
@@ -235,7 +237,10 @@ Template.game.helpers({
   },
   npcUrl: function(id){
     return "/game/"+FlowRouter.getParam('gameId')+"/npc/"+id;
-  }
+  },
+  npc: function(){
+    return Template.instance().npc.get();
+  },
 });
 
 Template.game.rendered = function() {
@@ -308,7 +313,11 @@ Template.game.events({
 
   'click a.use-space': function(event, instance) {
     Meteor.call($(event.currentTarget).data('action'), FlowRouter.getParam('gameId'), handleNotification(instance));
-  }
+  },
+
+  'click a.talk-to-npc': function(e, instance){
+    instance.npc.set($(e.target).attr('data-id'));
+  },
 });
 
 function handleNotification(instance) {

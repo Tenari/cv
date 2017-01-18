@@ -1,7 +1,9 @@
 <template name="npc">
 <div class="npc-interaction-container">
-  {{npc.name}}
-  <img src="/images/{{image}}.png"/>
+  <div class="">
+    <img src="/images/{{image}}.png"/>
+    {{npc.name}}
+  </div>
   {{#if dialog.text}}
     <div>
       {{dialog.text}}

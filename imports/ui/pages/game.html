@@ -33,7 +33,7 @@
               <div>
                 <p>{{opponent.name}}</p>
                 {{#if opponent.npc}}
-                  <a class="talk" href="{{npcUrl opponent._id}}">Talk</a>
+                  <a class="talk-to-npc" href="#" data-id="{{opponent._id}}">Talk</a>
                 {{else}}
                   {{#if fighting}}
                     {{#if amFighting opponent._id}}
@@ -104,5 +104,9 @@
       {{/if}}
     </div>
   </div>
-  {{> chat roomChat}}
+  {{#if npc}}
+    {{> npcTalk}}
+  {{else}}
+    {{> chat roomChat}}
+  {{/if}}
 </template>

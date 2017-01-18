@@ -13,28 +13,40 @@
         {{timeLeft}}
       </div>
     </div>
-    <a href="#">Chat</a> 
-    <a href="#">Rank</a> 
-    <a href="#">Missions</a> 
-    <div class="rank-container">
-      {{#each rank in ranks}}
-        <div class="rank-display">
-          <div class="rank-name">{{rank.name}}</div>
-          <div class="rank-count">{{rank.number}}</div>
-          {{#each player in rank.players}}
-            <div class="rank-holder">
-              <div class="player-name">{{player.name}}</div>
-              <img src="{{player.image}}" class="player-image"/>
-              <div class="player-team-power">{{player.teamPower}}</div>
-            </div>
-          {{/each}}
-        </div>
-      {{/each}}
+    <div>
+      <a href="#" class="team-tab" data-tab="summary">Summary</a> 
+      <a href="#" class="team-tab" data-tab="missions">Missions</a> 
+      <a href="#" class="team-tab" data-tab="chat">Chat</a> 
     </div>
-    <ul class="team-status">
-      <li>Online players: 40</li>
-      <li>Team kills: {{team.kills}}</li>
-      <li>Team deaths: 40</li>
-    </ul>
+    {{#if tab 'summary'}}
+      <div class="rank-container">
+        {{#each rank in ranks}}
+          <div class="rank-display">
+            <div class="rank-name">{{rank.name}}</div>
+            <div class="rank-count">{{rank.number}}</div>
+            {{#each player in rank.players}}
+              <div class="rank-holder">
+                <div class="player-name">{{player.name}}</div>
+                <img src="{{player.image}}" class="player-image"/>
+                <div class="player-team-power">{{player.teamPower}}</div>
+              </div>
+            {{/each}}
+          </div>
+        {{/each}}
+      </div>
+      <ul class="team-status">
+        <li>Online players: 40</li>
+        <li>Team kills: {{team.kills}}</li>
+        <li>Team deaths: 40</li>
+      </ul>
+    {{/if}}
+
+    {{#if tab 'missions'}}
+      <p>No missions yet</p>
+    {{/if}}
+
+    {{#if tab 'chat'}}
+      {{> chat teamChat}}
+    {{/if}}
   </div>
 </template>

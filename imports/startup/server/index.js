@@ -37,7 +37,7 @@ Meteor.startup(function (){
       romans: {
         score: 0,
         key: 'romans',
-        name: 'The Holy Roman Empire',
+        name: 'The Roman Empire',
         kills: 0,
       },
       japs: {
@@ -61,6 +61,9 @@ Meteor.startup(function (){
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
     Chats.insert({scope: "Rooms:"+landId, messages: []});
+
+    Chats.insert({scope: "team:japs", messages: []});
+    Chats.insert({scope: "team:romans", messages: []});
 
     // insert NPCs
     const marcoPoloId = Characters.insert({

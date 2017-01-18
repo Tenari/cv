@@ -3,23 +3,32 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
-import { Characters } from '../../api/characters/characters.js'
-import { Fights } from '../../api/fights/fights.js'
-import { Games } from '../../api/games/games.js'
+import { Characters } from '../../api/characters/characters.js';
+import { Fights } from '../../api/fights/fights.js';
+import { Games } from '../../api/games/games.js';
+import { Chats } from '../../api/chats/chats.js';
 
 import { gameLength, getCharacter } from '../../configs/game.js';
 import { ranksConfig } from '../../configs/ranks.js';
 
+import '../components/chat.js';
 import './team.html';
 
 Template.team.onCreated(function fightOnCreated() {
   this.state = new ReactiveDict();
   this.state.setDefault({
     timeLeft: 0,
+    tab: 'summary',
   })
-  this.subscribe('characters.team');
+  var teamCharacters = this.subscribe('characters.team');
   this.subscribe('games');
   this.character = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
+
+  this.autorun(() => {
+    if (teamCharacters.ready()) {
+      this.subscribe('chats.scope', "team:"+this.character().team);
+    }
+  })
 
   var that = this;
   Meteor.setInterval(function(){
@@ -45,6 +54,12 @@ Template.team.helpers({
   },
   timeLeft(){
     return Template.instance().state.get('timeLeft');
+  },
+  tab(tab){
+    return Template.instance().state.get('tab') == tab;
+  },
+  teamChat(){
+    return Chats.findOne();
   },
 })
 
@@ -76,4 +91,7 @@ function dhm(t){
 }
 
 Template.team.events({
+  'click a.team-tab'(e, instance){
+    instance.state.set('tab', $(e.currentTarget).data('tab'));
+  },
 })
