@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Session } from 'meteor/session';
 
 import { Characters } from '../../api/characters/characters.js'
 import { Items } from '../../api/items/items.js'
@@ -33,7 +34,6 @@ Template.game.onCreated(function gameOnCreated() {
   this.subscribe('items.own');
   var myself = this.subscribe('characters.own');
   this.notification = new ReactiveVar(null);
-  this.npc = new ReactiveVar(null);
   this.getMyNextSpace = function(){
     const character = that.me();
     const room = Rooms.findOne(character.location.roomId);
@@ -239,7 +239,7 @@ Template.game.helpers({
     return "/game/"+FlowRouter.getParam('gameId')+"/npc/"+id;
   },
   npc: function(){
-    return Template.instance().npc.get();
+    return Session.get('npcTalkingTo') && Characters.findOne(Session.get('npcTalkingTo'));
   },
 });
 
@@ -271,6 +271,7 @@ var move = function(direction, search){
   var elem = $(search);
   return function(e){
     Meteor.call('characters.move', d);
+    Session.set('npcTalkingTo', null);
   };
 };
 
@@ -316,7 +317,7 @@ Template.game.events({
   },
 
   'click a.talk-to-npc': function(e, instance){
-    instance.npc.set($(e.target).attr('data-id'));
+    Session.set('npcTalkingTo', $(e.target).attr('data-id'));
   },
 });
 

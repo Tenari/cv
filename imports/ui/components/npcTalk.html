@@ -1,5 +1,14 @@
 <template name="npcTalk">
-  <div class="chat-container">
-    <p>poopy butthole</p>
+  <div class="npc-talk-container">
+    {{#if dialog.text}}
+      <div class="speech">
+        <span class="npc-name">{{name}}:</span> {{dialog.text}}
+      </div>
+      <ul class="response-options">
+        {{#each option in dialog.options}}
+          <li class="response-option" data-option="{{encode option}}"><i class="fa fa-caret-right"></i> {{option.option}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
   </div>
 </template>

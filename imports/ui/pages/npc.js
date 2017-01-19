@@ -42,7 +42,8 @@ Template.npc.onCreated(function gameOnCreated() {
             'location.y': myLocation.y,
           });
           if(!npc) FlowRouter.go('/'); // must be on the same space as npc to stay on this page.
-          this.dialog.set(npcConfig[npc.npcKey].dialog);
+          this.dialog.set({trade: true});
+          this.tab.set('items');
           this.subscribe('items.character', FlowRouter.getParam('npcId'));
         }
       }
@@ -60,9 +61,6 @@ Template.npc.helpers({
   },
   dialog(){
     return Template.instance().dialog.get();
-  },
-  encode(obj){
-    return JSON.stringify(obj);
   },
   tab(key){
     return Template.instance().tab.get() == key;
@@ -109,13 +107,8 @@ Template.npc.events({
   'click li.response-option'(e, instance){
     const option = JSON.parse($(e.currentTarget).attr('data-option'));
     const action = option.action;
-    if (action == 'dialog') {
-      instance.dialog.set(option.dialog);
-    } else if (action == 'cancel') {
-      instance.dialog.set(npcConfig[Characters.findOne(FlowRouter.getParam('npcId')).npcKey].dialog);
-    } else if (action == 'npc trade') {
-      instance.dialog.set({trade: true});
-      instance.tab.set('items');
+    if (action == 'cancel') {
+      FlowRouter.go('/game/'+FlowRouter.getParam('gameId')+"/world");
     } else if (action == 'trade') {
       const type = $('.resource-trade-type').val();
       const amount = $('.resource-trade-amount').val();
