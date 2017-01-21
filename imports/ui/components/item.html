@@ -1,7 +1,10 @@
 <template name="item">
   <div class="item" data-id="{{_id}}">
     <img src="{{img}}" class="{{type}}"/>
-    <div>
+    <div class="item-info">
+      {{#if price}}
+        <span class="price">${{price}}</span>
+      {{/if}}
       <h3>{{name}}</h3>
       {{#if equipped}}
         <p>Equipped</p>
@@ -9,9 +12,6 @@
         {{#if ownerId}}
           <p>
             Weight: {{weight}}
-            {{#if price}}
-              $ {{price}}
-            {{/if}}
           </p>
         {{else}}
           <button class="pick-up-item" data-id="{{_id}}">Take</button>

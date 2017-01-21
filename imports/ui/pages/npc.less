@@ -1,10 +1,14 @@
 @import '../stylesheets/variables.less';
 
 .npc-interaction-container {
+  .traders-info-block {
+    display: flex;
+  }
   .npc-info-block {
     display: flex;
     justify-content: center;
     line-height: 32px;
+    width: 50%;
     .npc-image {
       width: 64px;
       height: 64px;
@@ -23,17 +27,34 @@
     display: flex;
     margin-left: 50px;
     margin-right: 50px;
+    margin-top: 20px;
 
+    .inner-tab-container {
+      border: 2px solid black;
+      border-bottom: none;
+      border-radius: 5px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      display: flex;
+    }
     .tab {
       padding: 10px;
-      border: 2px solid black;
-      border-radius: 5px;
-      margin-right: 20px;
+      border-right: 1px solid black;
+      &:first-of-type {
+        border-top-left-radius: 5px;
+      }
+      &:last-of-type {
+        border-right: none;
+        border-top-right-radius: 5px;
+      }
       &:hover {
         cursor: pointer;
         text-decoration: underline;
         font-weight: bold;
         background-color: @color-primary-muted;
+      }
+      &.selected {
+        background-color: @color-secondary;
       }
     }
   }
@@ -42,6 +63,69 @@
       .item {
         border-color: @color-tertiary;
       }
+    }
+    .npc-trade-items-container, .npc-trade-resources-container {
+      border: 3px solid black;
+      border-radius: 10px;
+      margin-left: 40px;
+      margin-right: 40px;
+    }
+    .npc-trade-items-container {
+      display: flex;
+      .npc-items {
+        border-right: 2px solid black;
+      }
+      .npc-items, .player-items {
+        width: 50%;
+        padding: 10px;
+        .list-title {
+          margin-bottom: 20px;
+          text-align: center;
+          text-decoration: underline;
+        }
+        .item-list {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          max-height: 400px;
+          overflow: auto;
+          margin: 10px;
+        }
+        .outer-item-container {
+          margin-bottom: 10px;
+          width: 47%;
+        }
+      }
+    }
+    .npc-trade-resources-container {
+      padding: 20px;
+      background-color: @color-primary-muted;
+      .trade-resource {
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .response-options {
+    width: 680px;
+    border: 3px solid black;
+    border-top: 0;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: @color-primary-muted;
+
+    .response-option {
+      width: 50%;
+      text-align: center;
     }
   }
 }

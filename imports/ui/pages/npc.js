@@ -42,8 +42,10 @@ Template.npc.onCreated(function gameOnCreated() {
             'location.y': myLocation.y,
           });
           if(!npc) FlowRouter.go('/'); // must be on the same space as npc to stay on this page.
-          this.dialog.set({trade: true});
-          this.tab.set('items');
+          if (!this.tab.get()) {
+            this.dialog.set({trade: true});
+            this.tab.set('items');
+          }
           this.subscribe('items.character', FlowRouter.getParam('npcId'));
         }
       }
@@ -63,7 +65,7 @@ Template.npc.helpers({
     return Template.instance().dialog.get();
   },
   tab(key){
-    return Template.instance().tab.get() == key;
+    return Template.instance().tab.get() == key ? 'selected' : false;
   },
   resources(){
     const npc = Characters.findOne(FlowRouter.getParam('npcId'));
@@ -101,6 +103,13 @@ Template.npc.helpers({
   playerSelectedItem(){
     return Template.instance().playerItem.get();
   },
+  player(){
+    return Template.instance().me();
+  },
+  playerImage(){
+    const player = Template.instance().me();
+    return player && player.location.classId + 2;
+  },
 })
 
 Template.npc.events({
@@ -133,12 +142,16 @@ Template.npc.events({
       const price = parseInt(itemConfigs[item.type][item.key].npcSellFactor * (item.condition || 100));
       Meteor.call('characters.trade', instance.me()._id, FlowRouter.getParam('npcId'), {type: 'money', amount: price}, {type: 'item', itemId: item._id}, function (){
         instance.dialog.set({trade: true});
+        instance.playerItem.set(false);
+        instance.item.set(false);
       })
     } else if (action == 'sell item') {
       const item = Items.findOne(instance.playerItem.get());
       const price = parseInt(itemConfigs[item.type][item.key].npcBuyFactor * (item.condition || 100));
       Meteor.call('characters.trade', instance.me()._id, FlowRouter.getParam('npcId'), {type: 'item', itemId: item._id}, {type: 'money', amount: price}, function (){
         instance.dialog.set({trade: true});
+        instance.playerItem.set(false);
+        instance.item.set(false);
       })
     }
   },

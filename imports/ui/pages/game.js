@@ -15,6 +15,7 @@ import '../../api/trades/methods.js'
 import { Chats } from '../../api/chats/chats.js'
 import '../../api/chats/methods.js'
 
+import '../components/music.js';
 import '../components/npcTalk.js';
 import '../components/chat.js';
 import '../components/item.js';

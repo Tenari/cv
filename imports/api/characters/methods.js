@@ -111,7 +111,11 @@ Meteor.methods({
         Items.update(giving.itemId, {$set: {ownerId: npcId}});
       }
     }
-  }
+  },
+  'characters.toggleMusic'(characterId) {
+    const character = Characters.findOne(characterId);
+    Characters.update(characterId, {$set: {music: !character.music}});
+  },
 });
 
 export function moveCharacter(character, directionInt) {

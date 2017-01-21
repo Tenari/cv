@@ -28,6 +28,8 @@ export const itemConfigs = {
       cost: {
         wood: 6, energy: 20
       },
+      npcSellFactor: 0.2,
+      npcBuyFactor: 0.18,
     },
   },
   weapon: {
@@ -62,6 +64,8 @@ export const itemConfigs = {
         amount: 1,
       }],
       cost: {wood: 3, energy: 25},
+      npcSellFactor: 0.1,
+      npcBuyFactor: 0.09,
     },
     woodenSword: {
       key: 'woodenSword',
@@ -76,6 +80,8 @@ export const itemConfigs = {
         amount: 2,
       }],
       cost: {wood: 4, energy: 25},
+      npcSellFactor: 0.2,
+      npcBuyFactor: 0.18,
     },
   },
   consumable: {

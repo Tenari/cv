@@ -1,66 +1,85 @@
 <template name="npc">
 <div class="npc-interaction-container">
   <h1>NPC Trade</h1>
-  <div class="npc-info-block">
-    <img class="npc-image" src="/images/{{image}}.png"/>
-    <div>
-      <div>{{npc.name}}</div>
-      <div><img class="money-image" src="/images/money.png"/> {{npc.stats.money}}</div>
+  <div class="traders-info-block">
+    <div class="npc-info-block">
+      <img class="npc-image" src="/images/{{image}}.png"/>
+      <div>
+        <div>{{npc.name}}</div>
+        <div><img class="money-image" src="/images/money.png"/> {{npc.stats.money}}</div>
+      </div>
+    </div>
+    <div class="npc-info-block">
+      <img class="npc-image" src="/images/{{playerImage}}.png"/>
+      <div>
+        <div>{{player.name}}</div>
+        <div><img class="money-image" src="/images/money.png"/> {{player.stats.money}}</div>
+      </div>
     </div>
   </div>
   <div>
     <div class="tab-container">
-      <div class="tab" data-tab="items">Items</div>
-      <div class="tab" data-tab="resources">Resources</div>
+      <div class="inner-tab-container">
+        <div class="tab {{tab 'items'}}" data-tab="items">Items</div>
+        <div class="tab {{tab 'resources'}}" data-tab="resources">Resources</div>
+      </div>
     </div>
     <div class="tab-displays">
       {{#if tab 'items'}}
-        <div class="npc-items">
-          <p>{{npc.name}}'s items:</p>
-          {{#each itemX in items}}
-            <div class="{{itemSelectedClass itemX}}">
-              {{> item itemX}}
+        <div class="npc-trade-items-container">
+          <div class="npc-items">
+            <p class="list-title">{{npc.name}}'s items:</p>
+            <div class="item-list">
+              {{#each itemX in items}}
+                <div class="{{itemSelectedClass itemX}} outer-item-container">
+                  {{> item itemX}}
+                </div>
+              {{/each}}
             </div>
-          {{/each}}
-        </div>
-        <div class="player-items">
-          <p>Your Items:</p>
-          {{#each itemX in playerItems}}
-            <div class="{{playerItemSelectedClass itemX}}">
-              {{> item itemX}}
+          </div>
+          <div class="player-items">
+            <p class="list-title">Your Items:</p>
+            <div class="item-list">
+              {{#each itemX in playerItems}}
+                <div class="{{playerItemSelectedClass itemX}} outer-item-container">
+                  {{> item itemX}}
+                </div>
+              {{/each}}
             </div>
-          {{/each}}
+          </div>
         </div>
       {{/if}}
       {{#if tab 'resources'}}
-        {{#each resource in resources}}
-          <div class="trade-resource" data-resource="{{resource.key}}">{{resource.label}}: {{resource.amount}} @ ${{resource.cost}} / lb</div>
-          {{#if tradeResource resource.key}}
-            <div>
-              <select class="resource-trade-type">
-                <option value="buy">Buy</option>
-                <option value="sell">Sell</option>
-              </select>
-              <input class="resource-trade-amount" type="number" min="0" value="1"/>
-            </div>
-          {{/if}}
-        {{/each}}
+        <div class="npc-trade-resources-container">
+          {{#each resource in resources}}
+            <div class="trade-resource" data-resource="{{resource.key}}">{{resource.label}}: {{resource.amount}} @ ${{resource.cost}} / lb</div>
+            {{#if tradeResource resource.key}}
+              <div>
+                <select class="resource-trade-type">
+                  <option value="buy">Buy</option>
+                  <option value="sell">Sell</option>
+                </select>
+                <input class="resource-trade-amount" type="number" min="0" value="1"/>
+              </div>
+            {{/if}}
+          {{/each}}
+        </div>
       {{/if}}
     </div>
   </div>
   <ul class="response-options">
     {{#if tab 'items'}}
       {{#if selectedItem}}
-        <li class="response-option" data-option='{"action":"buy item"}'>BUY</li>
+        <li class="response-option" data-option='{"action":"buy item"}'><i class="fa fa-caret-right"></i> BUY</li>
       {{/if}}
       {{#if playerSelectedItem}}
-        <li class="response-option" data-option='{"action":"sell item"}'>SELL</li>
+        <li class="response-option" data-option='{"action":"sell item"}'><i class="fa fa-caret-right"></i> SELL</li>
       {{/if}}
     {{/if}}
     {{#if tab 'resources'}}
-      <li class="response-option" data-option='{"action":"trade"}'>TRADE</li>
+      <li class="response-option" data-option='{"action":"trade"}'><i class="fa fa-caret-right"></i> TRADE</li>
     {{/if}}
-    <li class="response-option" data-option='{"action":"cancel"}'>CANCEL</li>
+    <li class="response-option" data-option='{"action":"cancel"}'><i class="fa fa-caret-right"></i> CANCEL</li>
   </ul>
 </div>
 </template>
