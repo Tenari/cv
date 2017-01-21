@@ -224,7 +224,7 @@ Template.stats.helpers({
 });
 
 Template.stats.events({
-  'click .tab-links>a'(e, instance) {
+  'click .tab-links a'(e, instance) {
     instance.state.set('page', $(e.target).data('page'));
     instance.state.set('item', false);
     instance.state.set('building', null);

@@ -69,8 +69,10 @@ Template.npc.helpers({
   },
   resources(){
     const npc = Characters.findOne(FlowRouter.getParam('npcId'));
+    const player = Template.instance().me();
     return _.map(resourceConfig, function(obj, key){
       obj.amount = npc.stats.resources[key];
+      obj.playerAmount = player.stats.resources[key];
       return obj;
     });
   },
@@ -121,18 +123,23 @@ Template.npc.events({
     } else if (action == 'trade') {
       const type = $('.resource-trade-type').val();
       const amount = $('.resource-trade-amount').val();
-      const money = {
-        type: 'money',
-        amount: amount * resourceConfig[instance.tradeResource.get()].cost,
-      };
       const resource = {
         type: 'resource',
         resource: instance.tradeResource.get(),
         amount: amount,
       };
-      var giving = money, getting = resource;
+      var giving, getting = resource;
       if (type == 'sell') {
-        giving = resource; getting = money;
+        getting = {
+          type: 'money',
+          amount: amount * resourceConfig[instance.tradeResource.get()].value,
+        };
+        giving = resource;
+      } else {
+        giving = {
+          type: 'money',
+          amount: amount * resourceConfig[instance.tradeResource.get()].cost,
+        }
       }
       Meteor.call('characters.trade', instance.me()._id, FlowRouter.getParam('npcId'), giving, getting, function (){
         instance.dialog.set({trade: true});

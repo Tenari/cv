@@ -52,16 +52,22 @@
       {{#if tab 'resources'}}
         <div class="npc-trade-resources-container">
           {{#each resource in resources}}
-            <div class="trade-resource" data-resource="{{resource.key}}">{{resource.label}}: {{resource.amount}} @ ${{resource.cost}} / lb</div>
-            {{#if tradeResource resource.key}}
-              <div>
-                <select class="resource-trade-type">
-                  <option value="buy">Buy</option>
-                  <option value="sell">Sell</option>
-                </select>
-                <input class="resource-trade-amount" type="number" min="0" value="1"/>
+            <div class="trade-resource" data-resource="{{resource.key}}">
+              <p class="resource-name">{{resource.label}}</p>
+              <div class="trade-resource-info-block">
+                <span>{{resource.amount}}lbs @ ${{resource.cost}}/lb</span>
+                {{#if tradeResource resource.key}}
+                  <span>
+                    <select class="resource-trade-type">
+                      <option value="buy">Buy</option>
+                      <option value="sell">Sell</option>
+                    </select>
+                    <input class="resource-trade-amount" type="number" min="0" value="1"/>
+                  </span>
+                {{/if}}
+                <span>{{resource.playerAmount}}lbs @ ${{resource.value}}/lb</span>
               </div>
-            {{/if}}
+            </div>
           {{/each}}
         </div>
       {{/if}}

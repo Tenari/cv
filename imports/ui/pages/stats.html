@@ -42,12 +42,14 @@
       </div>
       <div class="detail-tabs-container">
         <div class="tab-links">
-          <a href="#" data-page="Skills" class="{{page 'Skills'}}">Skills</a>
-          <a href="#" data-page="Items" class="{{page 'Items'}}">Items</a>
-          <a href="#" data-page="Resources" class="{{page 'Resources'}}">Resources</a>
-          {{#if hasBuilding}}
-            <a href="#" data-page="Buildings" class="{{page 'Buildings'}}">Buildings</a>
-          {{/if}}
+          <div class="inner-tab-links-container">
+            <a href="#" data-page="Skills" class="{{page 'Skills'}}">Skills</a>
+            <a href="#" data-page="Items" class="{{page 'Items'}}">Items</a>
+            <a href="#" data-page="Resources" class="{{page 'Resources'}}">Resources</a>
+            {{#if hasBuilding}}
+              <a href="#" data-page="Buildings" class="{{page 'Buildings'}}">Buildings</a>
+            {{/if}}
+          </div>
         </div>
         {{#if page 'Skills'}}
           <div class="skills-display-container">
