@@ -10,6 +10,7 @@ import { Characters } from '../api/characters/characters.js';
 import { styleFactors, fightEnergyCostFactor, speeds, recalculateStats } from './game.js';
 import { equipSlots } from './items.js';
 import { aiTeam, bearConfig } from './ai.js';
+import { ranksConfig } from './ranks.js';
 
 export function countDownToRound(fightId){
   const fight = Fights.findOne(fightId)
@@ -160,8 +161,7 @@ function endFight(fight, first, last) {
     var obj = {};
     obj[last.team+'.kills'] = 1;
     if (first.team != aiTeam && last.team != first.team) {
-      obj[last.team+'.score'] = first.stats.rank; // your team gains as many points as the opponent's rank in his team
-      last.stats.rank += 1; // you gain rank for killing an opponent
+      obj[last.team+'.score'] = ranksConfig[first.stats.rank].value; // your team gains as many points as the opponent's rank in his team is worth
     }
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
@@ -174,8 +174,7 @@ function endFight(fight, first, last) {
     var obj = {};
     obj[first.team+'.kills'] = 1;
     if (last.team != aiTeam && last.team != first.team) {
-      obj[first.team+'.score'] = last.stats.rank;
-      first.stats.rank += 1;
+      obj[first.team+'.score'] = ranksConfig[last.stats.rank].value; // your team gains as many points as the opponent's rank in his team is worth
     }
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};

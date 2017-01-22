@@ -7,6 +7,7 @@ import { Characters } from '../../api/characters/characters.js';
 import { Fights } from '../../api/fights/fights.js';
 import { Games } from '../../api/games/games.js';
 import { Chats } from '../../api/chats/chats.js';
+import { Missions } from '../../api/missions/missions.js';
 
 import { gameLength, getCharacter } from '../../configs/game.js';
 import { ranksConfig } from '../../configs/ranks.js';
@@ -26,7 +27,16 @@ Template.team.onCreated(function fightOnCreated() {
 
   this.autorun(() => {
     if (teamCharacters.ready()) {
-      this.subscribe('chats.scope', "team:"+this.character().team);
+      const team = this.character().team;
+      this.subscribe('chats.scope', "team:"+team);
+      this.ranks = _.map(ranksConfig, function(obj, key){
+        obj.name = obj[team].name;
+        obj.image = obj[team].image;
+        if (key == ranksConfig.king.key) {
+          obj.player = Characters.findOne({'stats.rank': ranksConfig.king.key});
+        }
+        return obj;
+      });
     }
   })
 
@@ -50,16 +60,32 @@ Template.team.helpers({
     const team = Template.instance().character().team == 'romans' ? 'japs' : 'romans';
     return Games.findOne(FlowRouter.getParam('gameId'))[team];
   },
+  rankIs(key){
+    return Template.instance().character().rank == key;
+  },
   ranks(){
+    return Template.instance().ranks;
+  },
+  king(){
+    return Template.instance().ranks[0];
+  },
+  freemen(){
+    return Template.instance().ranks[1];
+  },
+  peasants(){
+    return Template.instance().ranks[2];
   },
   timeLeft(){
     return Template.instance().state.get('timeLeft');
   },
   tab(tab){
-    return Template.instance().state.get('tab') == tab;
+    return Template.instance().state.get('tab') == tab ? 'active' : false;
   },
   teamChat(){
     return Chats.findOne();
+  },
+  missions(){
+    return Missions.find();
   },
 })
 

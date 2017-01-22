@@ -109,7 +109,8 @@ const StatsSchema = new SimpleSchema({
   energyBase: {type: Number, defaultValue: 10000},
   endurance: {type: Number, defaultValue: 1, decimal: true},
   money: {type: Number, defaultValue: 100, decimal: true},
-  rank: {type: Number, defaultValue: 1}
+  rank: {type: String, defaultValue: 'peasant'},
+  rankPoints: {type: Number, defaultValue: 1},
 });
 
 const DeathsSchema = new SimpleSchema({

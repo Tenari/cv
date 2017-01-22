@@ -20,27 +20,48 @@ export const playerTeamKeys = _.select(_.keys(teamConfigs), function(key) {retur
 
 export const ranksConfig = {
   king: {
-    japs: 'Shogun',
-    romans: 'Imperator',
+    japs: {
+      name: 'Shogun',
+      image: '/images/shogun.png',
+    },
+    romans: {
+      name: 'Imperator',
+      image: '/images/imperator.png',
+    },
     number: 1,
     power: 100,
+    value: 100,
   },
-  noble: {
+/*  noble: {
     japs: 'Lord',
     romans: 'Senator',
     number: 2,
     power: 80,
-  },
+  },*/
   freeman: {
-    japs: 'Samurai',
-    romans: 'Patrician',
+    japs: {
+      name: 'Samurai',
+      image: '/images/samurai.png',
+    },
+    romans: {
+      name: 'Patrician',
+      image: '/images/patrician.png',
+    },
     number: 4,
     power: 50,
+    value: 10,
   },
   peasant: {
-    japs: 'Peasant',
-    romans: 'Plebian',
-    number: 8,
+    japs: {
+      name: 'Peasant',
+      image: '/images/peasant.png',
+    },
+    romans: {
+      name: 'Plebian',
+      image: '/images/plebian.png',
+    },
+    number: 800,
     power: 10,
+    value: 1,
   },
 }

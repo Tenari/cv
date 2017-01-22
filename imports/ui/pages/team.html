@@ -1,39 +1,30 @@
 <template name="team">
   <div class="team-page">
-    <div class="scoreboard">
-      <div class="{{team.key}}">
-        <div class="team-name">{{team.name}}</div>
-        <div class="team-score">{{team.score}}</div>
-      </div>
-      <div class="{{otherTeam.key}}">
-        <div class="team-score">{{otherTeam.score}}</div>
-        <div class="team-name">{{otherTeam.name}}</div>
-      </div>
-      <div class="time-left">
-        {{timeLeft}}
+    <div class="scoreboard-container">
+      <div class="scoreboard">
+        <div class="{{team.key}}">
+          <div class="team-name">{{team.name}}</div>
+          <div class="team-score">{{team.score}}</div>
+        </div>
+        <div class="{{otherTeam.key}}">
+          <div class="team-score">{{otherTeam.score}}</div>
+          <div class="team-name">{{otherTeam.name}}</div>
+        </div>
+        <div class="time-left">
+          {{timeLeft}}
+        </div>
       </div>
     </div>
-    <div>
-      <a href="#" class="team-tab" data-tab="summary">Summary</a> 
-      <a href="#" class="team-tab" data-tab="missions">Missions</a> 
-      <a href="#" class="team-tab" data-tab="chat">Chat</a> 
+    <h1>{{team.name}}</h1>
+    <div class="tab-links">
+      <div class="inner-tab-links-container">
+        <a href="#" class="team-tab {{tab 'summary'}}" data-tab="summary">Summary</a> 
+        <a href="#" class="team-tab {{tab 'ranks'}}" data-tab="ranks">Ranks</a> 
+        <a href="#" class="team-tab {{tab 'missions'}}" data-tab="missions">Missions</a> 
+        <a href="#" class="team-tab {{tab 'chat'}}" data-tab="chat">Chat</a> 
+      </div>
     </div>
     {{#if tab 'summary'}}
-      <div class="rank-container">
-        {{#each rank in ranks}}
-          <div class="rank-display">
-            <div class="rank-name">{{rank.name}}</div>
-            <div class="rank-count">{{rank.number}}</div>
-            {{#each player in rank.players}}
-              <div class="rank-holder">
-                <div class="player-name">{{player.name}}</div>
-                <img src="{{player.image}}" class="player-image"/>
-                <div class="player-team-power">{{player.teamPower}}</div>
-              </div>
-            {{/each}}
-          </div>
-        {{/each}}
-      </div>
       <ul class="team-status">
         <li>Online players: 40</li>
         <li>Team kills: {{team.kills}}</li>
@@ -41,7 +32,80 @@
       </ul>
     {{/if}}
 
+    {{#if tab 'ranks'}}
+      <div class="rank-container">
+
+        <div class="rank-display">
+          <div class="rank-image-container">
+            <img src="{{king.image}}"/>
+          </div>
+          <div class="rank-info-conatiner">
+            <div class="rank-name">{{king.name}}</div>
+            <div class="rank-holder">
+              {{#if king.player}}
+                <div class="player-name">{{king.player.name}}</div>
+              {{else}}
+                <div class="player-name">Your team has no {{king.name}}</div>
+              {{/if}}
+            </div>
+            <div class="rank-score">Minimum rank points: {{king.power}}</div>
+          </div>
+        </div>
+
+        <div class="rank-display">
+          <div class="rank-image-container">
+            <img src="{{freemen.image}}"/>
+          </div>
+          <div class="rank-info-conatiner">
+            <div class="rank-name">{{freemen.name}}</div>
+            <div class="rank-holder">
+              {{#if freemen.players}}
+                <div class="player-name">{{king.player.name}}</div>
+              {{else}}
+                <div class="player-name">Your team has no {{freemen.name}}s</div>
+              {{/if}}
+            </div>
+            <div class="rank-score">Minimum rank points: {{freemen.power}}</div>
+          </div>
+          <div class="rank-name">{{freeman.name}}</div>
+        </div>
+
+        <div class="rank-display">
+          <div class="rank-image-container">
+            <img src="{{peasants.image}}"/>
+          </div>
+          <div class="rank-info-conatiner">
+            <div class="rank-name">{{peasants.name}}</div>
+            <div class="rank-holder">
+              {{#if peasants.players}}
+                <div class="player-name">{{peasants.players.count}}</div>
+              {{/if}}
+            </div>
+            {{#if rankIs 'peasant'}}
+              <div class="rank-score">You are a peasant</div>
+            {{/if}}
+          </div>
+          <div class="rank-name">{{freeman.name}}</div>
+        </div>
+      </div>
+    {{/if}}
+
     {{#if tab 'missions'}}
+      <div class="missions-container">
+        {{#each mission in missions}}
+          <div class="mission">
+            <div class="mission-type-icon-conatiner">
+              <i class="fa fa-{{mission.icon}}"></i>
+            </div>
+            <div class="mission-details-container">
+              <div class="mission-title">{{mission.title}}</div>
+              <div class="mission-description">{{mission.description}}</div>
+              <div class="mission-value">{{mission.rankPoints}}</div>
+              <button class="accept-mission" data-id="{{mission._id}}">Accept</button>
+            </div>
+          </div>
+        {{/each}}
+      </div>
       <p>No missions yet</p>
     {{/if}}
 

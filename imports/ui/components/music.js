@@ -8,7 +8,7 @@ import './music.html';
 Template.music.onCreated(function() {
   this.play = new ReactiveVar(false);
   buzz.defaults.loop = true;
-  this.m = new buzz.sound('/sounds/anguish-of-conciousness.mp3');
+  this.m = new buzz.sound('/sounds/anguish-of-consciousness.mp3');
   if (Template.currentData().music) {
     this.play.set(true);
     this.m.play();

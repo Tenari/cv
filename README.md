@@ -91,3 +91,19 @@ _(in no particular order)_
 Every player is on one of two teams. Players actions earn points for their team. The team with the most points at the end of the game wins.
 
 Each team is a hierarchical command structure. Of course, players within this structure are free to ignore commands from above, it's just that incentives and priveleges depend on it. Example: a king has the ability to set the team-wide strategy by adding/removing mission objectives, and setting a personal message on the team page. A peasant gets none of those abilities. Team rank is dependant on a combination of how powerful your character is individually (ie, money + fighting ability) and how much you have co-operated with your team members (killed anyone? completed any missions a higher up set?
+
+Rules:
+
+- each team has 1 king, 4 freemen, and the rest are peasants
+- king is the first player to 100 rankPoints
+  - If king is anactive for 1 day, he abdicates, and top knight becomes king. old Kings cannot re-claim the throne
+  - king can command ai troops, create player team missions, talk to whole team on team page
+- freemen are the top 4 non-king teamates (by rankPoints)
+  - freemen can command 1 ai troop, create 1 team mission/day
+- players get rankPoints for doing team missions
+
+- Teams get points (which win them the game) from:
+  - killing members of the other team (based on rank)
+  - finding the maguffin
+  - holding the maguffin
+  - building the monument and using the maguffin
