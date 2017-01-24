@@ -12,21 +12,17 @@ Missions.deny({
   remove() { return true; },
 });
 
-const LocationSchema = new SimpleSchema({
-  x: {type: Number},
-  y: {type: Number},
-  roomId: { type: String, regEx: SimpleSchema.RegEx.Id },
-  updatedAt: { type: Number },
-});
-
 Missions.schema = new SimpleSchema({
   _id: { type: String, regEx: SimpleSchema.RegEx.Id },
+  gameId: { type: String, regEx: SimpleSchema.RegEx.Id },
   type: {type: String},
   rankPoints: {type: Number},
+  team: {type: String},
   creatorId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true }, // missions do not have this if they are auto-generated
   ownerId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true }, // missions do not have this if they have not been accepted
   conditions: {type: Object, blackbox: true}, // an object which specifies the details for the successful completion of the mission
   createdAt: {type: Number, optional: true}, // timestamp
+  completed: {type: Boolean, defaultValue: false},
 });
 
 Missions.attachSchema(Missions.schema);
@@ -35,12 +31,21 @@ Missions.attachSchema(Missions.schema);
 // to the client. If we add secret properties to Missions objects, don't list
 // them here to keep them private to the server.
 Missions.publicFields = {
+  gameId: 1,
   type: 1,
   rankPoints: 1,
   creatorId: 1,
   ownerId: 1,
   conditions: 1,
+  completed: 1,
+  team: 1,
 };
 
 Missions.helpers({
+ title(){
+   return missionsConfig[this.type].title;
+ },
+ description(){
+   return missionsConfig[this.type].description(this.conditions);
+ },
 })

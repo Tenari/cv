@@ -23,6 +23,7 @@ Template.team.onCreated(function fightOnCreated() {
   })
   var teamCharacters = this.subscribe('characters.team');
   this.subscribe('games');
+  this.subscribe('missions.team', FlowRouter.getParam('gameId'));
   this.character = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
 
   this.autorun(() => {
@@ -34,6 +35,10 @@ Template.team.onCreated(function fightOnCreated() {
         obj.image = obj[team].image;
         if (key == ranksConfig.king.key) {
           obj.player = Characters.findOne({'stats.rank': ranksConfig.king.key});
+        } else if (key == ranksConfig.peasant.key) {
+          obj.players = {
+            count: Characters.find({'stats.rank': ranksConfig.peasant.key}).count(),
+          }
         }
         return obj;
       });
@@ -89,6 +94,7 @@ Template.team.helpers({
   },
 })
 
+// countdown timer function
 function dhm(t){
   var cd = 24 * 60 * 60 * 1000,
       ch = 60 * 60 * 1000,

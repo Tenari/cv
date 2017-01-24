@@ -14,6 +14,8 @@ export const maxAiOfType = {
 
 export const npcConfig = {
   marcoPolo: {
+    key: 'marcoPolo',
+    name: 'Marco Polo',
     dialog: {
       text: "Hi! My name is Marco Polo. How can I help you?",
       options: [

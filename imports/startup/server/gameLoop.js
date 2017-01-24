@@ -7,6 +7,7 @@ import { Characters } from '../../api/characters/characters.js';
 import { itemConfigs } from '../../configs/items.js';
 
 import { regenLoop } from './regenLoop.js';
+import { missionSpawnLoop } from './missionSpawnLoop.js';
 import { aiActLoop, aiSpawnLoop } from './aiLoop.js';
 
 SyncedCron.add({
@@ -31,7 +32,6 @@ SyncedCron.add({
   },
   job: aiSpawnLoop,
 })
-*/
 SyncedCron.add({
   name: 'maguffin point-tick',
   schedule: function(parser){
@@ -47,4 +47,13 @@ SyncedCron.add({
     });
   }
 });
+SyncedCron.add({
+  name: 'team auto-generate missions',
+  schedule: function(parser){
+    return parser.text('every 10 minutes');
+  },
+  job: missionSpawnLoop,
+});
+*/
+Meteor.setTimeout(missionSpawnLoop, 2000);
 SyncedCron.start();

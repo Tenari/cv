@@ -7,6 +7,7 @@ import { Characters } from '../../api/characters/characters.js';
 import { Buildings } from '../../api/buildings/buildings.js';
 import { Items } from '../../api/items/items.js';
 import { Notifications } from '../../api/notifications/notifications.js';
+import { Missions } from '../../api/missions/missions.js';
 
 import './gameLoop.js';
 
@@ -27,6 +28,8 @@ import  '../../api/buildings/publications.js';
 import  '../../api/buildings/methods.js';
 import  '../../api/notifications/publications.js';
 import  '../../api/notifications/methods.js';
+import  '../../api/missions/publications.js';
+//import  '../../api/notifications/methods.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();

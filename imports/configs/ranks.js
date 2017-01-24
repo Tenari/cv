@@ -20,6 +20,7 @@ export const playerTeamKeys = _.select(_.keys(teamConfigs), function(key) {retur
 
 export const ranksConfig = {
   king: {
+    key: 'king',
     japs: {
       name: 'Shogun',
       image: '/images/shogun.png',
@@ -39,6 +40,7 @@ export const ranksConfig = {
     power: 80,
   },*/
   freeman: {
+    key: 'freeman',
     japs: {
       name: 'Samurai',
       image: '/images/samurai.png',
@@ -52,6 +54,7 @@ export const ranksConfig = {
     value: 10,
   },
   peasant: {
+    key: 'peasant',
     japs: {
       name: 'Peasant',
       image: '/images/peasant.png',
