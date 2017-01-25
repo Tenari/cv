@@ -178,4 +178,9 @@ Characters.helpers({
     const weaponPower = _.reduce(['handsBase','smallBladeBase','largeBladeBase', 'axeBase'], function(memo, key){return memo + that.stats.weapon[key];}, 0);
     return moneyPower + collectingPower + fightingPower + weaponPower;
   },
+  sameLocationAs(otherCharacter){
+    return this.location.roomId == otherCharacter.location.roomId &&
+           this.location.x == otherCharacter.location.x &&
+           this.location.y == otherCharacter.location.y;
+  },
 })

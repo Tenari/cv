@@ -96,6 +96,10 @@ Template.team.helpers({
   myMissions(){
     return Missions.find({ownerId: Template.instance().character()._id});
   },
+  kingMessage(){
+    const game = Games.findOne(FlowRouter.getParam('gameId'));
+    return game && game[Template.instance().character().team].kingMessage;
+  },
 })
 
 // countdown timer function

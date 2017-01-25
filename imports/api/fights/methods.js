@@ -17,7 +17,7 @@ Meteor.methods({
     if (!defender) throw new Meteor.Error('fights.insert.badId','this opponent doesnt exist, dude');
 
     const attacker = Characters.findOne({userId: this.userId, 'stats.hp': {$gt: 0}});
-    if (defender.location.roomId != attacker.location.roomId || defender.location.x != attacker.location.x || defender.location.y != attacker.location.y) throw new Meteor.Error('fights.insert.invalidOpponent', 'this opponent must have moved or something');
+    if (!defender.sameLocationAs(attacker)) throw new Meteor.Error('fights.insert.invalidOpponent', 'this opponent must have moved or something');
 
     const fightId = Fights.insert({
       attackerId: attacker._id,

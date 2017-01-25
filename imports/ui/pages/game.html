@@ -36,7 +36,7 @@
                 {{#if opponent.npc}}
                   <a class="talk-to-npc" href="#" data-id="{{opponent._id}}">Talk</a>
                   {{#if canFinishMission opponent}}
-                    <a class="finish-mission" href="#" data-id="{{canFinishMission opponent}}">Finish mission</a>
+                    <div><a class="finish-mission" href="#" data-id="{{canFinishMission opponent}}">Finish mission</a></div>
                   {{/if}}
                 {{else}}
                   {{#if fighting}}

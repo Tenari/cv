@@ -1,6 +1,8 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
+import { Characters } from '../characters/characters.js';
+
 import { missionsConfig } from '../../configs/missions.js';
 
 export const Missions = new Mongo.Collection('missions');
@@ -53,7 +55,8 @@ Missions.helpers({
  },
  passesConditionsToFinish(character){
    if (this.type == 'collectResources'){
-     return character.stats.resources[this.conditions.resource] >= this.conditions.amount; //TODO should also check npcLocation
+     const npc = Characters.findOne({gameId: character.gameId, npc: true, npcKey: this.conditions.turnIn.npc})
+     return npc && character.stats.resources[this.conditions.resource] >= this.conditions.amount && character.sameLocationAs(npc);
    }
  },
 })

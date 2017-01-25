@@ -42,6 +42,7 @@ Meteor.startup(function (){
         key: 'romans',
         name: 'The Roman Empire',
         kills: 0,
+        kingMessage: 'no king message yet',
       },
       japs: {
         score: 0,

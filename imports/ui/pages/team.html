@@ -25,11 +25,16 @@
       </div>
     </div>
     {{#if tab 'summary'}}
-      <ul class="team-status">
-        <li>Online players: 40</li>
-        <li>Team kills: {{team.kills}}</li>
-        <li>Team deaths: 40</li>
-      </ul>
+      <div class="summary-container">
+        {{#if kingMessage}}
+          <p class="king-message">{{kingMessage}}</p>
+        {{/if}}
+        <ul class="team-status">
+          <li>Online players: 40</li>
+          <li>Team kills: {{team.kills}}</li>
+          <li>Team deaths: 40</li>
+        </ul>
+      </div>
     {{/if}}
 
     {{#if tab 'ranks'}}
