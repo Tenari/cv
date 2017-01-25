@@ -92,21 +92,42 @@
 
     {{#if tab 'missions'}}
       <div class="missions-container">
-        {{#each mission in missions}}
+        <h2>Your Missions</h2>
+        {{#each mission in myMissions}}
           <div class="mission">
-            <div class="mission-type-icon-conatiner">
+            <div class="mission-type-icon-container">
               <i class="fa fa-{{mission.icon}}"></i>
             </div>
             <div class="mission-details-container">
               <div class="mission-title">{{mission.title}}</div>
               <div class="mission-description">{{mission.description}}</div>
-              <div class="mission-value">{{mission.rankPoints}}</div>
+            </div>
+            <div class="mission-value">Rank Points Reward: {{mission.rankPoints}}</div>
+            <div class="accepted-notice">
+              Accepted
+            </div>
+          </div>
+        {{else}}
+          <p class="no-missions-message">You do not have not any active missions</p>
+        {{/each}}
+        <h2>Available Missions</h2>
+        {{#each mission in missions}}
+          <div class="mission">
+            <div class="mission-type-icon-container">
+              <i class="fa fa-{{mission.icon}}"></i>
+            </div>
+            <div class="mission-details-container">
+              <div class="mission-title">{{mission.title}}</div>
+              <div class="mission-description">{{mission.description}}</div>
+            </div>
+            <div class="mission-value">Cost to Accept: 100 energy</div>
+            <div class="mission-value">Rank Points Reward: {{mission.rankPoints}}</div>
+            <div>
               <button class="accept-mission" data-id="{{mission._id}}">Accept</button>
             </div>
           </div>
         {{/each}}
       </div>
-      <p>No missions yet</p>
     {{/if}}
 
     {{#if tab 'chat'}}

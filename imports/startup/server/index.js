@@ -29,7 +29,7 @@ import  '../../api/buildings/methods.js';
 import  '../../api/notifications/publications.js';
 import  '../../api/notifications/methods.js';
 import  '../../api/missions/publications.js';
-//import  '../../api/notifications/methods.js';
+import  '../../api/missions/methods.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();

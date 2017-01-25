@@ -48,4 +48,12 @@ Missions.helpers({
  description(){
    return missionsConfig[this.type].description(this.conditions);
  },
+ icon(){
+   return missionsConfig[this.type].icon;
+ },
+ passesConditionsToFinish(character){
+   if (this.type == 'collectResources'){
+     return character.stats.resources[this.conditions.resource] >= this.conditions.amount; //TODO should also check npcLocation
+   }
+ },
 })

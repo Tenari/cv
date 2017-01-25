@@ -14,6 +14,8 @@ import { Trades } from '../../api/trades/trades.js'
 import '../../api/trades/methods.js'
 import { Chats } from '../../api/chats/chats.js'
 import '../../api/chats/methods.js'
+import { Missions } from '../../api/missions/missions.js'
+import '../../api/missions/methods.js'
 
 import '../components/music.js';
 import '../components/npcTalk.js';
@@ -33,6 +35,7 @@ Template.game.onCreated(function gameOnCreated() {
   this.getRoomId = () => Meteor.userId() && that.me() && that.me().location.roomId;
   this.subscribe('fights.own');
   this.subscribe('items.own');
+  this.subscribe('missions.own', FlowRouter.getParam('gameId'));
   var myself = this.subscribe('characters.own');
   this.notification = new ReactiveVar(null);
   this.getMyNextSpace = function(){
@@ -242,6 +245,13 @@ Template.game.helpers({
   npc: function(){
     return Session.get('npcTalkingTo') && Characters.findOne(Session.get('npcTalkingTo'));
   },
+  canFinishMission: function(npc){
+    const mission = Missions.findOne({'conditions.turnIn.npc': npc.npcKey});
+    const character = Template.instance().me();
+    if (mission && character.stats.resources[mission.conditions.resource] >= mission.conditions.amount)
+      return mission._id;
+    return false
+  },
 });
 
 Template.game.rendered = function() {
@@ -319,6 +329,10 @@ Template.game.events({
 
   'click a.talk-to-npc': function(e, instance){
     Session.set('npcTalkingTo', $(e.target).attr('data-id'));
+  },
+
+  'click a.finish-mission': function(e, instance){
+    Meteor.call('missions.finish', FlowRouter.getParam('gameId'), $(e.target).attr('data-id'));
   },
 });
 

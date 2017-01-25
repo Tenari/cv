@@ -9,6 +9,7 @@ export const missionsConfig = {
   },
   collectResources: {
     title: 'Resource Acquisition',
+    icon: 'bar-chart',
     description: function(conditions){
       return "Collect " + conditions.amount +
              "lbs of "  + conditions.resource +

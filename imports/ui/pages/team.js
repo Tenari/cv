@@ -24,6 +24,7 @@ Template.team.onCreated(function fightOnCreated() {
   var teamCharacters = this.subscribe('characters.team');
   this.subscribe('games');
   this.subscribe('missions.team', FlowRouter.getParam('gameId'));
+  this.subscribe('missions.own', FlowRouter.getParam('gameId'));
   this.character = () => getCharacter(Meteor.userId(), FlowRouter.getParam('gameId'), Characters);
 
   this.autorun(() => {
@@ -90,7 +91,10 @@ Template.team.helpers({
     return Chats.findOne();
   },
   missions(){
-    return Missions.find();
+    return Missions.find({ownerId: {$exists: false}});
+  },
+  myMissions(){
+    return Missions.find({ownerId: Template.instance().character()._id});
   },
 })
 
@@ -125,5 +129,8 @@ function dhm(t){
 Template.team.events({
   'click a.team-tab'(e, instance){
     instance.state.set('tab', $(e.currentTarget).data('tab'));
+  },
+  'click button.accept-mission'(e, instance){
+    Meteor.call('missions.accept', FlowRouter.getParam('gameId'), $(e.target).attr('data-id'));
   },
 })
