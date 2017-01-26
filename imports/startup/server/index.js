@@ -12,6 +12,7 @@ import { Missions } from '../../api/missions/missions.js';
 import './gameLoop.js';
 
 import  '../../api/games/publications.js';
+import  '../../api/games/methods.js';
 import  '../../api/rooms/publications.js';
 import  '../../api/rooms/methods.js';
 import  '../../api/characters/methods.js';

@@ -26,10 +26,19 @@
     </div>
     {{#if tab 'summary'}}
       <div class="summary-container">
+        {{#if rankIs 'king'}}
+          <a href="#" class="edit-king-message">Edit your message to your team</a>
+          {{#if isEditingKingMessage}}
+            <textarea class="new-king-message"></textarea>
+            <button class="save-new-king-message">Save</button>
+          {{/if}}
+        {{/if}}
         {{#if kingMessage}}
           <p class="king-message">{{kingMessage}}</p>
         {{/if}}
         <ul class="team-status">
+          <li>Missions Completed: {{character.counts.missionsCompleted}}</li>
+          <li>Your rank points: {{character.stats.rankPoints}}</li>
           <li>Online players: 40</li>
           <li>Team kills: {{team.kills}}</li>
           <li>Team deaths: 40</li>
@@ -65,12 +74,16 @@
             <div class="rank-name">{{freemen.name}}</div>
             <div class="rank-holder">
               {{#if freemen.players}}
-                <div class="player-name">{{king.player.name}}</div>
+                <div class="player-name">There are {{freemen.players.count}} of {{freemen.number}}</div>
               {{else}}
                 <div class="player-name">Your team has no {{freemen.name}}s</div>
               {{/if}}
             </div>
-            <div class="rank-score">Minimum rank points: {{freemen.power}}</div>
+            {{#if rankIs 'freeman'}}
+              <div class="rank-score">You are a {{freemen.name}}</div>
+            {{else}}
+              <div class="rank-score">Minimum rank points: {{freemen.power}}</div>
+            {{/if}}
           </div>
           <div class="rank-name">{{freeman.name}}</div>
         </div>

@@ -11,13 +11,13 @@ import { npcConfig } from '../../configs/ai.js';
 export function missionSpawnLoop(){
   Games.find().forEach(function (game){
     _.each(playerTeamKeys, function(key) {
-      const missionCount = Missions.find({gameId: game._id, team: key, creatorId: {$exists: false}}).count();
+      const missionCount = Missions.find({gameId: game._id, team: key, creatorId: {$exists: false}, completed: false}).count();
       const neededMissionCount = 5 - missionCount;
       for (var i=0; i < neededMissionCount; i++) {
         Missions.insert({
           gameId: game._id,
           type: 'collectResources',
-          rankPoints: 1,
+          rankPoints: 48,
           team: key,
           conditions: {
             resource: 'wood',

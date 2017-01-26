@@ -29,9 +29,15 @@ Meteor.methods({
     const mission = Missions.findOne(id);
     if (mission.passesConditionsToFinish(character)) {
       Missions.update(id, {$set: {completed: true}});
+
+      let setObj = {};
       let incObj = {'stats.rankPoints': mission.rankPoints};
       incObj['stats.resources.'+mission.conditions.resource] = -1 * mission.conditions.amount;
-      Characters.update(character._id, {$inc: incObj});
+      incObj['counts.missionsCompleted'] = 1;
+      if (character.canBePromoted(mission.rankPoints)) {
+        setObj['stats.rank'] = character.canBePromoted(mission.rankPoints);
+      }
+      Characters.update(character._id, {$inc: incObj, $set: setObj});
     }
   },
 });

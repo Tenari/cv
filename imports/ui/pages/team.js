@@ -20,6 +20,7 @@ Template.team.onCreated(function fightOnCreated() {
   this.state.setDefault({
     timeLeft: 0,
     tab: 'summary',
+    editingKingMessage: false,
   })
   var teamCharacters = this.subscribe('characters.team');
   this.subscribe('games');
@@ -36,6 +37,10 @@ Template.team.onCreated(function fightOnCreated() {
         obj.image = obj[team].image;
         if (key == ranksConfig.king.key) {
           obj.player = Characters.findOne({'stats.rank': ranksConfig.king.key});
+        } else if (key == ranksConfig.freeman.key) {
+          obj.players = {
+            count: Characters.find({'stats.rank': ranksConfig.freeman.key}).count(),
+          }
         } else if (key == ranksConfig.peasant.key) {
           obj.players = {
             count: Characters.find({'stats.rank': ranksConfig.peasant.key}).count(),
@@ -67,7 +72,7 @@ Template.team.helpers({
     return Games.findOne(FlowRouter.getParam('gameId'))[team];
   },
   rankIs(key){
-    return Template.instance().character().rank == key;
+    return Template.instance().character().stats.rank == key;
   },
   ranks(){
     return Template.instance().ranks;
@@ -99,6 +104,12 @@ Template.team.helpers({
   kingMessage(){
     const game = Games.findOne(FlowRouter.getParam('gameId'));
     return game && game[Template.instance().character().team].kingMessage;
+  },
+  character(){
+    return Template.instance().character();
+  },
+  isEditingKingMessage(){
+    return Template.instance().state.get('editingKingMessage');
   },
 })
 
@@ -136,5 +147,13 @@ Template.team.events({
   },
   'click button.accept-mission'(e, instance){
     Meteor.call('missions.accept', FlowRouter.getParam('gameId'), $(e.target).attr('data-id'));
+  },
+  'click a.edit-king-message'(e, instance){
+    instance.state.set('editingKingMessage', !instance.state.get('editingKingMessage'));
+  },
+  'click button.save-new-king-message'(e, instance){
+    Meteor.call('games.changeKingMessage', FlowRouter.getParam('gameId'), $('.new-king-message').val(), function(){
+      instance.state.set('editingKingMessage', false);
+    });
   },
 })

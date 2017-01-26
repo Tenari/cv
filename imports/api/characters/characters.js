@@ -3,6 +3,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Items } from '../items/items.js';
 import { itemConfigs } from '../../configs/items.js';
+import { ranksConfig } from '../../configs/ranks.js';
 
 export const Characters = new Mongo.Collection('characters');
 
@@ -119,6 +120,10 @@ const DeathsSchema = new SimpleSchema({
   count: {type: Number, defaultValue: 0}
 });
 
+const CountsSchema = new SimpleSchema({
+  missionsCompleted: {type: Number, defaultValue: 0},
+})
+
 Characters.schema = new SimpleSchema({
   _id: { type: String, regEx: SimpleSchema.RegEx.Id },
   name: { type: String },
@@ -132,7 +137,8 @@ Characters.schema = new SimpleSchema({
   lastFightEndedAt: { type: Number, optional: true },
   npc: {type: Boolean, defaultValue: false},
   npcKey: {type: String, optional: true },
-  music: {type: Boolean, defaultValue: true}
+  music: {type: Boolean, defaultValue: true},
+  counts: {type: CountsSchema},
 });
 
 Characters.attachSchema(Characters.schema);
@@ -152,6 +158,7 @@ Characters.publicFields = {
   npc: 1,
   npcKey: 1,
   music: 1,
+  counts: 1,
 };
 
 Characters.helpers({
@@ -182,5 +189,15 @@ Characters.helpers({
     return this.location.roomId == otherCharacter.location.roomId &&
            this.location.x == otherCharacter.location.x &&
            this.location.y == otherCharacter.location.y;
+  },
+  canBePromoted(newRankPoints) {
+    const newRankPointTotal = this.stats.rankPoints + newRankPoints;
+    const next = ranksConfig[this.stats.rank].next
+    if (!next) return false;
+    const nextLimit = ranksConfig[next].power;
+    if (newRankPointTotal > nextLimit && Characters.find({team: this.team, 'stats.rank': next}).count() < ranksConfig[next].number) {
+      return next;
+    }
+    return false;
   },
 })

@@ -52,6 +52,7 @@ export const ranksConfig = {
     number: 4,
     power: 50,
     value: 10,
+    next: 'king',
   },
   peasant: {
     key: 'peasant',
@@ -66,5 +67,6 @@ export const ranksConfig = {
     number: 800,
     power: 10,
     value: 1,
+    next: 'freeman',
   },
 }
