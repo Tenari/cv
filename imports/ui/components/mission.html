@@ -1,0 +1,22 @@
+<template name="showMission">
+  <div class="mission">
+    <div class="mission-type-icon-container">
+      <i class="fa fa-{{icon}}"></i>
+    </div>
+    <div class="mission-details-container">
+      <div class="mission-title">{{title}}</div>
+      <div class="mission-description">{{description}}</div>
+    </div>
+    <div class="mission-value">Rank Points Reward: {{rankPoints}}</div>
+    {{#if ownerId}}
+      <div class="accepted-notice">
+        Accepted
+      </div>
+    {{else}}
+      <div class="mission-value">Cost to Accept: 100 energy</div>
+      <div>
+        <button class="accept-mission" data-id="{{_id}}">Accept</button>
+      </div>
+    {{/if}}
+  </div>
+</template>

@@ -12,6 +12,7 @@ import { Missions } from '../../api/missions/missions.js';
 import { gameLength, getCharacter } from '../../configs/game.js';
 import { ranksConfig } from '../../configs/ranks.js';
 
+import '../components/mission.js';
 import '../components/chat.js';
 import './team.html';
 
@@ -21,6 +22,7 @@ Template.team.onCreated(function fightOnCreated() {
     timeLeft: 0,
     tab: 'summary',
     editingKingMessage: false,
+    makingNewMission: false,
   })
   var teamCharacters = this.subscribe('characters.team');
   this.subscribe('games');
@@ -111,6 +113,9 @@ Template.team.helpers({
   isEditingKingMessage(){
     return Template.instance().state.get('editingKingMessage');
   },
+  isCreatingNewMission(){
+    return Template.instance().state.get('makingNewMission');
+  },
 })
 
 // countdown timer function
@@ -155,5 +160,8 @@ Template.team.events({
     Meteor.call('games.changeKingMessage', FlowRouter.getParam('gameId'), $('.new-king-message').val(), function(){
       instance.state.set('editingKingMessage', false);
     });
+  },
+  'click a.toggle-new-mission-container'(e, instance){
+    instance.state.set('makingNewMission', !instance.state.get('makingNewMission'));
   },
 })

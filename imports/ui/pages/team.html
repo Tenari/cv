@@ -110,41 +110,41 @@
 
     {{#if tab 'missions'}}
       <div class="missions-container">
-        <h2>Your Missions</h2>
-        {{#each mission in myMissions}}
-          <div class="mission">
-            <div class="mission-type-icon-container">
-              <i class="fa fa-{{mission.icon}}"></i>
-            </div>
-            <div class="mission-details-container">
-              <div class="mission-title">{{mission.title}}</div>
-              <div class="mission-description">{{mission.description}}</div>
-            </div>
-            <div class="mission-value">Rank Points Reward: {{mission.rankPoints}}</div>
-            <div class="accepted-notice">
-              Accepted
-            </div>
+        {{#if rankIs 'king'}}
+          <a href="#" class="toggle-new-mission-container">
+            {{#if isCreatingNewMission}}
+              View missions
+            {{else}}
+              Create mission
+            {{/if}}
+          </a>
+        {{/if}}
+
+        {{#if isCreatingNewMission}}
+          <h2>Create New Mission</h2>
+          <div class="new-mission-container">
+            <p>
+              Mission type:
+              <select>
+                {{#each type in missionTypes}}
+                  <option value="{{type.key}}">{{type.name}}</option>
+                {{/each}}
+              </select>
+            </p>
+            <button class="create-new-mission">Create</button>
           </div>
         {{else}}
-          <p class="no-missions-message">You do not have not any active missions</p>
-        {{/each}}
-        <h2>Available Missions</h2>
-        {{#each mission in missions}}
-          <div class="mission">
-            <div class="mission-type-icon-container">
-              <i class="fa fa-{{mission.icon}}"></i>
-            </div>
-            <div class="mission-details-container">
-              <div class="mission-title">{{mission.title}}</div>
-              <div class="mission-description">{{mission.description}}</div>
-            </div>
-            <div class="mission-value">Cost to Accept: 100 energy</div>
-            <div class="mission-value">Rank Points Reward: {{mission.rankPoints}}</div>
-            <div>
-              <button class="accept-mission" data-id="{{mission._id}}">Accept</button>
-            </div>
-          </div>
-        {{/each}}
+          <h2>Your Missions</h2>
+          {{#each mission in myMissions}}
+            {{> showMission mission}}
+          {{else}}
+            <p class="no-missions-message">You do not have not any active missions</p>
+          {{/each}}
+          <h2>Available Missions</h2>
+          {{#each mission in missions}}
+            {{> showMission mission}}
+          {{/each}}
+        {{/if}}
       </div>
     {{/if}}
 

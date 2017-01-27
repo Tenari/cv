@@ -1,12 +1,12 @@
 <template name="accountHome">
   {{#if hasCharacter}}
-    <ul>
+    <ul class="my-characters-list">
       Your characters:
       {{#each character in characters}}
         {{#if isAlive character}}
-          <li><img src="images/{{image character}}.png"/> Play as <a href="{{characterGamePath}}">{{character.name}}</a></li>
+          <li class="my-character"><img src="images/{{image character}}.png"/> Play as <a href="{{characterGamePath}}">{{character.name}}</a></li>
         {{else}}
-          <li><img src="images/{{image character}}.png"/> {{character.name}} is dead.
+          <li class="my-character"><img src="images/{{image character}}.png"/> {{character.name}} is dead.
             {{#if canRevive character}}
               <button class="revive" data-id="{{character._id}}">Revive</button>
             {{else}}

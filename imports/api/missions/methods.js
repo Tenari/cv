@@ -5,6 +5,7 @@ import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { Missions } from './missions.js';
 import { Characters } from '../characters/characters.js';
 import { getCharacter } from '../../configs/game.js'
+import { ranksConfig } from '../../configs/ranks.js';
 
 Meteor.methods({
   'missions.accept'(gameId, id) {
@@ -40,4 +41,22 @@ Meteor.methods({
       Characters.update(character._id, {$inc: incObj, $set: setObj});
     }
   },
+  'missions.create'(gameId, data){
+    if (!this.userId) throw new Meteor.Error('accessDenied', 'Gotta be logged in');
+
+    const character = getCharacter(this.userId, gameId, Characters);
+    if (!character) throw new Meteor.Error('missions.create', 'you dont have a character in this game');
+    if (character.stats.rank == ranksConfig.peasant.key) throw new Meteor.Error('missions.create', 'not high enough rank');
+
+    let missions = {
+      gameId: gameId,
+      type: data.type,
+      rankPoints: ranksConfig[character.stats.rank].missionPoints,
+      team: character.team,
+      creatorId: character._id,
+      conditions: data.conditions
+    };
+
+    return Missions.insert(mission);
+  }
 });
