@@ -1,0 +1,13 @@
+<template name="characterSelector">
+<div class="character-search-selector-container">
+  <input class="character-search" type="text"/>
+  <ul class="character-matches">
+    {{#each character in searchResults}}
+      <li class="select-character {{character.team}}" data-id="{{character._id}}">
+        <img src="{{character.image}}"/>
+        {{character.name}}
+      </li>
+    {{/each}}
+  </ul>
+</div>
+</template>

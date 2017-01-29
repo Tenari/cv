@@ -125,13 +125,29 @@
           <div class="new-mission-container">
             <p>
               Mission type:
-              <select>
+              <select class="mission-type-selector">
                 {{#each type in missionTypes}}
-                  <option value="{{type.key}}">{{type.name}}</option>
+                  <option value="{{type.key}}">{{type.title}}</option>
                 {{/each}}
               </select>
             </p>
-            <button class="create-new-mission">Create</button>
+            {{#if selectedMissionType 'collectResources'}}
+              <div>
+                Resource:
+                <select class="resource-type-selector">
+                  {{#each type in resourceTypes}}
+                    <option value="{{type.key}}">{{type.label}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div>
+                Amount: <input type="number" class="resource-amount-input" min="5" value="5" max="500"/>
+              </div>
+              <div>
+                {{> characterSelector}}
+              </div>
+              <button class="create-new-mission">Create</button>
+            {{/if}}
           </div>
         {{else}}
           <h2>Your Missions</h2>

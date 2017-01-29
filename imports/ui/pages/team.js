@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import { Session } from 'meteor/session';
 
 import { Characters } from '../../api/characters/characters.js';
 import { Fights } from '../../api/fights/fights.js';
@@ -9,11 +10,13 @@ import { Games } from '../../api/games/games.js';
 import { Chats } from '../../api/chats/chats.js';
 import { Missions } from '../../api/missions/missions.js';
 
-import { gameLength, getCharacter } from '../../configs/game.js';
+import { gameLength, getCharacter, resourceConfig } from '../../configs/game.js';
 import { ranksConfig } from '../../configs/ranks.js';
+import { missionsConfig } from '../../configs/missions.js';
 
 import '../components/mission.js';
 import '../components/chat.js';
+import '../components/characterSelector.js';
 import './team.html';
 
 Template.team.onCreated(function fightOnCreated() {
@@ -23,6 +26,7 @@ Template.team.onCreated(function fightOnCreated() {
     tab: 'summary',
     editingKingMessage: false,
     makingNewMission: false,
+    missionType: 'killMonster',
   })
   var teamCharacters = this.subscribe('characters.team');
   this.subscribe('games');
@@ -103,6 +107,12 @@ Template.team.helpers({
   myMissions(){
     return Missions.find({ownerId: Template.instance().character()._id});
   },
+  missionTypes(){
+    return _.values(missionsConfig);
+  },
+  resourceTypes(){
+    return _.values(resourceConfig);
+  },
   kingMessage(){
     const game = Games.findOne(FlowRouter.getParam('gameId'));
     return game && game[Template.instance().character().team].kingMessage;
@@ -115,6 +125,9 @@ Template.team.helpers({
   },
   isCreatingNewMission(){
     return Template.instance().state.get('makingNewMission');
+  },
+  selectedMissionType(type) {
+    return Template.instance().state.get('missionType') == type;
   },
 })
 
@@ -164,4 +177,21 @@ Template.team.events({
   'click a.toggle-new-mission-container'(e, instance){
     instance.state.set('makingNewMission', !instance.state.get('makingNewMission'));
   },
+  'change .mission-type-selector'(e, instance) {
+    instance.state.set('missionType', e.target.value);
+  },
+  'click button.create-new-mission'(e, instance) {
+    console.log({
+      type: instance.state.get('missionType'),
+      resource: $('.resource-type-selector').val(),
+      amount: parseInt($('.resource-amount-input').val()),
+      turnInId: Session.get('selectedCharacterId')
+    });
+    Meteor.call('missions.create', FlowRouter.getParam('gameId'), {
+      type: instance.state.get('missionType'),
+      resource: $('.resource-type-selector').val(),
+      amount: parseInt($('.resource-amount-input').val()),
+      turnInId: Session.get('selectedCharacterId'),
+    })
+  }
 })

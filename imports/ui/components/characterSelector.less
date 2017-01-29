@@ -1,0 +1,18 @@
+@import '../stylesheets/variables.less';
+
+.character-search-selector-container {
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+
+  input.character-search {
+    width: 100%;
+    border: 1px solid black;
+    &:active, &:focus {
+      outline: 0;
+      border-color: @color-primary;
+    }
+  }
+  ul.character-matches {
+  }
+}

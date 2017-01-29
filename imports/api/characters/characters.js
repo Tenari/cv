@@ -185,6 +185,9 @@ Characters.helpers({
     const weaponPower = _.reduce(['handsBase','smallBladeBase','largeBladeBase', 'axeBase'], function(memo, key){return memo + that.stats.weapon[key];}, 0);
     return moneyPower + collectingPower + fightingPower + weaponPower;
   },
+  image(){
+    return '/images/' + (this.location.classId + this.location.direction) + '.png';
+  },
   sameLocationAs(otherCharacter){
     return this.location.roomId == otherCharacter.location.roomId &&
            this.location.x == otherCharacter.location.x &&

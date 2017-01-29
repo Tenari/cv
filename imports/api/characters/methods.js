@@ -116,6 +116,16 @@ Meteor.methods({
     const character = Characters.findOne(characterId);
     Characters.update(characterId, {$set: {music: !character.music}});
   },
+  'characters.search'(gameId, searchString) {
+    return _.map(Characters.find({gameId: gameId, name: {$regex: searchString, $options: 'i'}}, {limit: 5}).fetch(), function(obj){
+      return {
+        team: obj.team,
+        image: obj.image(),
+        _id: obj._id,
+        name: obj.name,
+      };
+    });
+  },
 });
 
 export function moveCharacter(character, directionInt) {
