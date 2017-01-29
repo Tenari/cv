@@ -181,17 +181,13 @@ Template.team.events({
     instance.state.set('missionType', e.target.value);
   },
   'click button.create-new-mission'(e, instance) {
-    console.log({
-      type: instance.state.get('missionType'),
-      resource: $('.resource-type-selector').val(),
-      amount: parseInt($('.resource-amount-input').val()),
-      turnInId: Session.get('selectedCharacterId')
-    });
     Meteor.call('missions.create', FlowRouter.getParam('gameId'), {
       type: instance.state.get('missionType'),
       resource: $('.resource-type-selector').val(),
       amount: parseInt($('.resource-amount-input').val()),
       turnInId: Session.get('selectedCharacterId'),
+    }, function(error, result){
+      if (!error)  instance.state.set('makingNewMission', false);
     })
   }
 })

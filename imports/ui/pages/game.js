@@ -242,12 +242,11 @@ Template.game.helpers({
   npc: function(){
     return Session.get('npcTalkingTo') && Characters.findOne(Session.get('npcTalkingTo'));
   },
-  canFinishMission: function(npc){
-    const mission = Missions.findOne({'conditions.turnIn.npc': npc.npcKey});
-    const character = Template.instance().me();
-    if (mission && character.stats.resources[mission.conditions.resource] >= mission.conditions.amount)
+  canFinishMission: function(character){
+    const mission = Missions.findOne({'conditions.turnIn.characterId': character._id});
+    if (mission.passesConditionsToFinish(Template.instance().me()))
       return mission._id;
-    return false
+    return false;
   },
 });
 

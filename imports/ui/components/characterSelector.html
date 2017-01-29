@@ -1,9 +1,15 @@
 <template name="characterSelector">
 <div class="character-search-selector-container">
   <input class="character-search" type="text"/>
+  {{#if currentCharacter}}
+    <div class="current-character-choice">
+      <img src="{{currentCharacter.image}}"/>
+      {{currentCharacter.name}}
+    </div>
+  {{/if}}
   <ul class="character-matches">
     {{#each character in searchResults}}
-      <li class="select-character {{character.team}}" data-id="{{character._id}}">
+      <li class="select-character {{character.team}}" data-id="{{character._id}}" data-index="{{@index}}">
         <img src="{{character.image}}"/>
         {{character.name}}
       </li>

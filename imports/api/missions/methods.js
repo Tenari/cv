@@ -40,6 +40,10 @@ Meteor.methods({
         setObj['stats.rank'] = character.canBePromoted(mission.rankPoints);
       }
       Characters.update(character._id, {$inc: incObj, $set: setObj});
+
+      let gainResource = {};
+      gainResource['stats.resources.'+mission.conditions.resource] = mission.conditions.amount;
+      Characters.update(mission.conditions.turnIn.characterId, {$inc: gainResource});
     }
   },
   'missions.create'(gameId, data){
@@ -55,7 +59,7 @@ Meteor.methods({
       rankPoints: ranksConfig[character.stats.rank].missionPoints,
       team: character.team,
       creatorId: character._id,
-      conditions: missionsConfig[data.type].conditions(data.resource, data.amount, Characters.findOne(data.turnInId)),
+      conditions: missionsConfig[data.type].conditions(data.resource, data.amount, data.turnInId),
     };
 
     return Missions.insert(mission);

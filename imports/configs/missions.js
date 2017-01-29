@@ -13,20 +13,18 @@ export const missionsConfig = {
     title: 'Resource Acquisition',
     key: 'collectResources',
     icon: 'bar-chart',
-    description: function(conditions){
+    description: function(conditions, character){
       return "Collect " + conditions.amount +
              "lbs of "  + conditions.resource +
-             " and bring it to " + npcConfig[conditions.turnIn.npc].name;
+             " and bring it to " + character.name;
     },
-    conditions: function(resource, amount, turnInCharacter) {
-      let turnIn = {};
-      if (turnInCharacter.npc) {
-        turnIn.npc = turnInCharacter.npcKey;
-      }
+    conditions: function(resource, amount, turnInCharacterId) {
       return {
         resource: resource,
         amount: amount,
-        turnIn: turnIn,
+        turnIn: {
+          characterId: turnInCharacterId,
+        },
       };
     }
   },

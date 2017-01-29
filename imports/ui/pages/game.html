@@ -35,9 +35,6 @@
                 <p>{{opponent.name}}</p>
                 {{#if opponent.npc}}
                   <a class="talk-to-npc" href="#" data-id="{{opponent._id}}">Talk</a>
-                  {{#if canFinishMission opponent}}
-                    <div><a class="finish-mission" href="#" data-id="{{canFinishMission opponent}}">Finish mission</a></div>
-                  {{/if}}
                 {{else}}
                   {{#if fighting}}
                     {{#if amFighting opponent._id}}
@@ -51,6 +48,9 @@
                       <button class="trade" data-id="{{opponent._id}}">Trade</button>
                     {{/if}}
                   {{/if}}
+                {{/if}}
+                {{#if canFinishMission opponent}}
+                  <div><a class="finish-mission" href="#" data-id="{{canFinishMission opponent}}">Finish mission</a></div>
                 {{/if}}
               </div>
             </div>

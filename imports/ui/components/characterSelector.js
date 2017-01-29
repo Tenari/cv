@@ -10,11 +10,15 @@ import './characterSelector.html';
 var timeout = null;
 Template.characterSelector.onCreated(function(){
   this.matches = new ReactiveVar([]);
+  this.currentCharacter = new ReactiveVar(null);
 })
 
 Template.characterSelector.helpers({
   searchResults: function(){
     return Template.instance().matches.get();
+  },
+  currentCharacter: function(){
+    return Template.instance().currentCharacter.get();
   },
 })
 
@@ -32,5 +36,7 @@ Template.characterSelector.events({
   },
   'click ul li.select-character'(e, instance) {
     Session.set('selectedCharacterId', $(e.currentTarget).attr('data-id'));
+    instance.currentCharacter.set(instance.matches.get()[parseInt($(e.currentTarget).attr('data-index'))]);
+    instance.matches.set([]);
   },
 })

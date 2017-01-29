@@ -13,6 +13,7 @@ export function missionSpawnLoop(){
     _.each(playerTeamKeys, function(key) {
       const missionCount = Missions.find({gameId: game._id, team: key, creatorId: {$exists: false}, completed: false}).count();
       const neededMissionCount = 5 - missionCount;
+      const marcoPoloId = Characters.findOne({npc: true, gameId: game._id, npcKey: npcConfig.marcoPolo.key})._id;
       for (var i=0; i < neededMissionCount; i++) {
         Missions.insert({
           gameId: game._id,
@@ -23,7 +24,7 @@ export function missionSpawnLoop(){
             resource: 'wood',
             amount: 5,
             turnIn: {
-              npc: npcConfig.marcoPolo.key,
+              characterId: marcoPoloId,
             }
           },
           createdAt: Date.now(),
