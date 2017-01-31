@@ -20,6 +20,14 @@ Meteor.methods({
     Missions.update(id, {$set: {ownerId: character._id}});
     Characters.update(character._id, {$inc: {'stats.energy': -100}});
   },
+  'missions.progress'(gameId, id) {
+    if (!this.userId) throw new Meteor.Error('missions.accessDenied', 'Gotta be logged in');
+
+    const character = getCharacter(this.userId, gameId, Characters);
+    if (!character) throw new Meteor.Error('missions', 'you dont have a character in this game');
+    
+    return Missions.update(id, {$inc: {'conditions.killCount': 1}});
+  },
   'missions.finish'(gameId, id) {
     if (!this.userId) {
       throw new Meteor.Error('missions.finish.accessDenied',
@@ -56,10 +64,10 @@ Meteor.methods({
     let mission = {
       gameId: gameId,
       type: data.type,
-      rankPoints: ranksConfig[character.stats.rank].missionPoints,
+      rankPoints: missionsConfig[data.type].missionValue(data),
       team: character.team,
       creatorId: character._id,
-      conditions: missionsConfig[data.type].conditions(data.resource, data.amount, data.turnInId),
+      conditions: missionsConfig[data.type].conditions(data),
     };
 
     return Missions.insert(mission);

@@ -77,6 +77,7 @@ export const resourceConfig = {
     cost: 1,
     value: 0.5,
     baseCostToCollect: 50,
+    missionValue: 1,
   },
   hide: {
     key: 'hide',
@@ -84,6 +85,7 @@ export const resourceConfig = {
     cost: 4,
     value: 3,
     baseCostToCollect: 60,
+    missionValue: 2,
   },
   leather: {
     key: 'leather',
@@ -91,6 +93,7 @@ export const resourceConfig = {
     cost: 8,
     value: 5,
     baseCostToCollect: 100,
+    missionValue: 3,
   },
   ore: {
     key: 'ore',
@@ -98,6 +101,7 @@ export const resourceConfig = {
     cost: 3,
     value: 1.5,
     baseCostToCollect: 70,
+    missionValue: 2,
   },
   metal: {
     key: 'metal',
@@ -105,6 +109,7 @@ export const resourceConfig = {
     cost: 6,
     value: 4,
     baseCostToCollect: 120,
+    missionValue: 4,
   },
 };
 

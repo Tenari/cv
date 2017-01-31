@@ -7,29 +7,29 @@ import { Items } from '../../api/items/items.js';
 import { Characters } from '../../api/characters/characters.js';
 import { Fights } from '../../api/fights/fights.js';
 
-import { squirrelConfig, bearConfig, aiTeam, aiNames, maxAiOfType } from '../../configs/ai.js';
+import { monsterConfig, aiTeam } from '../../configs/ai.js';
 import { countDownToRound } from '../../configs/fights.js';
 
 export function aiActLoop(){
   Characters.find({team: aiTeam}).forEach(attack);
-  Characters.find({team: aiTeam, name: aiNames.bear}).forEach(bearConfig.move);
-  Characters.find({team: aiTeam, name: aiNames.squirrel}).forEach(squirrelConfig.move);
+  Characters.find({team: aiTeam, name: monsterConfig.bear.name}).forEach(monsterConfig.bear.move);
+  Characters.find({team: aiTeam, name: monsterConfig.squirrel.name}).forEach(monsterConfig.squirrel.move);
 }
 
 export function aiSpawnLoop(){
   Games.find().forEach(function(game){
-    const totalBears = Characters.find({team: aiTeam, name: aiNames.bear}).count();
-    const bearsToSpawn = maxAiOfType.bear - totalBears;
+    const totalBears = Characters.find({team: aiTeam, name: monsterConfig.bear.name}).count();
+    const bearsToSpawn = monsterConfig.bear.maxPerGame - totalBears;
     for (let i = 0; i < bearsToSpawn; i++){
       const room = Rooms.findOne({gameId: game._id, name: 'rome'})
-      bearConfig.spawn(room, Characters);
+      monsterConfig.bear.spawn(room, Characters);
     }
 
-    const totalSquirrels = Characters.find({team: aiTeam, name: aiNames.squirrel}).count();
-    const squirrelsToSpawn = maxAiOfType.squirrel - totalSquirrels;
+    const totalSquirrels = Characters.find({team: aiTeam, name: monsterConfig.squirrel.name}).count();
+    const squirrelsToSpawn = monsterConfig.squirrel.maxPerGame - totalSquirrels;
     for (let i = 0; i < squirrelsToSpawn; i++){
       const room = Rooms.findOne({gameId: game._id, name: 'rome'})
-      squirrelConfig.spawn(room, Characters);
+      monsterConfig.squirrel.spawn(room, Characters);
     }
   });
 }

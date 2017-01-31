@@ -1,18 +1,37 @@
 @import '../stylesheets/variables.less';
 
 .character-search-selector-container {
-  padding: 10px;
-  border: 2px solid black;
-  border-radius: 5px;
-
   input.character-search {
     width: 100%;
-    border: 1px solid black;
+    border: 2px solid black;
     &:active, &:focus {
       outline: 0;
       border-color: @color-primary;
     }
   }
   ul.character-matches {
+    .select-character {
+      padding: 5px;
+      border: 1px solid black;
+      &:hover {
+        box-shadow: 0px 0px 5px 0px #555;
+      }
+      &.romans img {
+        background-color: @color-contrast;
+      }
+      &.japs img {
+        background-color: @color-tertiary;
+      }
+      img {
+        height: 32px;
+        width: 32px;
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 2px;
+      }
+    }
+  }
+  .current-character-choice {
+    border: 3px solid @color-primary;
   }
 }

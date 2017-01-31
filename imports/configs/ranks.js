@@ -32,7 +32,6 @@ export const ranksConfig = {
     number: 1,
     power: 100,
     value: 100,
-    missionPoints: 10,
   },
 /*  noble: {
     japs: 'Lord',
@@ -54,7 +53,6 @@ export const ranksConfig = {
     power: 50,
     value: 10,
     next: 'king',
-    missionPoints: 5,
   },
   peasant: {
     key: 'peasant',

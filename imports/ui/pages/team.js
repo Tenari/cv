@@ -13,6 +13,7 @@ import { Missions } from '../../api/missions/missions.js';
 import { gameLength, getCharacter, resourceConfig } from '../../configs/game.js';
 import { ranksConfig } from '../../configs/ranks.js';
 import { missionsConfig } from '../../configs/missions.js';
+import { monsterConfig } from '../../configs/ai.js';
 
 import '../components/mission.js';
 import '../components/chat.js';
@@ -113,6 +114,9 @@ Template.team.helpers({
   resourceTypes(){
     return _.values(resourceConfig);
   },
+  monsterTypes(){
+    return _.values(monsterConfig);
+  },
   kingMessage(){
     const game = Games.findOne(FlowRouter.getParam('gameId'));
     return game && game[Template.instance().character().team].kingMessage;
@@ -181,13 +185,22 @@ Template.team.events({
     instance.state.set('missionType', e.target.value);
   },
   'click button.create-new-mission'(e, instance) {
-    Meteor.call('missions.create', FlowRouter.getParam('gameId'), {
+    let dataToSend = {
       type: instance.state.get('missionType'),
-      resource: $('.resource-type-selector').val(),
-      amount: parseInt($('.resource-amount-input').val()),
-      turnInId: Session.get('selectedCharacterId'),
-    }, function(error, result){
-      if (!error)  instance.state.set('makingNewMission', false);
+    };
+    if (instance.state.get('missionType') == missionsConfig.collectResources.key) {
+      dataToSend.resource = $('.resource-type-selector').val();
+      dataToSend.amount = parseInt($('.resource-amount-input').val());
+      dataToSend.turnInId = Session.get('selectedCharacterId');
+    } else if (instance.state.get('missionType') == missionsConfig.killMonster.key) {
+      dataToSend.monsterKey = $('.monster-type-selector').val();
+      dataToSend.amount = parseInt($('.monster-amount-input').val());
+    }
+    Meteor.call('missions.create', FlowRouter.getParam('gameId'), dataToSend, function(error, result){
+      if (!error) {
+        instance.state.set('makingNewMission', false);
+        instance.state.set('missionType', null);
+      }
     })
   }
 })

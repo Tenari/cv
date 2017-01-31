@@ -9,7 +9,7 @@ import { Characters } from '../api/characters/characters.js';
 
 import { styleFactors, fightEnergyCostFactor, speeds, recalculateStats } from './game.js';
 import { equipSlots } from './items.js';
-import { aiTeam, bearConfig } from './ai.js';
+import { aiTeam, monsterConfig } from './ai.js';
 import { ranksConfig } from './ranks.js';
 
 export function countDownToRound(fightId){
@@ -145,7 +145,7 @@ export function fightNextRound(fightId){
   // handle AIs making their next move
   _.each([first,last], function(character){
     if (character.team == aiTeam) {
-      bearConfig.setFightStrategy(fight, character, Fights);
+      monsterConfig[character.monsterKey].setFightStrategy(fight, character, Fights);
     }
   });
 

@@ -48,15 +48,19 @@ Missions.helpers({
    return missionsConfig[this.type].title;
  },
  description(){
-   return missionsConfig[this.type].description(this.conditions, Characters.findOne(this.conditions.turnIn.characterId));
+   if (this.type == missionsConfig.collectResources.key)
+     return missionsConfig[this.type].description(this.conditions, Characters.findOne(this.conditions.turnIn.characterId));
+   return missionsConfig[this.type].description(this.conditions);
  },
  icon(){
    return missionsConfig[this.type].icon;
  },
  passesConditionsToFinish(character){
-   if (this.type == 'collectResources'){
+   if (this.type == missionsConfig.collectResources.key){
      const receiver = Characters.findOne(this.conditions.turnIn.characterId);
      return receiver && character.stats.resources[this.conditions.resource] >= this.conditions.amount && character.sameLocationAs(receiver);
+   } else if (this.type == missionsConfig.killMonster.key) {
+     return this.conditions.killCount && this.conditions.killCount > this.conditions.amount;
    }
  },
 })

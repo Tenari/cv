@@ -137,6 +137,7 @@ Characters.schema = new SimpleSchema({
   lastFightEndedAt: { type: Number, optional: true },
   npc: {type: Boolean, defaultValue: false},
   npcKey: {type: String, optional: true },
+  monsterKey: {type: String, optional: true },
   music: {type: Boolean, defaultValue: true},
   counts: {type: CountsSchema},
 });
@@ -157,6 +158,7 @@ Characters.publicFields = {
   lastFightEndedAt: 1,
   npc: 1,
   npcKey: 1,
+  monsterKey: 1,
   music: 1,
   counts: 1,
 };

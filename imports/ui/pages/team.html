@@ -123,14 +123,14 @@
         {{#if isCreatingNewMission}}
           <h2>Create New Mission</h2>
           <div class="new-mission-container">
-            <p>
+            <div>
               Mission type:
               <select class="mission-type-selector">
                 {{#each type in missionTypes}}
                   <option value="{{type.key}}">{{type.title}}</option>
                 {{/each}}
               </select>
-            </p>
+            </div>
             {{#if selectedMissionType 'collectResources'}}
               <div>
                 Resource:
@@ -145,6 +145,20 @@
               </div>
               <div>
                 {{> characterSelector}}
+              </div>
+              <button class="create-new-mission">Create</button>
+            {{/if}}
+            {{#if selectedMissionType 'killMonster'}}
+              <div>
+                Monster:
+                <select class="monster-type-selector">
+                  {{#each type in monsterTypes}}
+                    <option value="{{type.key}}">{{type.name}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <div>
+                Amount: <input type="number" class="monster-amount-input" min="2" value="2" max="100"/>
               </div>
               <button class="create-new-mission">Create</button>
             {{/if}}
