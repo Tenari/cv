@@ -17,6 +17,13 @@ SyncedCron.add({
   },
   job: regenLoop,
 })
+SyncedCron.add({
+  name: 'aiSpawn',
+  schedule: function(parser) {
+    return parser.text('every 2 minutes')
+  },
+  job: aiSpawnLoop,
+})
 /*
 SyncedCron.add({
   name: 'aiAct',
@@ -24,13 +31,6 @@ SyncedCron.add({
     return parser.text('every 2 seconds')
   },
   job: aiActLoop,
-})
-SyncedCron.add({
-  name: 'aiSpawn',
-  schedule: function(parser) {
-    return parser.text('every 2 minutes')
-  },
-  job: aiSpawnLoop,
 })
 SyncedCron.add({
   name: 'maguffin point-tick',

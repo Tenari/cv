@@ -18,14 +18,14 @@ export function aiActLoop(){
 
 export function aiSpawnLoop(){
   Games.find().forEach(function(game){
-    const totalBears = Characters.find({team: aiTeam, name: monsterConfig.bear.name}).count();
+    const totalBears = Characters.find({team: aiTeam, name: monsterConfig.bear.name, 'stats.hp': {$gt: 0}}).count();
     const bearsToSpawn = monsterConfig.bear.maxPerGame - totalBears;
     for (let i = 0; i < bearsToSpawn; i++){
       const room = Rooms.findOne({gameId: game._id, name: 'rome'})
       monsterConfig.bear.spawn(room, Characters);
     }
 
-    const totalSquirrels = Characters.find({team: aiTeam, name: monsterConfig.squirrel.name}).count();
+    const totalSquirrels = Characters.find({team: aiTeam, name: monsterConfig.squirrel.name, 'stats.hp': {$gt: 0}}).count();
     const squirrelsToSpawn = monsterConfig.squirrel.maxPerGame - totalSquirrels;
     for (let i = 0; i < squirrelsToSpawn; i++){
       const room = Rooms.findOne({gameId: game._id, name: 'rome'})

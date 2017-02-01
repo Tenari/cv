@@ -2,6 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { Characters } from '../characters/characters.js';
+import { Notifications } from '../notifications/notifications.js';
 
 import { missionsConfig } from '../../configs/missions.js';
 
@@ -60,7 +61,34 @@ Missions.helpers({
      const receiver = Characters.findOne(this.conditions.turnIn.characterId);
      return receiver && character.stats.resources[this.conditions.resource] >= this.conditions.amount && character.sameLocationAs(receiver);
    } else if (this.type == missionsConfig.killMonster.key) {
-     return this.conditions.killCount && this.conditions.killCount > this.conditions.amount;
+     return this.conditions.killCount && this.conditions.killCount >= this.conditions.amount;
    }
  },
+ finish(character){
+   let setObj = {};
+   let incObj = {'counts.missionsCompleted': 1, 'stats.rankPoints': parseInt(this.rankPoints)};
+   if (character.canBePromoted(this.rankPoints)) {
+     setObj['stats.rank'] = character.canBePromoted(this.rankPoints);
+   }
+   console.log(character, incObj, setObj);
+   Meteor.setTimeout(function(){
+     Characters.update(character._id, {$inc: incObj, $set: setObj});
+   }, 33)
+
+   Missions.update(this._id, {$set: {completed: true}});
+   Notifications.insert({
+     characterId: this.ownerId,
+     title: missionsConfig[this.type].title + " mission completed",
+     message: "You gained " + this.rankPoints + " rank points",
+     duration: 3500,
+   })
+ },
+ progress() {
+   if (!this.ownerId) return false;
+
+   if (this.type == missionsConfig.killMonster.key) {
+     return "" + this.conditions.killCount + " / " + this.conditions.amount;
+   }
+   return false;
+ }
 })

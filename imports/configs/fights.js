@@ -6,11 +6,13 @@ import { Games } from '../api/games/games.js';
 import { Fights } from '../api/fights/fights.js';
 import { Items } from '../api/items/items.js';
 import { Characters } from '../api/characters/characters.js';
+import { Missions } from '../api/missions/missions.js';
 
 import { styleFactors, fightEnergyCostFactor, speeds, recalculateStats } from './game.js';
 import { equipSlots } from './items.js';
 import { aiTeam, monsterConfig } from './ai.js';
 import { ranksConfig } from './ranks.js';
+import { missionsConfig } from './missions.js';
 
 export function countDownToRound(fightId){
   const fight = Fights.findOne(fightId)
@@ -163,6 +165,9 @@ function endFight(fight, first, last) {
     if (first.team != aiTeam && last.team != first.team) {
       obj[last.team+'.score'] = ranksConfig[first.stats.rank].value; // your team gains as many points as the opponent's rank in his team is worth
     }
+    if (first.team == aiTeam) {
+      updateKillMissions(last, first);
+    }
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: first._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
@@ -176,6 +181,9 @@ function endFight(fight, first, last) {
     if (last.team != aiTeam && last.team != first.team) {
       obj[first.team+'.score'] = ranksConfig[last.stats.rank].value; // your team gains as many points as the opponent's rank in his team is worth
     }
+    if (last.team == aiTeam) {
+      updateKillMissions(first, last);
+    }
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: last._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
@@ -183,6 +191,17 @@ function endFight(fight, first, last) {
   Fights.remove(fight._id);
   Characters.update(first._id, {$set: {stats: first.stats, 'deaths': first.deaths, lastFightEndedAt: Date.now()}});
   Characters.update(last._id, {$set: {stats: last.stats, 'deaths': last.deaths, lastFightEndedAt: Date.now()}});
+}
+
+function updateKillMissions(killer, monster) {
+  const missions = Missions.find({completed: false, ownerId: killer._id, type: missionsConfig.killMonster.key, 'conditions.monsterKey': monster.monsterKey});
+  missions.forEach(function(mission){
+    if (mission.conditions.killCount + 1 >= mission.conditions.amount) {
+      mission.finish(killer);
+    } else {
+      Missions.update(mission._id, {$inc: {'conditions.killCount': 1}})
+    }
+  })
 }
 
 function combatOrder(fight, a, b, aW, bW) {

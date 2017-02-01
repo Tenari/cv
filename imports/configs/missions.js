@@ -14,6 +14,7 @@ export const missionsConfig = {
       return {
         monsterKey: data.monsterKey,
         amount: data.amount,
+        killCount: 0,
       };
     },
     missionValue: function(data){

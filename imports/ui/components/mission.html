@@ -7,6 +7,9 @@
       <div class="mission-title">{{title}}</div>
       <div class="mission-description">{{description}}</div>
     </div>
+    {{#if progress}}
+      <div class="mission-progress">{{progress}}</div>
+    {{/if}}
     <div class="mission-value">Rank Points Reward: {{rankPoints}}</div>
     {{#if ownerId}}
       <div class="accepted-notice">

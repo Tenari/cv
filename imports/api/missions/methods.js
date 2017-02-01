@@ -20,14 +20,6 @@ Meteor.methods({
     Missions.update(id, {$set: {ownerId: character._id}});
     Characters.update(character._id, {$inc: {'stats.energy': -100}});
   },
-  'missions.progress'(gameId, id) {
-    if (!this.userId) throw new Meteor.Error('missions.accessDenied', 'Gotta be logged in');
-
-    const character = getCharacter(this.userId, gameId, Characters);
-    if (!character) throw new Meteor.Error('missions', 'you dont have a character in this game');
-    
-    return Missions.update(id, {$inc: {'conditions.killCount': 1}});
-  },
   'missions.finish'(gameId, id) {
     if (!this.userId) {
       throw new Meteor.Error('missions.finish.accessDenied',
@@ -38,16 +30,11 @@ Meteor.methods({
 
     const mission = Missions.findOne(id);
     if (mission.passesConditionsToFinish(character)) {
-      Missions.update(id, {$set: {completed: true}});
+      mission.finish(character);
 
-      let setObj = {};
-      let incObj = {'stats.rankPoints': mission.rankPoints};
+      let incObj = {};
       incObj['stats.resources.'+mission.conditions.resource] = -1 * mission.conditions.amount;
-      incObj['counts.missionsCompleted'] = 1;
-      if (character.canBePromoted(mission.rankPoints)) {
-        setObj['stats.rank'] = character.canBePromoted(mission.rankPoints);
-      }
-      Characters.update(character._id, {$inc: incObj, $set: setObj});
+      Characters.update(character._id, {$inc: incObj});
 
       let gainResource = {};
       gainResource['stats.resources.'+mission.conditions.resource] = mission.conditions.amount;
