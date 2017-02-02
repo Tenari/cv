@@ -35,7 +35,7 @@ Template.characterSelector.events({
     }, 333);
   },
   'click ul li.select-character'(e, instance) {
-    Session.set('selectedCharacterId', $(e.currentTarget).attr('data-id'));
+    Session.set('selectedCharacter', instance.matches.get()[parseInt($(e.currentTarget).attr('data-index'))]);
     instance.currentCharacter.set(instance.matches.get()[parseInt($(e.currentTarget).attr('data-index'))]);
     instance.matches.set([]);
   },

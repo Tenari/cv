@@ -110,12 +110,12 @@
 
     {{#if tab 'missions'}}
       <div class="missions-container">
-        {{#if rankIs 'king'}}
+        {{#if canCreateMission}}
           <a href="#" class="toggle-new-mission-container">
             {{#if isCreatingNewMission}}
               View missions
             {{else}}
-              Create mission
+              Create mission ({{canCreateMission}} left)
             {{/if}}
           </a>
         {{/if}}
@@ -146,7 +146,7 @@
               <div>
                 {{> characterSelector}}
               </div>
-              <button class="create-new-mission">Create</button>
+              <button class="create-new-mission">Create (25 energy)</button>
             {{/if}}
             {{#if selectedMissionType 'killMonster'}}
               <div>
@@ -160,7 +160,16 @@
               <div>
                 Amount: <input type="number" class="monster-amount-input" min="2" value="2" max="100"/>
               </div>
-              <button class="create-new-mission">Create</button>
+              <button class="create-new-mission">Create (25 energy)</button>
+            {{/if}}
+            {{#if selectedMissionType 'killPlayer'}}
+              <div>
+                {{> characterSelector}}
+              </div>
+              <div>
+                Mission value: <input type="number" class="kill-mission-value" min="20" max="1000" value="20"/>
+              </div>
+              <button class="create-new-mission">Create (25 energy)</button>
             {{/if}}
           </div>
         {{else}}

@@ -10,6 +10,7 @@ import { Items } from '../items/items.js';
 import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
+import { aiTeam } from '../../configs/ai.js';
 import { getCharacter } from '../../configs/game.js';
 import { teamConfigs } from '../../configs/ranks.js';
 
@@ -117,7 +118,7 @@ Meteor.methods({
     Characters.update(characterId, {$set: {music: !character.music}});
   },
   'characters.search'(gameId, searchString) {
-    return _.map(Characters.find({gameId: gameId, name: {$regex: searchString, $options: 'i'}}, {limit: 5}).fetch(), function(obj){
+    return _.map(Characters.find({gameId: gameId, team: {$ne: aiTeam}, name: {$regex: searchString, $options: 'i'}}, {limit: 5}).fetch(), function(obj){
       return {
         team: obj.team,
         image: obj.image(),

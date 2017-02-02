@@ -168,6 +168,8 @@ function endFight(fight, first, last) {
     if (first.team == aiTeam) {
       updateKillMissions(last, first);
     }
+    if (first.team != aiTeam) updateKillPlayerMissions(last, first);
+
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: first.location.x, y: first.location.y, roomId: first.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: first._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
@@ -184,6 +186,8 @@ function endFight(fight, first, last) {
     if (last.team == aiTeam) {
       updateKillMissions(first, last);
     }
+    if (last.team != aiTeam) updateKillPlayerMissions(first, last);
+
     Games.update(first.gameId, {$inc: obj});
     const newLocation = {x: last.location.x, y: last.location.y, roomId: last.location.roomId, updatedAt: Date.now()};
     Items.update({ownerId: last._id}, {$set: {equipped: false, ownerId: null, location: newLocation}}, {multi: true});
@@ -201,6 +205,13 @@ function updateKillMissions(killer, monster) {
     } else {
       Missions.update(mission._id, {$inc: {'conditions.killCount': 1}})
     }
+  })
+}
+
+function updateKillPlayerMissions(killer, target) {
+  const missions = Missions.find({completed: false, ownerId: killer._id, type: missionsConfig.killPlayer.key, 'conditions.playerId': target._id});
+  missions.forEach(function(mission){
+    mission.finish(killer);
   })
 }
 

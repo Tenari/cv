@@ -27,7 +27,7 @@ Template.team.onCreated(function fightOnCreated() {
     tab: 'summary',
     editingKingMessage: false,
     makingNewMission: false,
-    missionType: 'killMonster',
+    missionType: missionsConfig.killMonster.key,
   })
   var teamCharacters = this.subscribe('characters.team');
   this.subscribe('games');
@@ -127,6 +127,13 @@ Template.team.helpers({
   isEditingKingMessage(){
     return Template.instance().state.get('editingKingMessage');
   },
+  canCreateMission(){
+    const character = Template.instance().character();
+    const missionsLeft = character.createableMissionCount(Missions);
+    if (missionsLeft > 0)
+      return missionsLeft;
+    return false;
+  },
   isCreatingNewMission(){
     return Template.instance().state.get('makingNewMission');
   },
@@ -191,15 +198,19 @@ Template.team.events({
     if (instance.state.get('missionType') == missionsConfig.collectResources.key) {
       dataToSend.resource = $('.resource-type-selector').val();
       dataToSend.amount = parseInt($('.resource-amount-input').val());
-      dataToSend.turnInId = Session.get('selectedCharacterId');
+      dataToSend.turnInId = Session.get('selectedCharacter')._id;
     } else if (instance.state.get('missionType') == missionsConfig.killMonster.key) {
       dataToSend.monsterKey = $('.monster-type-selector').val();
       dataToSend.amount = parseInt($('.monster-amount-input').val());
+    } else if (instance.state.get('missionType') == missionsConfig.killPlayer.key) {
+      dataToSend.playerId = Session.get('selectedCharacter')._id;
+      dataToSend.playerName = Session.get('selectedCharacter').name;
+      dataToSend.value = parseInt($('.kill-mission-value').val());
     }
     Meteor.call('missions.create', FlowRouter.getParam('gameId'), dataToSend, function(error, result){
       if (!error) {
         instance.state.set('makingNewMission', false);
-        instance.state.set('missionType', null);
+        instance.state.set('missionType', missionsConfig.killMonster.key);
       }
     })
   }

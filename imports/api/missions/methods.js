@@ -42,11 +42,14 @@ Meteor.methods({
     }
   },
   'missions.create'(gameId, data){
+    const missionEnergyCost = 25;
+
     if (!this.userId) throw new Meteor.Error('accessDenied', 'Gotta be logged in');
 
     const character = getCharacter(this.userId, gameId, Characters);
     if (!character) throw new Meteor.Error('missions.create', 'you dont have a character in this game');
-    if (character.stats.rank == ranksConfig.peasant.key) throw new Meteor.Error('missions.create', 'not high enough rank');
+    if (character.createableMissionCount(Missions) <= 0) throw new Meteor.Error('missions.create', 'cant make more');
+    if (character.stats.energy < missionEnergyCost) throw new Meteor.Error('missions.create', 'not enough energy');
 
     let mission = {
       gameId: gameId,
@@ -57,6 +60,7 @@ Meteor.methods({
       conditions: missionsConfig[data.type].conditions(data),
     };
 
+    Characters.update(character._id, {$inc: {'stats.energy': -1 * missionEnergyCost}})
     return Missions.insert(mission);
   }
 });

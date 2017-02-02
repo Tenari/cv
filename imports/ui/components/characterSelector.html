@@ -10,7 +10,7 @@
   {{/if}}
   <ul class="character-matches">
     {{#each character in searchResults}}
-      <li class="select-character {{character.team}}" data-id="{{character._id}}" data-index="{{@index}}">
+      <li class="select-character {{character.team}}" data-index="{{@index}}">
         <img src="{{character.image}}"/>
         {{character.name}}
       </li>

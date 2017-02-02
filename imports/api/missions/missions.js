@@ -49,8 +49,6 @@ Missions.helpers({
    return missionsConfig[this.type].title;
  },
  description(){
-   if (this.type == missionsConfig.collectResources.key)
-     return missionsConfig[this.type].description(this.conditions, Characters.findOne(this.conditions.turnIn.characterId));
    return missionsConfig[this.type].description(this.conditions);
  },
  icon(){
@@ -70,7 +68,7 @@ Missions.helpers({
    if (character.canBePromoted(this.rankPoints)) {
      setObj['stats.rank'] = character.canBePromoted(this.rankPoints);
    }
-   console.log(character, incObj, setObj);
+   //no idea why this is necessary, but it is...
    Meteor.setTimeout(function(){
      Characters.update(character._id, {$inc: incObj, $set: setObj});
    }, 33)

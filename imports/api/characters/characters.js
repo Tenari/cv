@@ -205,4 +205,9 @@ Characters.helpers({
     }
     return false;
   },
+  createableMissionCount(Missions) {
+    const rank = this.stats.rank;
+    const createableMissions = ranksConfig[rank].createableMissions;
+    return createableMissions - Missions.find({creatorId: this._id, completed: false}).count();
+  },
 })

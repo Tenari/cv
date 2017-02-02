@@ -6,7 +6,7 @@ export const missionsConfig = {
     title: 'Pest Control',
     key: 'killMonster',
     icon: 'paw',
-    description: function(conditions, character){
+    description: function(conditions){
       return "Hunt down and kill " + conditions.amount +
              " " + monsterConfig[conditions.monsterKey].name + "s";
     },
@@ -25,15 +25,27 @@ export const missionsConfig = {
     title: 'Enemy Elimination',
     key: 'killPlayer',
     icon: 'street-view',
+    description: function(conditions){
+      return "Hunt down and kill " + conditions.playerName;
+    },
+    conditions: function(data) {
+      return {
+        playerId: data.playerId,
+        playerName: data.playerName,
+      };
+    },
+    missionValue: function(data){
+      return data.value;
+    },
   },
   collectResources: {
     title: 'Resource Acquisition',
     key: 'collectResources',
     icon: 'bar-chart',
-    description: function(conditions, character){
+    description: function(conditions){
       return "Collect " + conditions.amount +
              "lbs of "  + conditions.resource +
-             " and bring it to " + character.name;
+             " and bring it to " + conditions.characterName;
     },
     conditions: function(data) {
       return {

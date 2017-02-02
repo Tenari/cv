@@ -11,7 +11,7 @@ Meteor.publish ("missions.own", function(gameId) {
 
   const character = getCharacter(this.userId, gameId, Characters);
   if (!character) return this.ready();
-  return Missions.find({ownerId: character._id, completed: false}, {fields: Missions.publicFields});
+  return Missions.find({$or: [{ownerId: character._id},{creatorId: character._id}], completed: false}, {fields: Missions.publicFields});
 });
 
 // all your team's open (un-accepted) missions
