@@ -16,6 +16,7 @@ import { Chats } from '../../api/chats/chats.js'
 import '../../api/chats/methods.js'
 import { Missions } from '../../api/missions/missions.js'
 import '../../api/missions/methods.js'
+import { Obstacles } from '../../api/obstacles/obstacles.js'
 
 import '../components/music.js';
 import '../components/npcTalk.js';
@@ -130,6 +131,8 @@ Template.game.helpers({
       s_y = 0;
     }
 
+    const obstacles = Obstacles.find({'location.x': {$gt: s_x}, 'location.y': {$gt: s_y}}).fetch();
+
     html = "";
     for(i = 0; i < viewH; i++){
       html += "<div class='g-row'>";
@@ -140,15 +143,20 @@ Template.game.helpers({
           tile = undefined;
 
         var otherUser = _.find(users, function(user){return user.location.y == i+s_y && user.location.x == j+s_x;});
+        var obstacle = _.find(obstacles, function(obstacle) {return obstacle.location.y == i+s_y && obstacle.location.x == j+s_x});
 
         if (tile == undefined)
           html += "<div class='g-col i-blank'></div>";
-        else if (j == drawX && i == drawY)
-          html += "<div class='g-col i-"+tile.type+"'><div class='character mc i-"+(parseInt(usr.location.classId)+parseInt(usr.location.direction))+"'></div></div>";
-        else if (otherUser) {
-          html += "<div class='g-col i-"+tile.type+"'><div class='character i-"+(parseInt(otherUser.location.classId)+parseInt(otherUser.location.direction))+"'></div></div>";
-        } else
-          html += "<div class='g-col i-"+tile.type+"'></div>";
+        else {
+          html += "<div class='g-col i-"+tile.type+"'>";
+          if (obstacle)
+            html += "<div class='character "+obstacle.imageClass()+"'></div>";
+          if (j == drawX && i == drawY)
+            html += "<div class='character mc i-"+(parseInt(usr.location.classId)+parseInt(usr.location.direction))+"'></div>";
+          else if (otherUser) 
+            html += "<div class='character i-"+(parseInt(otherUser.location.classId)+parseInt(otherUser.location.direction))+"'></div>";
+          html += "</div>";
+        }
       }
       html += "</div>";
     }
@@ -184,8 +192,8 @@ Template.game.helpers({
     return Items.find({'location.x': character.location.x, 'location.y':character.location.y});
   },
   resource: function(){
-    const nextSpace = Template.instance().getMyNextSpace();
-    return nextSpace && nextSpace.resources;
+    const obstacle = Template.instance().me().getFacingObstacle(Obstacles);
+    return obstacle && obstacle.data.resources;
   },
   resourceSource: function(){
     return "Tree";

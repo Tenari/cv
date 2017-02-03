@@ -4,6 +4,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Items } from '../items/items.js';
 import { itemConfigs } from '../../configs/items.js';
 import { ranksConfig } from '../../configs/ranks.js';
+import { nextSpotXY } from '../../configs/locations.js';
 
 export const Characters = new Mongo.Collection('characters');
 
@@ -209,5 +210,9 @@ Characters.helpers({
     const rank = this.stats.rank;
     const createableMissions = ranksConfig[rank].createableMissions;
     return createableMissions - Missions.find({creatorId: this._id, completed: false}).count();
+  },
+  getFacingObstacle(Obstacles) {
+    const xy = nextSpotXY(this);
+    return Obstacles.findOne({'location.roomId': this.location.roomId, 'location.x': xy.x, 'location.y': xy.y});
   },
 })

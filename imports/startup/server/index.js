@@ -8,6 +8,7 @@ import { Buildings } from '../../api/buildings/buildings.js';
 import { Items } from '../../api/items/items.js';
 import { Notifications } from '../../api/notifications/notifications.js';
 import { Missions } from '../../api/missions/missions.js';
+import { Obstacles } from '../../api/obstacles/obstacles.js';
 
 import './gameLoop.js';
 
@@ -62,6 +63,18 @@ Meteor.startup(function (){
     const romeId = Rooms.upsert({name : "rome"}, { $set : rome}).insertedId;
     const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
     const landId = Rooms.upsert({name : "land-sale"}, { $set : land}).insertedId;
+
+    Obstacles.insert({
+      location: {
+        roomId: romeId,
+        x: 2,
+        y:2,
+      },
+      type: 'tree',
+      data: {
+        resources:{"type":"wood", "amount":10}
+      }
+    })
 
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});

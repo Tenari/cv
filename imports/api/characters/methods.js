@@ -7,6 +7,7 @@ import { Rooms } from '../rooms/rooms.js';
 import { Fights } from '../fights/fights.js';
 import { Trades } from '../trades/trades.js';
 import { Items } from '../items/items.js';
+import { Obstacles } from '../obstacles/obstacles.js';
 import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
@@ -149,9 +150,10 @@ export function moveCharacter(character, directionInt) {
 
   const xy = nextSpotXY(character);
   nextSpot = room.map[xy.y] && room.map[xy.y][xy.x] ? room.map[xy.y][xy.x] : "out of bounds";
+  const obstacle = character.getFacingObstacle(Obstacles)
   moveObject = xy.moveObject;
 
-  if (nextSpot != "out of bounds" && moveCosts[nextSpot.type] && character.location.direction == directionInt) { // can traverse the next spot and are facing the right way
+  if (nextSpot != "out of bounds" && moveCosts[nextSpot.type] && character.location.direction == directionInt && (!obstacle || obstacle.passable())) { // can traverse the next spot and are facing the right way
     Trades.remove({$or: [{sellerId: character._id}, {buyerId: character._id}]}) // if the dude leaves, the trade is cancelled
 
     if (nextSpot.data && nextSpot.data.x > -1 && nextSpot.data.y > -1) { // next spot is a door

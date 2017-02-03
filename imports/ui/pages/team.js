@@ -199,6 +199,7 @@ Template.team.events({
       dataToSend.resource = $('.resource-type-selector').val();
       dataToSend.amount = parseInt($('.resource-amount-input').val());
       dataToSend.turnInId = Session.get('selectedCharacter')._id;
+      dataToSend.characterName = Session.get('selectedCharacter').name;
     } else if (instance.state.get('missionType') == missionsConfig.killMonster.key) {
       dataToSend.monsterKey = $('.monster-type-selector').val();
       dataToSend.amount = parseInt($('.monster-amount-input').val());

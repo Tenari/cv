@@ -4,6 +4,7 @@ import { _ } from 'meteor/underscore';
 import { Rooms } from './rooms.js';
 import { Characters } from '../characters/characters.js';
 import { Buildings } from '../buildings/buildings.js';
+import { Obstacles } from '../obstacles/obstacles.js';
 import { Chats } from '../chats/chats.js';
 
 import { treeStumpTile, nextSpotXY, doorConfig } from '../../configs/locations.js';
@@ -18,22 +19,26 @@ Meteor.methods({
     let room = Rooms.findOne(character.location.roomId);
     if (!room) throw new Meteor.Error('rooms.collect', "room not found");
 
-    const xy = nextSpotXY(character);
-    const nextSpace = room.map[xy.y][xy.x];
     const amountToCollect = 1;
-
     if (!character.canCarry(amountToCollect)) throw new Meteor.Error('rooms.collect', 'You cannot carry any more resources.');
 
-    if (nextSpace && nextSpace.resources && nextSpace.resources.amount > 0) {
-      character.stats.resources[nextSpace.resources.type] += amountToCollect;
-      room.map[xy.y][xy.x].resources.amount -= amountToCollect;
-      if (room.map[xy.y][xy.x].resources.amount == 0) {
-        room.map[xy.y][xy.x] = _.clone(treeStumpTile);
+    const obstacle = character.getFacingObstacle(Obstacles);
+
+    if (obstacle && obstacle.data.resources && obstacle.data.resources.amount > 0) {
+      character.stats.resources[obstacle.data.resources.type] += amountToCollect;
+      obstacle.data.resources.amount -= amountToCollect;
+      if (obstacle.data.resources.amount == 0) {
+        // remove the obstacle and turn it into it's empty version (tree into treeStump
+        obstacle.insertEmptyVersion();
+        Obstacles.remove(obstacle._id);
+      } else {
+        // update the obstacle
+        Obstacles.update(obstacle._id, {$set: {'data.resources.amount': obstacle.data.resources.amount}})
       }
-      Rooms.update(room._id, {$set: {map: room.map}});
-      const newEnergy = character.stats.energy - Math.max(resourceConfig[nextSpace.resources.type].baseCostToCollect - parseInt(character.stats.collecting[nextSpace.resources.type]), 1);
-      character.stats.collecting[nextSpace.resources.type] += collectingSkillGrowthAmount(character.stats.collecting[nextSpace.resources.type+'Base']);
-      character.stats.collecting[nextSpace.resources.type+'Base'] += collectingSkillGrowthAmount(character.stats.collecting[nextSpace.resources.type+'Base']);
+      // update the character
+      const newEnergy = character.stats.energy - Math.max(resourceConfig[obstacle.data.resources.type].baseCostToCollect - parseInt(character.stats.collecting[obstacle.data.resources.type]), 1);
+      character.stats.collecting[obstacle.data.resources.type] += collectingSkillGrowthAmount(character.stats.collecting[obstacle.data.resources.type+'Base']);
+      character.stats.collecting[obstacle.data.resources.type+'Base'] += collectingSkillGrowthAmount(character.stats.collecting[obstacle.data.resources.type+'Base']);
       Characters.update(character._id, {$set: {'stats.resources': character.stats.resources, 'stats.energy': newEnergy, 'stats.collecting': character.stats.collecting}});
     }
   },

@@ -45,7 +45,6 @@ Template.app.onCreated(function appBodyOnCreated() {
   });
 
   this.autorun(() => {
-    console.log(Notifications.find().fetch());
     if (FlowRouter.getParam('gameId')) {
       this.subscribe('notifications.own', FlowRouter.getParam('gameId'));
     }

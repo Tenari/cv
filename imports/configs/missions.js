@@ -53,6 +53,7 @@ export const missionsConfig = {
         amount: data.amount,
         turnIn: {
           characterId: data.turnInId,
+          characterName: data.characterName,
         },
       };
     },
