@@ -51,6 +51,7 @@ Template.game.onCreated(function gameOnCreated() {
     this.subscribe('game.rooms', this.getGameId());
     this.subscribe('trades.own', this.getGameId());
     if (myself.ready()) {
+      this.subscribe('room.obstacles', this.getRoomId());
       if (Characters.find().count() == 0) {
         FlowRouter.go('/');
       } else {
@@ -131,7 +132,7 @@ Template.game.helpers({
       s_y = 0;
     }
 
-    const obstacles = Obstacles.find({'location.x': {$gt: s_x}, 'location.y': {$gt: s_y}}).fetch();
+    const obstacles = Obstacles.find({'location.x': {$gte: s_x}, 'location.y': {$gte: s_y}}).fetch();
 
     html = "";
     for(i = 0; i < viewH; i++){
@@ -150,7 +151,7 @@ Template.game.helpers({
         else {
           html += "<div class='g-col i-"+tile.type+"'>";
           if (obstacle)
-            html += "<div class='character "+obstacle.imageClass()+"'></div>";
+            html += "<div class='obstacle "+obstacle.imageClass()+"'></div>";
           if (j == drawX && i == drawY)
             html += "<div class='character mc i-"+(parseInt(usr.location.classId)+parseInt(usr.location.direction))+"'></div>";
           else if (otherUser) 
@@ -223,11 +224,9 @@ Template.game.helpers({
     return Chats.findOne();
   },
   lockedDoor: function(){
-    const nextSpace = Template.instance().getMyNextSpace();
-    if (!nextSpace || !nextSpace.data) return false;
-    if (doorIsLocked(nextSpace, Template.instance().me()))
-      return nextSpace;
-    return false;
+    const character = Template.instance().me();
+    const obstacle = character.getCurrentTileObstacle(Obstacles);
+    return obstacle && obstacle.isDoor() && doorIsLocked(obstacle, Template.instance().me());
   },
   doorAttackEnergyCost: function(){return doorAttackEnergyCost;},
   nextSpaceAcceptsResources: function(){
@@ -252,7 +251,7 @@ Template.game.helpers({
   },
   canFinishMission: function(character){
     const mission = Missions.findOne({'conditions.turnIn.characterId': character._id});
-    if (mission.passesConditionsToFinish(Template.instance().me()))
+    if (mission && mission.passesConditionsToFinish(Template.instance().me()))
       return mission._id;
     return false;
   },

@@ -76,6 +76,16 @@ Meteor.startup(function (){
       }
     })
 
+    Obstacles.insert({
+      location: {
+        roomId: tokyoId,
+        x: 0,
+        y:3,
+      },
+      type: 'door',
+      data: {id: romeId, x: 1, y: 0},
+    })
+
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
     Chats.insert({scope: "Rooms:"+landId, messages: []});

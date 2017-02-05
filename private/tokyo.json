@@ -6,7 +6,7 @@
      [{"type":"hz-fence"}, {"type":"grass"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"vt-fence"}],
      [{"type":"vt-fence"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"workbench-left", "use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}}, {"type":"workbench-right","use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}}, {"type":"vt-fence"}],
      [{"type":"vt-fence"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"vt-fence"}],
-     [{"type":"door", "data": {"name": "rome", "x": 1, "y": 0}}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"vt-fence"}],
+     [{"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"vt-fence"}],
      [{"type":"vt-fence"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"vt-fence"}],
      [{"type":"vt-fence"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"grass"}, {"type":"vt-fence"}],
      [{"type":"vt-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}]

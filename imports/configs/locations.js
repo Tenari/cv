@@ -37,8 +37,11 @@ export function nextSpotXY(character){
   return {x: x, y: y, moveObject : moveObject};
 }
 
-export function moveCost(character, weight, terrain) {
-  return Math.max( 1, Math.round( (moveCosts[terrain] || 10) * (2 * weight / character.maxWeight()) ) );
+export function moveCost(character, weight, terrain, obstacle) {
+  let baseCost = moveCosts[terrain] || 10;
+  if (obstacle)
+    baseCost += obstacle.moveCost();
+  return Math.max( 1, Math.round( baseCost * (2 * weight / character.maxWeight()) ) );
 }
 
 export const doorConfig = {
@@ -51,15 +54,15 @@ export const doorConfig = {
   buildingResources: [{resource:"wood", amount:30, has:0}],
 };
 
-export function doorIsLocked(nextSpot, character){
+export function doorIsLocked(obstacle, character){
   let locked = false;
-  if (nextSpot.data && nextSpot.data.lock && nextSpot.stats.hp > 0) {
-    if (nextSpot.data.lock.type == doorConfig.lockTypes.none) return true;
+  if (obstacle && obstacle.data && obstacle.data.lock && obstacle.stats.hp > 0) {
+    if (obstacle.data.lock.type == doorConfig.lockTypes.none) return true;
 
-    if (nextSpot.data.lock.type == doorConfig.lockTypes.all) return false;
+    if (obstacle.data.lock.type == doorConfig.lockTypes.all) return false;
 
-    if (nextSpot.data.lock.type == doorConfig.lockTypes.team) {
-      return nextSpot.data.lock.team != character.team;
+    if (obstacle.data.lock.type == doorConfig.lockTypes.team) {
+      return obstacle.data.lock.team != character.team;
     }
   }
   return locked;

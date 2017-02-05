@@ -10,7 +10,7 @@ import { Items } from '../items/items.js';
 import { Obstacles } from '../obstacles/obstacles.js';
 import { Characters } from './characters.js';
 
-import { doorIsLocked, moveCost, moveCosts, nextSpotXY } from '../../configs/locations.js';
+import { doorIsLocked, moveCost, nextSpotXY } from '../../configs/locations.js';
 import { aiTeam } from '../../configs/ai.js';
 import { getCharacter } from '../../configs/game.js';
 import { teamConfigs } from '../../configs/ranks.js';
@@ -142,7 +142,8 @@ export function moveCharacter(character, directionInt) {
 
   const weight = character.carriedWeight();
   const terrain = room.map[character.location.y][character.location.x].type;
-  const newEnergy = character.stats.energy - moveCost(character, weight, terrain);
+  const currentObstacle = character.getCurrentTileObstacle(Obstacles);
+  const newEnergy = character.stats.energy - moveCost(character, weight, terrain, currentObstacle);
   const newEndurance = character.stats.endurance + (0.01 * weight / character.maxWeight());
 
   if (newEnergy < 0) // can't move without energy
@@ -153,20 +154,18 @@ export function moveCharacter(character, directionInt) {
   const obstacle = character.getFacingObstacle(Obstacles)
   moveObject = xy.moveObject;
 
-  if (nextSpot != "out of bounds" && moveCosts[nextSpot.type] && character.location.direction == directionInt && (!obstacle || obstacle.passable())) { // can traverse the next spot and are facing the right way
+  if (nextSpot != "out of bounds" && character.location.direction == directionInt && (!obstacle || obstacle.passable())) { // can traverse the next spot and are facing the right way
     Trades.remove({$or: [{sellerId: character._id}, {buyerId: character._id}]}) // if the dude leaves, the trade is cancelled
 
-    if (nextSpot.data && nextSpot.data.x > -1 && nextSpot.data.y > -1) { // next spot is a door
-      if (!doorIsLocked(nextSpot, character)) {
-        const roomId = Rooms.findOne({gameId: room.gameId, name: nextSpot.data.name})._id;
-
+    if (obstacle && obstacle.isDoor()) { // next spot is a door
+      if (!doorIsLocked(obstacle, character)) {
         Characters.update(character._id, {
           $set: {
             'location.direction': directionInt, 
             'location.updatedAt': Date.now(),
-            'location.roomId': roomId,
-            'location.x': nextSpot.data.x,
-            'location.y': nextSpot.data.y,
+            'location.roomId': obstacle.data.id,
+            'location.x': obstacle.data.x,
+            'location.y': obstacle.data.y,
             'stats.energy': newEnergy,
           } 
         });

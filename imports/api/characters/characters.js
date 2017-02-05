@@ -215,4 +215,7 @@ Characters.helpers({
     const xy = nextSpotXY(this);
     return Obstacles.findOne({'location.roomId': this.location.roomId, 'location.x': xy.x, 'location.y': xy.y});
   },
+  getCurrentTileObstacle(Obstacles) {
+    return Obstacles.findOne({'location.roomId': this.location.roomId, 'location.x': this.location.x, 'location.y': this.location.y});
+  },
 })

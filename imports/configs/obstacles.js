@@ -15,7 +15,14 @@ export const obstaclesConfig = {
   treeStump: {
     key: 'treeStump',
     passable: true,
+    moveCost: 6,
     image: '/images/oaktree1cut.png',
     imageClass: 'i-oaktree1cut',
-  }
+  },
+  door: {
+    key: 'door',
+    passable: true,
+    imageClass: 'i-door',
+    isDoor: true,
+  },
 };

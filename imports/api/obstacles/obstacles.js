@@ -56,5 +56,11 @@ Obstacles.helpers({
   },
   insertEmptyVersion(){
     return (typeof obstaclesConfig[this.type].insertEmptyVersion === 'function') && obstaclesConfig[this.type].insertEmptyVersion(this, Obstacles);
+  },
+  moveCost(){
+    return obstaclesConfig[this.type].moveCost;
+  },
+  isDoor(){
+    return obstaclesConfig[this.type].isDoor;
   }
 })
