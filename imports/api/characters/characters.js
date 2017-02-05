@@ -213,7 +213,10 @@ Characters.helpers({
   },
   getFacingObstacle(Obstacles) {
     const xy = nextSpotXY(this);
-    return Obstacles.findOne({'location.roomId': this.location.roomId, 'location.x': xy.x, 'location.y': xy.y});
+    const obstacles = Obstacles.find({'location.roomId': this.location.roomId, 'location.x': {$gte: xy.x - 4}, 'location.y':{$gte: xy.y - 4}}).fetch();
+    return _.find(obstacles, function(obstacle){
+      return _.find(obstacle.locations(), function(loc){ return loc.x == xy.x && loc.y == xy.y; });
+    })
   },
   getCurrentTileObstacle(Obstacles) {
     return Obstacles.findOne({'location.roomId': this.location.roomId, 'location.x': this.location.x, 'location.y': this.location.y});

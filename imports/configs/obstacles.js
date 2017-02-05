@@ -25,4 +25,11 @@ export const obstaclesConfig = {
     imageClass: 'i-door',
     isDoor: true,
   },
+  workbench: {
+    key: 'workbench',
+    passable: false,
+    imageClass: 'obstacle-2x1 i-workbench',
+    width: 2,
+    //"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}
+  },
 };

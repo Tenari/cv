@@ -207,9 +207,9 @@ Template.game.helpers({
   },
   usableLocation: function(){
     const character = Template.instance().me();
-    const nextSpace = Template.instance().getMyNextSpace();
-    if (!nextSpace || !nextSpace.use) return false;
-    let useObj = nextSpace.use;
+    const obstacle = character.getFacingObstacle(Obstacles);
+    if (!obstacle || !obstacle.data.use) return false;
+    let useObj = obstacle.data.use;
     if (useObj.type == 'craft')
       useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
     return useObj;
@@ -225,7 +225,7 @@ Template.game.helpers({
   },
   lockedDoor: function(){
     const character = Template.instance().me();
-    const obstacle = character.getCurrentTileObstacle(Obstacles);
+    const obstacle = character.getFacingObstacle(Obstacles);
     return obstacle && obstacle.isDoor() && doorIsLocked(obstacle, Template.instance().me());
   },
   doorAttackEnergyCost: function(){return doorAttackEnergyCost;},

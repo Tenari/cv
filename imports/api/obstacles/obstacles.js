@@ -62,5 +62,21 @@ Obstacles.helpers({
   },
   isDoor(){
     return obstaclesConfig[this.type].isDoor;
-  }
+  },
+  height(){
+    return obstaclesConfig[this.type].height || 1;
+  },
+  width(){
+    return obstaclesConfig[this.type].width || 1;
+  },
+  locations(){
+    const leftCorner = this.location;
+    let locations = [];
+    for (var i = 0; i < this.width(); i++) {
+      for (var j = 0; j < this.height(); j++) {
+        locations.push({x: leftCorner.x + i, y: leftCorner.y + j})
+      }
+    }
+    return locations;
+  },
 })

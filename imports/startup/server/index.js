@@ -33,6 +33,35 @@ import  '../../api/notifications/methods.js';
 import  '../../api/missions/publications.js';
 import  '../../api/missions/methods.js';
 
+function importRoomObstacles(name, roomId, gameId){
+  var roomDefinition = EJSON.parse(Assets.getText(name+'.json'));
+  _.each(roomDefinition.doors, function(door){
+    Obstacles.insert({
+      location: {
+        roomId: roomId,
+        x: door.location.x,
+        y: door.location.y,
+      },
+      type: door.type,
+      data: {
+        id: Rooms.findOne({name: door.data.name, gameId: gameId})._id,
+        x: door.data.x,
+        y: door.data.y,
+      },
+    })
+  })
+  _.each(roomDefinition.generics, function(obstacle){
+    Obstacles.insert({
+      location: {
+        roomId: roomId,
+        x: obstacle.location.x,
+        y: obstacle.location.y,
+      },
+      type: obstacle.type,
+      data: obstacle.data,
+    })
+  })
+}
 Meteor.startup(function (){
   var game = Games.findOne();
   if ( !game ) { // ensure that there is one game with some rooms always
@@ -54,7 +83,7 @@ Meteor.startup(function (){
       },
     });
     var rome = EJSON.parse(Assets.getText('rome.json'))  ;
-    var tokyo = EJSON.parse(Assets.getText('tokyo.json'))  ;
+    var tokyo = EJSON.parse(Assets.getText('tokyo.json')).room  ;
     var land = EJSON.parse(Assets.getText('land-sale.json'))  ;
     rome.gameId = gameId;
     tokyo.gameId = gameId;
@@ -76,15 +105,7 @@ Meteor.startup(function (){
       }
     })
 
-    Obstacles.insert({
-      location: {
-        roomId: tokyoId,
-        x: 0,
-        y:3,
-      },
-      type: 'door',
-      data: {id: romeId, x: 1, y: 0},
-    })
+    importRoomObstacles('tokyo', tokyoId, gameId);
 
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});

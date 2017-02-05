@@ -5,6 +5,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Characters } from '../../api/characters/characters.js';
 import { Rooms } from '../../api/rooms/rooms.js';
+import { Obstacles } from '../../api/obstacles/obstacles.js';
 import { craftingLocations, itemConfigs, effectsDescription } from '../../configs/items.js';
 import { nextSpotXY } from '../../configs/locations.js';
 
@@ -12,7 +13,7 @@ import './craft.html';
 
 Template.craft.onCreated( function craftOnCreated(){
   var myself = this.subscribe('characters.own', true);
-  var rooms;
+  var rooms, obstacles;
   this.itemClass = new ReactiveVar(null);
   this.itemToCraft = new ReactiveVar(null);
   this.crafted = new ReactiveVar(null);
@@ -21,10 +22,10 @@ Template.craft.onCreated( function craftOnCreated(){
     if(myself.ready()) {
       const character = Characters.findOne();
       rooms = this.subscribe('game.rooms', character.gameId);
-      if (rooms.ready()) {
-        const room = Rooms.findOne(character.location.roomId)
-        const xy = nextSpotXY(character);
-        if (room.map[xy.y] && room.map[xy.y][xy.x] && room.map[xy.y][xy.x].use && room.map[xy.y][xy.x].use.params && room.map[xy.y][xy.x].use.params.resource == FlowRouter.getQueryParam('resource')) {
+      obstacles = this.subscribe('room.obstacles', character.locations.roomId);
+      if (rooms.ready() && obstacles.ready()) {
+        const obstacle = character.getFacingObstacle(Obstacles);
+        if (obstacle && obstacle.data && obstacle.data.use && obstacle.data.use.params && obstacle.data.use.params.resource == FlowRouter.getQueryParam('resource')) {
           // all good
         } else {
           FlowRouter.go('/'); //you're not allowed to be here!
