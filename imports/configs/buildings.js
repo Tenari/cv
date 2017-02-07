@@ -19,6 +19,8 @@ export const buildingConfig = {
       const relativeY = y - dimensions.topLeft.y;
       return tileTypes[relativeY][relativeX];
     },
+    width: 3,
+    height: 3,
   },
   workshop: {
     key: 'workshop',

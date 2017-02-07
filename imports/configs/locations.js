@@ -56,7 +56,7 @@ export const doorConfig = {
 
 export function doorIsLocked(obstacle, character){
   let locked = false;
-  if (obstacle && obstacle.data && obstacle.data.lock && obstacle.stats.hp > 0) {
+  if (obstacle && obstacle.data && obstacle.data.lock && obstacle.data.stats.hp > 0) {
     if (obstacle.data.lock.type == doorConfig.lockTypes.none) return true;
 
     if (obstacle.data.lock.type == doorConfig.lockTypes.all) return false;

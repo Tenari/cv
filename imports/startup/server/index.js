@@ -47,6 +47,9 @@ function importRoomObstacles(name, roomId, gameId){
         id: Rooms.findOne({name: door.data.name, gameId: gameId})._id,
         x: door.data.x,
         y: door.data.y,
+        lock: door.data.lock,
+        stats: door.data.stats,
+        buildingResources: door.data.buildingResources,
       },
     })
   })
@@ -82,9 +85,9 @@ Meteor.startup(function (){
         kills: 0,
       },
     });
-    var rome = EJSON.parse(Assets.getText('rome.json'))  ;
-    var tokyo = EJSON.parse(Assets.getText('tokyo.json')).room  ;
-    var land = EJSON.parse(Assets.getText('land-sale.json'))  ;
+    var rome = EJSON.parse(Assets.getText('rome.json')).room;
+    var tokyo = EJSON.parse(Assets.getText('tokyo.json')).room;
+    var land = EJSON.parse(Assets.getText('land-sale.json')).room;
     rome.gameId = gameId;
     tokyo.gameId = gameId;
     land.gameId = gameId;
@@ -93,19 +96,9 @@ Meteor.startup(function (){
     const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
     const landId = Rooms.upsert({name : "land-sale"}, { $set : land}).insertedId;
 
-    Obstacles.insert({
-      location: {
-        roomId: romeId,
-        x: 2,
-        y:2,
-      },
-      type: 'tree',
-      data: {
-        resources:{"type":"wood", "amount":10}
-      }
-    })
-
+    importRoomObstacles('rome', romeId, gameId);
     importRoomObstacles('tokyo', tokyoId, gameId);
+    importRoomObstacles('land-sale', landId, gameId);
 
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});

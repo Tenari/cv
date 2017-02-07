@@ -51,25 +51,25 @@ Meteor.methods({
     let room = Rooms.findOne(character.location.roomId);
     if (!room) throw new Meteor.Error('rooms', "room not found");
 
-    const xy = nextSpotXY(character);
-    room.map[xy.y][xy.x].stats.hp -= 1;
-    Rooms.update(room._id, {$set: {map: room.map}});
+    const obstacle = character.getFacingObstacle(Obstacles);
+    if (!obstacle) throw new Meteor.Error('rooms', "door not found");
+
+    Obstacles.update(obstacle._id, {$inc: {'data.stats.hp': -1}});
+
     return Characters.update(character._id, {$set: {'stats.energy': character.stats.energy - doorAttackEnergyCost}});
   },
   'rooms.build'(characterId, type){
     let character = Characters.findOne(characterId);
     if (!character) throw new Meteor.Error('rooms', "Character not found");
 
-    let room = Rooms.findOne(character.location.roomId);
-    if (!room) throw new Meteor.Error('rooms', "room not found");
-
-    const xy = nextSpotXY(character);
-    let resourcesNeededObj = _.find(room.map[xy.y][xy.x].buildingResources, function(obj){return obj.resource == type});
+    let obstacle = character.getFacingObstacle(Obstacles);
+    if (!obstacle) throw new Meteor.Error('rooms', "Obstacle not found");
+    let resourcesNeededObj = _.find(obstacle.data.buildingResources, function(obj){return obj.resource == type});
     const amountNeeded = resourcesNeededObj.amount - resourcesNeededObj.has;
     const amountCarrying = character.stats.resources[type];
     const amountToDeposit = amountNeeded > amountCarrying ? amountCarrying : amountNeeded;
     let allResourcesArePresent = true;
-    room.map[xy.y][xy.x].buildingResources = _.map(room.map[xy.y][xy.x].buildingResources, function(obj){
+    obstacle.data.buildingResources = _.map(obstacle.data.buildingResources, function(obj){
       if (obj.resource == type)
         obj.has += amountToDeposit;
       if (obj.has < obj.amount)
@@ -80,13 +80,13 @@ Meteor.methods({
     character.stats.resources[type] -= amountToDeposit;
 
     if (allResourcesArePresent) {
-      if (room.map[xy.y][xy.x].stats) { // we are dealing with a door/repair
-        room.map[xy.y][xy.x].stats.hp = room.map[xy.y][xy.x].stats.hpBase;
-        room.map[xy.y][xy.x].buildingResources = _.map(room.map[xy.y][xy.x].buildingResources, function(obj){
+      if (obstacle.data.stats) { // we are dealing with a door/repair
+        obstacle.data.stats.hp = obstacle.data.stats.hpBase;
+        obstacle.data.buildingResources = _.map(obstacle.data.buildingResources, function(obj){
           obj.has = 0;
           return obj;
         });
-      } else if (room.map[xy.y][xy.x].buildingId) { // it was a building Construction
+      }/* else if (obstacle.data.buildingId) { // it was a building Construction
         const building = Buildings.findOne(room.map[xy.y][xy.x].buildingId);
         // update the map to look like the building
         const dimensions = room.map[xy.y][xy.x].dimensions;
@@ -108,10 +108,10 @@ Meteor.methods({
         }
         // update the building
         Buildings.update(building._id, {$set: {underConstruction: false}});
-      }
+      }*/
     }
 
-    Rooms.update(room._id, {$set: {map: room.map}});
+    Obstacles.update(obstacle._id, {$set: {data: obstacle.data}});
     return Characters.update(character._id, {$set: {'stats.resources': character.stats.resources}});
   },
   'rooms.buy'(gameId){

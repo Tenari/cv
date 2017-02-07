@@ -226,19 +226,19 @@ Template.game.helpers({
   lockedDoor: function(){
     const character = Template.instance().me();
     const obstacle = character.getFacingObstacle(Obstacles);
-    return obstacle && obstacle.isDoor() && doorIsLocked(obstacle, Template.instance().me());
+    return obstacle && obstacle.isDoor() && doorIsLocked(obstacle, Template.instance().me()) && obstacle.data;
   },
   doorAttackEnergyCost: function(){return doorAttackEnergyCost;},
   nextSpaceAcceptsResources: function(){
-    const nextSpace = Template.instance().getMyNextSpace();
-    if (nextSpace && nextSpace.buildingResources) {
-      if (nextSpace.data){ // this is a door
-        if (nextSpace.stats.hp <= 0) // which can only be built back up if it is destroyed.
-          return nextSpace.buildingResources;
+    const obstacle = Template.instance().me().getFacingObstacle(Obstacles);
+    if (obstacle && obstacle.data.buildingResources) {
+      if (obstacle.isDoor()){
+        if (obstacle.data.stats.hp <= 0) // which can only be built back up if it is destroyed.
+          return obstacle.data.buildingResources;
         else
           return false;
       } else // this is a normal building
-        return nextSpace.buildingResources;
+        return obstacle.data.buildingResources;
     }
     return false;
   },
