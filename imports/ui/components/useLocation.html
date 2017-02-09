@@ -1,0 +1,18 @@
+<template name="useLocation">
+  <div class="collect-resource">
+    {{#if name}}
+      <p>{{name}}</p>
+      <a href="{{path}}">USE</a>
+    {{else}}
+      <p>
+        {{message}}
+        {{#if cost}}
+          Cost: {{cost}}
+        {{/if}}
+      </p>
+      {{#if action}}
+        <a href="#" class="use-space" data-action="{{action}}">{{verb}}</a>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

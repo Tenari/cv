@@ -6,6 +6,7 @@ export const buildingConfig = {
     key: 'open',
     label: 'Empty land',
     image: '/images/buy-parcel.png',
+    imageClass: 'obstacle-3x3 i-full-land-parcel',
     cost: [],
     energyCost: 1000,
     description: 'Can be built up into a functioning building, or sold as is.',
@@ -19,8 +20,6 @@ export const buildingConfig = {
       const relativeY = y - dimensions.topLeft.y;
       return tileTypes[relativeY][relativeX];
     },
-    width: 3,
-    height: 3,
   },
   workshop: {
     key: 'workshop',
@@ -54,6 +53,7 @@ export const buildingConfig = {
         ] 
       };
     },
+    doorLocation: {x: 1, y: 2}, //relative to the top left corner
     entry: {x: 2, y: 4},
   },
 //    smithy: 2,

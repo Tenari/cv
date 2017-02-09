@@ -8,6 +8,7 @@ import { Fights } from '../fights/fights.js';
 import { Trades } from '../trades/trades.js';
 import { Items } from '../items/items.js';
 import { Obstacles } from '../obstacles/obstacles.js';
+import { Buildings } from '../buildings/buildings.js';
 import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, nextSpotXY } from '../../configs/locations.js';
@@ -152,12 +153,13 @@ export function moveCharacter(character, directionInt) {
   const xy = nextSpotXY(character);
   nextSpot = room.map[xy.y] && room.map[xy.y][xy.x] ? room.map[xy.y][xy.x] : "out of bounds";
   const obstacle = character.getFacingObstacle(Obstacles)
+  const building = character.getFacingBuilding(Buildings)
   moveObject = xy.moveObject;
 
-  if (nextSpot != "out of bounds" && character.location.direction == directionInt && (!obstacle || obstacle.passable())) { // can traverse the next spot and are facing the right way
+  if (nextSpot != "out of bounds" && character.location.direction == directionInt && (!obstacle || obstacle.passable()) && (!building || building.isDoor(xy))) { // can traverse the next spot and are facing the right way
     Trades.remove({$or: [{sellerId: character._id}, {buyerId: character._id}]}) // if the dude leaves, the trade is cancelled
 
-    if (obstacle && obstacle.isDoor()) { // next spot is a door
+    if ((obstacle && obstacle.isDoor()) || (building && building.isDoor(xy))) { // next spot is a door
       if (!doorIsLocked(obstacle, character)) {
         Characters.update(character._id, {
           $set: {

@@ -17,9 +17,12 @@ import '../../api/chats/methods.js'
 import { Missions } from '../../api/missions/missions.js'
 import '../../api/missions/methods.js'
 import { Obstacles } from '../../api/obstacles/obstacles.js'
+import { Buildings } from '../../api/buildings/buildings.js'
+import '../../api/buildings/buildings.js'
 
 import '../components/music.js';
 import '../components/npcTalk.js';
+import '../components/useLocation.js';
 import '../components/chat.js';
 import '../components/item.js';
 import '../components/status-bars.js';
@@ -52,6 +55,7 @@ Template.game.onCreated(function gameOnCreated() {
     this.subscribe('trades.own', this.getGameId());
     if (myself.ready()) {
       this.subscribe('room.obstacles', this.getRoomId());
+      this.subscribe('room.buildings', this.me()._id);
       if (Characters.find().count() == 0) {
         FlowRouter.go('/');
       } else {
@@ -134,6 +138,8 @@ Template.game.helpers({
 
     const obstacles = Obstacles.find({'location.x': {$gte: s_x}, 'location.y': {$gte: s_y}}).fetch();
 
+    const buildings = Buildings.find({'location.x': {$gte: s_x}, 'location.y': {$gte: s_y}}).fetch();
+
     html = "";
     for(i = 0; i < viewH; i++){
       html += "<div class='g-row'>";
@@ -145,6 +151,7 @@ Template.game.helpers({
 
         var otherUser = _.find(users, function(user){return user.location.y == i+s_y && user.location.x == j+s_x;});
         var obstacle = _.find(obstacles, function(obstacle) {return obstacle.location.y == i+s_y && obstacle.location.x == j+s_x});
+        var building = _.find(buildings, function(building) {return building.location.y == i+s_y && building.location.x == j+s_x});
 
         if (tile == undefined)
           html += "<div class='g-col i-blank'></div>";
@@ -152,6 +159,8 @@ Template.game.helpers({
           html += "<div class='g-col i-"+tile.type+"'>";
           if (obstacle)
             html += "<div class='obstacle "+obstacle.imageClass()+"'></div>";
+          if (building)
+            html += "<div class='obstacle "+building.imageClass()+"'></div>";
           if (j == drawX && i == drawY)
             html += "<div class='character mc i-"+(parseInt(usr.location.classId)+parseInt(usr.location.direction))+"'></div>";
           else if (otherUser) 
@@ -213,6 +222,12 @@ Template.game.helpers({
     if (useObj.type == 'craft')
       useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
     return useObj;
+  },
+  usableBuilding: function(){
+    const character = Template.instance().me();
+    const building = character.getFacingBuilding(Buildings);
+    if (!building) return false;
+    return building.useObject();
   },
   notification: function(){
     return Template.instance().notification.get();

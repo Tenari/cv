@@ -100,6 +100,27 @@ Meteor.startup(function (){
     importRoomObstacles('tokyo', tokyoId, gameId);
     importRoomObstacles('land-sale', landId, gameId);
 
+    Buildings.insert({
+      type: "open",
+      location: {
+        roomId: landId,
+        x:1,
+        y:0,
+      },
+      underConstruction: false,
+      sale: {
+        available: true,
+        cost: 100,
+      },
+      resources: {
+        wood: 0,
+        hide: 0,
+        leather: 0,
+        ore: 0,
+        metal: 0,
+      }
+    })
+
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
     Chats.insert({scope: "Rooms:"+landId, messages: []});

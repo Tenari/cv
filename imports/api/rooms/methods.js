@@ -117,57 +117,16 @@ Meteor.methods({
   'rooms.buy'(gameId){
     const character = getCharacter(this.userId, gameId, Characters);
     if (!character) throw new Meteor.Error('rooms', "Character not found");
-    
-    let room = Rooms.findOne(character.location.roomId);
-    if (!room) throw new Meteor.Error('rooms', "room not found");
 
-    const xy = nextSpotXY(character);
+    const building = character.getFacingBuilding(Buildings);
+    if (!building || !building.sale.available || building.sale.cost > character.stats.money) throw new Meteor.Error('rooms.buy', "You do not have enough money")
 
-    const cost = room.map[xy.y][xy.x].use.cost;
-    if (cost > character.stats.money) throw new Meteor.Error('rooms.buy', "You do not have enough money")
+    if (building.ownerId)
+      Characters.update(building.ownerId, {$inc: {'stats.money': building.sale.cost}}); // old owner gets $$$
 
-    const building = Buildings.findOne({
-      roomId: room._id,
-      'topLeft.x':room.map[xy.y][xy.x].dimensions.topLeft.x,
-      'topLeft.y':room.map[xy.y][xy.x].dimensions.topLeft.y,
-    })
-    if (building) {
-      Characters.update(building.ownerId, {$inc: {'stats.money': cost}}); // old owner gets $$$
-      // then building gets new owner
-      room.map[xy.y][xy.x].buildingId = building._id;
-      Buildings.update(building._id, {$set: {ownerId: character._id}});
-    } else {
-      const bId = Buildings.insert({
-        ownerId: character._id,
-        roomId: room._id,
-        topLeft: room.map[xy.y][xy.x].dimensions.topLeft,
-        bottomRight: room.map[xy.y][xy.x].dimensions.bottomRight,
-        door: {x: xy.x, y: xy.y},
-        type: buildingConfig.open.key,
-        underConstruction: false,
-        resources: {
-          wood: 0,
-          hide: 0,
-          leather: 0,
-          ore: 0,
-          metal: 0,
-        },
-        level: 0,
-        settings: {
-          door: {
-            lock: {
-              type: doorConfig.lockTypes.none
-            }
-          },
-        }
-      });
-      room.map[xy.y][xy.x].buildingId = bId;
-    }
+    // then building gets new owner
+    Buildings.update(building._id, {$set: {ownerId: character._id, 'sale.available':false}});
 
-    room.map[xy.y][xy.x].use = {message: "Owned by "+character.name+" ("+character.team+")"};
-    room.map[xy.y][xy.x].ownerId = character._id;
-
-    Rooms.update(room._id, {$set: {map: room.map}});
-    return Characters.update(character._id, {$set: {'stats.money': character.stats.money - cost}});
+    return Characters.update(character._id, {$set: {'stats.money': character.stats.money - building.sale.cost}});
   }
 })

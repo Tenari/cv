@@ -4,6 +4,7 @@ import { Characters } from '../characters/characters.js';
 import { Rooms } from '../rooms/rooms.js';
 
 import { buildingConfig } from '../../configs/buildings.js';
+import { teamConfig } from '../../configs/ranks.js';
 
 export const Buildings = new Mongo.Collection('buildings');
 
@@ -86,7 +87,7 @@ Buildings.helpers({
     return this.level * 100;
   },
   roomName() {
-    return Rooms.findOne(this.roomId).name;
+    return Rooms.findOne(this.location.roomId).name;
   },
   image() {
     return buildingConfig[this.type].image;
@@ -105,5 +106,41 @@ Buildings.helpers({
   },
   doorLockType(type) {
     return Rooms.findOne(this.roomId).map[this.door.y][this.door.x].data.lock.type == type;
-  }
+  },
+  imageClass(){
+    return buildingConfig[this.type].imageClass;
+  },
+  height(){
+    return buildingConfig[this.type].height || 3;
+  },
+  width(){
+    return buildingConfig[this.type].width || 3;
+  },
+  locations(){
+    var locations = [];
+    for (var i = 0; i < this.width(); i++) {
+      for (var j = 0; j < this.height(); j++) {
+        locations.push({x: this.location.x+i, y: this.location.y+j});
+      }
+    }
+    return locations;
+  },
+  isDoor(xy){
+    const loc = buildingConfig[this.type].doorLocation;
+    return loc && loc.x + this.location.x == xy.x && loc.y + this.location.y == xy.y;
+  },
+  useObject(){
+    if (this.sale.available) {
+      return {
+        message:"Buy this parcel of land?",
+        verb:"Buy",
+        action:"rooms.buy",
+        cost: this.sale.cost,
+      };
+    } else if (this.ownerId) {
+      const owner = Characters.findOne(this.ownerId);
+      return {message: "Owned by "+owner.name+" ("+teamConfig[owner.team].name+")"}
+    }
+    return false;
+  },
 })

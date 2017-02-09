@@ -13,3 +13,8 @@ Meteor.publish ("buildings.own", function(gameId) {
   return Buildings.find({ownerId: getCharacter(this.userId, gameId, Characters)._id});
 });
 
+Meteor.publish ("room.buildings", function(characterId) {
+  if (!this.userId) return this.ready();
+
+  return Buildings.find({'location.roomId': Characters.findOne(characterId).location.roomId});
+});

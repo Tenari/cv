@@ -218,6 +218,13 @@ Characters.helpers({
       return _.find(obstacle.locations(), function(loc){ return loc.x == xy.x && loc.y == xy.y; });
     })
   },
+  getFacingBuilding(Buildings) {
+    const xy = nextSpotXY(this);
+    const buildings = Buildings.find({'location.roomId': this.location.roomId, 'location.x': {$gte: xy.x - 4}, 'location.y':{$gte: xy.y - 4}}).fetch();
+    return _.find(buildings, function(building){
+      return _.find(building.locations(), function(loc){ return loc.x == xy.x && loc.y == xy.y; });
+    })
+  },
   getCurrentTileObstacle(Obstacles) {
     return Obstacles.findOne({'location.roomId': this.location.roomId, 'location.x': this.location.x, 'location.y': this.location.y});
   },
