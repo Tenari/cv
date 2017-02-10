@@ -21,6 +21,41 @@ export const buildingConfig = {
       return tileTypes[relativeY][relativeX];
     },
   },
+  house: {
+    key: 'house',
+    label: 'House',
+    imageClass: 'obstacle-3x3 i-house-big',
+    underConstructionImageClass: 'obstacle-3x3 i-house-in-progress',
+    cost: [{resource: resourceConfig.wood.key, amount: 10, has: 0}],
+    description: 'A safe place to sleep at night, and store your junk',
+    interior: function(gameId, name, building){
+      const exit = {
+        id: building.location.roomId,
+        y: building.location.y + building.height(),
+        x: building.location.x + 2,
+      }
+      return {
+        room:{
+          gameId: gameId,
+          name: name,
+          width: 6,
+          height: 6,
+          map:[
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
+          ] 
+        },
+        doors: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
+        generics: [],
+      };
+    },
+    doorLocation: {x: 2, y: 2}, //relative to the top left corner
+    insideLocation: {x: 3, y: 4}, //relative to the top left corner
+  },
   workshop: {
     key: 'workshop',
     label: 'Wood workshop',

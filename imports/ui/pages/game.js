@@ -55,7 +55,7 @@ Template.game.onCreated(function gameOnCreated() {
     this.subscribe('trades.own', this.getGameId());
     if (myself.ready()) {
       this.subscribe('room.obstacles', this.getRoomId());
-      this.subscribe('room.buildings', this.me()._id);
+      this.subscribe('room.buildings', this.getRoomId());
       if (Characters.find().count() == 0) {
         FlowRouter.go('/');
       } else {
@@ -252,8 +252,11 @@ Template.game.helpers({
           return obstacle.data.buildingResources;
         else
           return false;
-      } else // this is a normal building
-        return obstacle.data.buildingResources;
+      }
+    }
+    const building = Template.instance().me().getFacingBuilding(Buildings);
+    if (building && building.underConstruction && building.data.buildingResources) {
+      return building.data.buildingResources;
     }
     return false;
   },

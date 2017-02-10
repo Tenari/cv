@@ -79,3 +79,35 @@ export const obstaclesConfig = {
     //"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}
   },
 };
+
+export function importRoomObstacles(roomDefinition, roomId, gameId, Obstacles, Rooms){
+  _.each(roomDefinition.doors, function(door){
+    Obstacles.insert({
+      location: {
+        roomId: roomId,
+        x: door.location.x,
+        y: door.location.y,
+      },
+      type: door.type,
+      data: {
+        id: door.data.id || Rooms.findOne({name: door.data.name, gameId: gameId})._id,
+        x: door.data.x,
+        y: door.data.y,
+        lock: door.data.lock,
+        stats: door.data.stats,
+        buildingResources: door.data.buildingResources,
+      },
+    })
+  })
+  _.each(roomDefinition.generics, function(obstacle){
+    Obstacles.insert({
+      location: {
+        roomId: roomId,
+        x: obstacle.location.x,
+        y: obstacle.location.y,
+      },
+      type: obstacle.type,
+      data: obstacle.data,
+    })
+  })
+}

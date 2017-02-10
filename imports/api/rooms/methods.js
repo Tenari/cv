@@ -10,6 +10,7 @@ import { Chats } from '../chats/chats.js';
 import { treeStumpTile, nextSpotXY, doorConfig } from '../../configs/locations.js';
 import { getCharacter, doorAttackEnergyCost, resourceConfig, collectingSkillGrowthAmount } from '../../configs/game.js';
 import { buildingConfig } from '../../configs/buildings.js';
+import { importRoomObstacles } from '../../configs/obstacles.js';
 
 Meteor.methods({
   'rooms.collect'(gameId){
@@ -63,13 +64,16 @@ Meteor.methods({
     if (!character) throw new Meteor.Error('rooms', "Character not found");
 
     let obstacle = character.getFacingObstacle(Obstacles);
-    if (!obstacle) throw new Meteor.Error('rooms', "Obstacle not found");
-    let resourcesNeededObj = _.find(obstacle.data.buildingResources, function(obj){return obj.resource == type});
+    let building = character.getFacingBuilding(Buildings);
+    if (!obstacle && !building) throw new Meteor.Error('rooms', "Obstacle or Building not found");
+
+    let thing = obstacle || building;
+    let resourcesNeededObj = _.find(thing.data.buildingResources, function(obj){return obj.resource == type});
     const amountNeeded = resourcesNeededObj.amount - resourcesNeededObj.has;
     const amountCarrying = character.stats.resources[type];
     const amountToDeposit = amountNeeded > amountCarrying ? amountCarrying : amountNeeded;
     let allResourcesArePresent = true;
-    obstacle.data.buildingResources = _.map(obstacle.data.buildingResources, function(obj){
+    thing.data.buildingResources = _.map(thing.data.buildingResources, function(obj){
       if (obj.resource == type)
         obj.has += amountToDeposit;
       if (obj.has < obj.amount)
@@ -80,38 +84,30 @@ Meteor.methods({
     character.stats.resources[type] -= amountToDeposit;
 
     if (allResourcesArePresent) {
-      if (obstacle.data.stats) { // we are dealing with a door/repair
-        obstacle.data.stats.hp = obstacle.data.stats.hpBase;
-        obstacle.data.buildingResources = _.map(obstacle.data.buildingResources, function(obj){
+      if (thing.data.stats) { // we are dealing with a door/repair
+        thing.data.stats.hp = thing.data.stats.hpBase;
+        thing.data.buildingResources = _.map(thing.data.buildingResources, function(obj){
           obj.has = 0;
           return obj;
         });
-      }/* else if (obstacle.data.buildingId) { // it was a building Construction
-        const building = Buildings.findOne(room.map[xy.y][xy.x].buildingId);
-        // update the map to look like the building
-        const dimensions = room.map[xy.y][xy.x].dimensions;
-        const buildingType = building.typeObj();
-        for(let i = dimensions.topLeft.x; i <= dimensions.bottomRight.x; i+=1) {
-          for (let j = dimensions.topLeft.y; j <= dimensions.bottomRight.y; j +=1){
-            room.map[j][i].type = buildingType.getTileTypes(dimensions, i, j);
-          }
-        }
+      } else if (thing.underConstruction) { // it was a building Construction
+        const buildingType = thing.typeObj();
         if (typeof buildingType.interior === 'function') {
-          room.map[xy.y][xy.x].stats = doorConfig.stats;
-          room.map[xy.y][xy.x].buildingResources = doorConfig.buildingResources;
-          // make the inside of the building accessible
           const newRoomName = building.type+":"+building._id;
-          const newRoomId = Rooms.insert(buildingType.interior(room.gameId, newRoomName, {name: room.name, x: character.location.x, y: character.location.y}));
-          room.map[xy.y][xy.x].data = {name: newRoomName, x: buildingType.entry.x, y: buildingType.entry.y, lock: {type: doorConfig.lockTypes.team, team: character.team}};
+          const interior = buildingType.interior(character.gameId, newRoomName, building)
+          const newRoomId = Rooms.insert(interior.room);
+          importRoomObstacles(interior, newRoomId, character.gameId, Obstacles, Rooms);
           // create the chat
           Chats.insert({scope: "Rooms:"+newRoomId, messages: []});
+          // update the building
+          Buildings.update(building._id, {$set: {underConstruction: false, data: {id: newRoomId, x: buildingType.insideLocation.x, y: buildingType.insideLocation.y}}});
         }
-        // update the building
-        Buildings.update(building._id, {$set: {underConstruction: false}});
-      }*/
+      }
     }
 
-    Obstacles.update(obstacle._id, {$set: {data: obstacle.data}});
+    if (obstacle)
+      Obstacles.update(obstacle._id, {$set: {data: obstacle.data}});
+
     return Characters.update(character._id, {$set: {'stats.resources': character.stats.resources}});
   },
   'rooms.buy'(gameId){

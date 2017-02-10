@@ -33,38 +33,8 @@ import  '../../api/notifications/methods.js';
 import  '../../api/missions/publications.js';
 import  '../../api/missions/methods.js';
 
-function importRoomObstacles(name, roomId, gameId){
-  var roomDefinition = EJSON.parse(Assets.getText(name+'.json'));
-  _.each(roomDefinition.doors, function(door){
-    Obstacles.insert({
-      location: {
-        roomId: roomId,
-        x: door.location.x,
-        y: door.location.y,
-      },
-      type: door.type,
-      data: {
-        id: Rooms.findOne({name: door.data.name, gameId: gameId})._id,
-        x: door.data.x,
-        y: door.data.y,
-        lock: door.data.lock,
-        stats: door.data.stats,
-        buildingResources: door.data.buildingResources,
-      },
-    })
-  })
-  _.each(roomDefinition.generics, function(obstacle){
-    Obstacles.insert({
-      location: {
-        roomId: roomId,
-        x: obstacle.location.x,
-        y: obstacle.location.y,
-      },
-      type: obstacle.type,
-      data: obstacle.data,
-    })
-  })
-}
+import { importRoomObstacles } from '../../configs/obstacles.js';
+
 Meteor.startup(function (){
   var game = Games.findOne();
   if ( !game ) { // ensure that there is one game with some rooms always
@@ -85,6 +55,9 @@ Meteor.startup(function (){
         kills: 0,
       },
     });
+    var romeDefinition = EJSON.parse(Assets.getText('rome.json'));
+    var tokyoDefinition = EJSON.parse(Assets.getText('tokyo.json'));
+    var landDefinition = EJSON.parse(Assets.getText('land-sale.json'));
     var rome = EJSON.parse(Assets.getText('rome.json')).room;
     var tokyo = EJSON.parse(Assets.getText('tokyo.json')).room;
     var land = EJSON.parse(Assets.getText('land-sale.json')).room;
@@ -96,9 +69,9 @@ Meteor.startup(function (){
     const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
     const landId = Rooms.upsert({name : "land-sale"}, { $set : land}).insertedId;
 
-    importRoomObstacles('rome', romeId, gameId);
-    importRoomObstacles('tokyo', tokyoId, gameId);
-    importRoomObstacles('land-sale', landId, gameId);
+    importRoomObstacles(romeDefinition, romeId, gameId, Obstacles, Rooms);
+    importRoomObstacles(tokyoDefinition, tokyoId, gameId, Obstacles, Rooms);
+    importRoomObstacles(landDefinition, landId, gameId, Obstacles, Rooms);
 
     Buildings.insert({
       type: "open",

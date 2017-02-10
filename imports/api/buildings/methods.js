@@ -22,25 +22,12 @@ Meteor.methods({
 
     const type = buildingConfig[params[0]];
 
-    let room = Rooms.findOne(building.roomId);
     if (type.key == buildingConfig.open.key) { // open type is built immediately
-      for(let i = building.topLeft.x; i <= building.bottomRight.x; i+=1) {
-        for (let j = building.topLeft.y; j <= building.bottomRight.y; j +=1){
-          room.map[j][i].type = type.getTileTypes({topLeft: building.topLeft}, i, j);
-          room.map[j][i].data = undefined;
-          room.map[j][i].buildingResources = undefined;
-          room.map[j][i].stats = undefined;
-        }
-      }
+      if (building.interiorRoomId)
+        Rooms.remove(building.interiorRoomId);
       Characters.update(character._id, {$set: {'stats.energy': character.stats.energy - buildingConfig.open.energyCost}});
-    } else {
-      room.map[building.door.y][building.door.x].buildingResources = _.map(type.cost, function(obj){
-        obj.has = 0;
-        return obj;
-      });
     }
-    Rooms.update(room._id, {$set: {map: room.map}});
-    return Buildings.update(buildingId, {$set: {type: type.key, underConstruction: type.key != buildingConfig.open.key}});
+    return Buildings.update(buildingId, {$set: {type: type.key, underConstruction: type.key != buildingConfig.open.key, data: {buildingResources: type.cost}}});
   },
   'buildings.lock'(gameId, buildingId, lock, team) {
     console.log(lock, team);

@@ -108,6 +108,8 @@ Buildings.helpers({
     return Rooms.findOne(this.roomId).map[this.door.y][this.door.x].data.lock.type == type;
   },
   imageClass(){
+    if (this.underConstruction)
+      return buildingConfig[this.type].underConstructionImageClass;
     return buildingConfig[this.type].imageClass;
   },
   height(){

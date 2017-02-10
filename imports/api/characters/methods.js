@@ -160,14 +160,15 @@ export function moveCharacter(character, directionInt) {
     Trades.remove({$or: [{sellerId: character._id}, {buyerId: character._id}]}) // if the dude leaves, the trade is cancelled
 
     if ((obstacle && obstacle.isDoor()) || (building && building.isDoor(xy))) { // next spot is a door
-      if (!doorIsLocked(obstacle, character)) {
+      var thing = obstacle || building;
+      if (!doorIsLocked(thing, character)) {
         Characters.update(character._id, {
           $set: {
             'location.direction': directionInt, 
             'location.updatedAt': Date.now(),
-            'location.roomId': obstacle.data.id,
-            'location.x': obstacle.data.x,
-            'location.y': obstacle.data.y,
+            'location.roomId': thing.data.id,
+            'location.x': thing.data.x,
+            'location.y': thing.data.y,
             'stats.energy': newEnergy,
           } 
         });
