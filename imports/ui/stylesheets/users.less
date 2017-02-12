@@ -1,4 +1,5 @@
 /* Character display rules */
+@size: 60px;
 .obstacle, .character{
   position:absolute;
   top:auto;
@@ -23,6 +24,69 @@
     width: 180px;
     height: 180px;
     background-size: 180px 180px;
+  }
+  &.shift-x8 {
+    left: 8 * @size;
+  }
+  &.shift-x7 {
+    left: 7 * @size;
+  }
+  &.shift-x6 {
+    left: 6 * @size;
+  }
+  &.shift-x5 {
+    left: 5 * @size;
+  }
+  &.shift-x4 {
+    left: 4 * @size;
+  }
+  &.shift-x3 {
+    left: 3 * @size;
+  }
+  &.shift-x2 {
+    left: 2 * @size;
+  }
+  &.shift-x1 {
+    left: @size;
+  }
+  &.shift-x-1 {
+    left: -1 * @size;
+  }
+  &.shift-x-2 {
+    left: -2 * @size;
+  }
+  &.shift-x-3 {
+    left: -3 * @size;
+  }
+  &.shift-x-4 {
+    left: -4 * @size;
+  }
+  &.shift-y5 {
+    top: 5 * @size;
+  }
+  &.shift-y4 {
+    top: 4 * @size;
+  }
+  &.shift-y3 {
+    top: 3 * @size;
+  }
+  &.shift-y2 {
+    top: 2 * @size;
+  }
+  &.shift-y1 {
+    top: @size;
+  }
+  &.shift-y-1 {
+    top: -1 * @size;
+  }
+  &.shift-y-2 {
+    top: -2 * @size;
+  }
+  &.shift-y-3 {
+    top: -3 * @size;
+  }
+  &.shift-y-4 {
+    top: -4 * @size;
   }
 }
 .mc{

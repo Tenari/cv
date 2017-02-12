@@ -136,11 +136,22 @@ Template.game.helpers({
       s_y = 0;
     }
 
-    const obstacles = Obstacles.find({'location.x': {$gte: s_x}, 'location.y': {$gte: s_y}}).fetch();
-
-    const buildings = Buildings.find({'location.x': {$gte: s_x}, 'location.y': {$gte: s_y}}).fetch();
+    const obstacles = Obstacles.find({'location.x': {$gte: s_x - 4 }, 'location.y': {$gte: s_y - 4 }}).fetch();
+    const buildings = Buildings.find({'location.x': {$gte: s_x - 4 }, 'location.y': {$gte: s_y - 4 }}).fetch();
 
     html = "";
+    _.each(obstacles, function(obstacle){
+      if(obstacle.location.x < s_x || obstacle.location.y < s_y) {
+        // need to render the shifted image
+        html += "<div class='obstacle shift-x"+(obstacle.location.x - s_x)+" shift-y"+(obstacle.location.y - s_y)+" "+obstacle.imageClass()+"'></div>";
+      }
+    })
+    _.each(buildings, function(building){
+      if(building.location.x < s_x || building.location.y < s_y) {
+        // need to render the shifted image
+        html += "<div class='obstacle shift-x"+(building.location.x - s_x)+" shift-y"+(building.location.y - s_y)+" "+building.imageClass()+"'></div>";
+      }
+    })
     for(i = 0; i < viewH; i++){
       html += "<div class='g-row'>";
       for (j = 0; j < viewW; j++){
