@@ -84,7 +84,7 @@ Meteor.methods({
     character.stats.resources[type] -= amountToDeposit;
 
     if (allResourcesArePresent) {
-      if (thing.data.stats) { // we are dealing with a door/repair
+      if (obstacle && thing.data.stats) { // we are dealing with a door/repair
         thing.data.stats.hp = thing.data.stats.hpBase;
         thing.data.buildingResources = _.map(thing.data.buildingResources, function(obj){
           obj.has = 0;
@@ -103,6 +103,9 @@ Meteor.methods({
           Buildings.update(building._id, {$set: {underConstruction: false, data: {id: newRoomId, x: buildingType.insideLocation.x, y: buildingType.insideLocation.y}}});
         }
       }
+    } else {
+      if (building)
+        Buildings.update(building._id, {$set: {data: building.data}});
     }
 
     if (obstacle)

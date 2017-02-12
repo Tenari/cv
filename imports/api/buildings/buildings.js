@@ -4,7 +4,7 @@ import { Characters } from '../characters/characters.js';
 import { Rooms } from '../rooms/rooms.js';
 
 import { buildingConfig } from '../../configs/buildings.js';
-import { teamConfig } from '../../configs/ranks.js';
+import { teamConfigs } from '../../configs/ranks.js';
 
 export const Buildings = new Mongo.Collection('buildings');
 
@@ -102,10 +102,10 @@ Buildings.helpers({
     return buildingConfig[this.type];
   },
   doorLockTeam(team) {
-    return Rooms.findOne(this.roomId).map[this.door.y][this.door.x].data.lock.team == team;
+    return this.data && this.data.lock && this.data.lock.team == team;
   },
   doorLockType(type) {
-    return Rooms.findOne(this.roomId).map[this.door.y][this.door.x].data.lock.type == type;
+    return this.data && this.data.lock && this.data.lock.type == type;
   },
   imageClass(){
     if (this.underConstruction)
@@ -141,7 +141,7 @@ Buildings.helpers({
       };
     } else if (this.ownerId) {
       const owner = Characters.findOne(this.ownerId);
-      return {message: "Owned by "+owner.name+" ("+teamConfig[owner.team].name+")"}
+      return {message: "Owned by "+owner.name+" ("+teamConfigs[owner.team].name+")"}
     }
     return false;
   },

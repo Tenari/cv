@@ -140,7 +140,7 @@
               <div class="building-card" data-id="{{building._id}}">
                 <img src="{{building.image}}"/>
                 <div>
-                  <p>{{building.roomName}} [{{building.topLeft.x}}, {{building.topLeft.y}}]</p>
+                  <p>{{building.roomName}} [{{building.location.x}}, {{building.location.y}}]</p>
                   <p>{{building.typeLabel}} {{#if building.underConstruction}}<span>Under Construction</span>{{/if}}</p>
                 </div>
               </div>
@@ -233,9 +233,9 @@
               {{#if buildingMenu 'description'}}
                 {{#if selectedBuilding.underConstruction}}
                 {{else}}
+                  <div class="action-menu" data-menu="sell"><i class="fa fa-caret-right"></i> Sell</div>
                   {{#if selectedBuilding.canStartBuilding}}
                     <div class="action-menu" data-menu="create"><i class="fa fa-caret-right"></i> New Construction</div>
-                    <div class="action-menu" data-menu="sell"><i class="fa fa-caret-right"></i> Sell</div>
                   {{else}}
                     <div class="action-menu" data-menu="demolish"><i class="fa fa-caret-right"></i> Demolish</div>
                   {{/if}}
