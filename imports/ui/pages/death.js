@@ -6,6 +6,7 @@ import { Characters } from '../../api/characters/characters.js';
 import { canRevive, minutesUntilRevive } from '../../configs/game.js';
 
 import './death.html';
+import '../components/music.js';
 
 Template.death.onCreated( function deathOnCreated(){
   Meteor.call('characters.sawDeathNotification', FlowRouter.getParam('characterId'));
@@ -20,7 +21,10 @@ Template.death.helpers({
   timeToLife(){
     const character = Characters.findOne(FlowRouter.getParam('characterId'));
     return minutesUntilRevive(character);
-  }
+  },
+  character(){
+    return Characters.findOne(FlowRouter.getParam('characterId'));
+  },
 })
 
 Template.death.events({

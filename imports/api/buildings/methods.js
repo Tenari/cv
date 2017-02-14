@@ -46,9 +46,11 @@ Meteor.methods({
     return Buildings.update(building._id, {$set: {data: building.data}});
   },
   'buildings.sell'(gameId, buildingId, params){
+    // TODO security
     return Buildings.update(buildingId, {$set: {sale: {available: true, cost: parseInt(params[0])}}});
   },
   'buildings.unsell'(gameId, buildingId) {
+    // TODO security
     return Buildings.update(buildingId, {$set: {sale: undefined}});
   },
 })

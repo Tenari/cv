@@ -11,6 +11,7 @@ import '../../api/rooms/methods.js'
 import './mapbuilder.html';
 
 import { tiles } from '../../configs/locations.js';
+import { buildingConfig } from '../../configs/buildings.js';
 
 Template.mapbuilder.onCreated(function gameOnCreated() {
   let map = [[],[],[],[]];
@@ -28,11 +29,15 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
   });
 
   this.selected = new ReactiveVar('grass');
+  this.selectedBuilding = new ReactiveVar('open');
   this.door = new ReactiveVar({name: 'tokyo', x: 3, y:5});
-  this.dataDimensions = new ReactiveVar(tiles['fence-sign'].dimensions);
 
   this.currentX = new ReactiveVar(0);
   this.currentY = new ReactiveVar(0);
+
+  this.tab = new ReactiveVar('tiles');
+
+  this.buildings = new ReactiveVar([]);
 })
 
 Template.mapbuilder.helpers({
@@ -47,20 +52,34 @@ Template.mapbuilder.helpers({
   tileSelected(key){
     return Template.instance().selected.get() == key ? 'selected' : '';
   },
+  tabIs(tab) {
+    return Template.instance().tab.get() == tab;
+  },
+  buildings(){
+    return _.map(buildingConfig, function(config){return {key: config.key, image: config.imageClass}});
+  },
+  buildingSelected(key){
+    return Template.instance().selectedBuilding.get() == key ? 'selected' : '';
+  },
   showDoor(){
     return tiles[Template.instance().selected.get()].data;
   },
   hasDimensions(){
     return tiles[Template.instance().selected.get()].dimensions;
   },
-  width(){
-    return Template.instance().map.get()[0].length * 70;
-  },
   currentX(){
     return Template.instance().currentX.get();
   },
   currentY(){
     return Template.instance().currentY.get();
+  },
+  buildingAt(x,y){
+    console.log(x, y);
+    return _.find(Template.instance().buildings.get(), function(building){return building.location.x == x && building.location.y == y;});
+  },
+  buildingImageAt(x,y){
+    const b = _.find(Template.instance().buildings.get(), function(building){return building.location.x == x && building.location.y == y;});
+    return b && buildingConfig[b.type].imageClass;
   },
 });
 
@@ -94,20 +113,33 @@ Template.mapbuilder.events({
   'click .tiles .g-col'(e, instance){
     instance.selected.set($(e.target).data('key'));
   },
+  'click .buildings .g-col'(e, instance){
+    instance.selectedBuilding.set($(e.target).data('key'));
+  },
   'click .map .g-col'(e, instance){
-    let newTile = _.clone(tiles[instance.selected.get()]);
-    if (newTile.data) {
-      newTile.data = _.clone(instance.door.get());
-    }
-    if (newTile.dimensions) {
-      newTile.dimensions = $.extend(true, {}, instance.dataDimensions.get()); // deep clone
-    }
     const row = $(e.currentTarget).closest('.g-row').data('index');
     const col = $(e.currentTarget).data('index');
-    let map = instance.map.get();
-    map[row][col] = newTile;
-    instance.map.set(map);
-    instance.dimensions.set('rows', map.length);
+    if (instance.tab.get() == 'tiles') {
+      let newTile = _.clone(tiles[instance.selected.get()]);
+      let map = instance.map.get();
+      map[row][col] = newTile;
+      instance.map.set(map);
+      instance.dimensions.set('rows', map.length);
+    } else if (instance.tab.get() == 'buildings') {
+      var buildings = instance.buildings.get();
+      buildings.push({type: instance.selectedBuilding.get(), location: {x: col, y: row}});
+      instance.buildings.set(buildings);
+      console.log(buildings);
+    }
+  },
+  'click .map .g-col .obstacle'(e, instance){
+    e.stopPropagation();
+    const row = $(e.currentTarget).data('y');
+    const col = $(e.currentTarget).data('x');
+    instance.buildings.set(_.reject(instance.buildings.get(), function(b){return b.location.x == col && b.location.y == row}));
+  },
+  'click .tabs .show-tab'(e, instance) {
+    instance.tab.set($(e.currentTarget).data('tab'));
   },
   'change .door-data input.name'(e, instance) {
     let doorData = instance.door.get();

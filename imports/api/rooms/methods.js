@@ -49,9 +49,6 @@ Meteor.methods({
 
     if (character.stats.energy < doorAttackEnergyCost) return "out of energy";
 
-    let room = Rooms.findOne(character.location.roomId);
-    if (!room) throw new Meteor.Error('rooms', "room not found");
-
     const obstacle = character.getFacingObstacle(Obstacles);
     if (!obstacle) throw new Meteor.Error('rooms', "door not found");
 

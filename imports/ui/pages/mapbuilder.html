@@ -1,11 +1,44 @@
 <template name="mapbuilder">
   <div class="mapbuilder">
     <div class="control-panel">
-      <input type="number" class="rows" value="4"/>
-      <input type="number" class="cols" value="4"/>
-      <button class="export">Export</button>
-      <input class="import" type="text"/><button class="import-btn">Import</button>
-      <span>[{{currentX}}, {{currentY}}]</span>
+      <div class="tabs">
+        <div class="show-tab" data-tab="tiles">Tiles</div>
+        <div class="show-tab" data-tab="buildings">Buildings</div>
+        <div class="show-tab" data-tab="obstacles">Obstacles</div>
+      </div>
+
+      <div>
+        <input type="number" class="rows" value="4"/>
+        <input type="number" class="cols" value="4"/>
+        <button class="export">Export</button>
+        <input class="import" type="text"/><button class="import-btn">Import</button>
+        <span>[{{currentX}}, {{currentY}}]</span>
+      </div>
+
+      {{#if tabIs 'tiles'}}
+        <div class="tiles g-row">
+          {{#each tiles}}
+            <div class="g-col i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      {{#if tabIs 'buildings'}}
+        <div class="buildings g-row">
+          {{#each buildings}}
+            <div class="g-col building i-{{image}} {{buildingSelected key}}" data-key="{{key}}"></div>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      {{#if tabIs 'obstacles'}}
+        <div class="obstacles g-row">
+          {{#each obstacles}}
+            <div class="g-col obstacle i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
+          {{/each}}
+        </div>
+      {{/if}}
+
       {{#if showDoor}}
       <div class="door-data">
         Name: <input type="text" class="name"/>
@@ -13,25 +46,27 @@
         y: <input type="number" class="y"/>
       </div>
       {{/if}}
+
       {{#if hasDimensions}}
         <div class="dimensions">
           topLeft: x<input type="number" class="dimension-input" data-coord="topLeft" data-part="x"/> y<input type="number" class="dimension-input" data-coord="topLeft" data-part="y"/>
           bottomRight: x<input type="number" class="dimension-input" data-coord="bottomRight" data-part="x"/> y<input type="number" class="dimension-input" data-coord="bottomRight" data-part="y"/>
         </div>
       {{/if}}
-      <div class="tiles g-row">
-        {{#each tiles}}
-          <div class="g-col i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
-        {{/each}}
-      </div>
     </div>
     <hr/>
     <div class="map">
       {{#each row in map}}
-        <div class="g-row" style="width: {{width}}px" data-index="{{@index}}">
-          {{#each tile in row}}
-            <div class="g-col i-{{tile.type}}" data-index="{{@index}}"></div>
-          {{/each}}
+        <div class="g-row" data-index="{{@index}}">
+          {{#with y=@index}}
+            {{#each tile in row}}
+              <div class="g-col i-{{tile.type}}" data-index="{{@index}}">
+                {{#if buildingAt @index y}}
+                  <div class="obstacle {{buildingImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
+                {{/if}}
+              </div>
+            {{/each}}
+          {{/with}}
         </div>
       {{/each}}
     </div>
