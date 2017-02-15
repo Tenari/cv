@@ -10,7 +10,7 @@ import { Chats } from '../chats/chats.js';
 import { treeStumpTile, nextSpotXY, doorConfig } from '../../configs/locations.js';
 import { getCharacter, doorAttackEnergyCost, resourceConfig, collectingSkillGrowthAmount } from '../../configs/game.js';
 import { buildingConfig } from '../../configs/buildings.js';
-import { importRoomObstacles } from '../../configs/obstacles.js';
+import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
 
 Meteor.methods({
   'rooms.collect'(gameId){
@@ -90,14 +90,7 @@ Meteor.methods({
       } else if (thing.underConstruction) { // it was a building Construction
         const buildingType = thing.typeObj();
         if (typeof buildingType.interior === 'function') {
-          const newRoomName = building.type+":"+building._id;
-          const interior = buildingType.interior(character.gameId, newRoomName, building)
-          const newRoomId = Rooms.insert(interior.room);
-          importRoomObstacles(interior, newRoomId, character.gameId, Obstacles, Rooms);
-          // create the chat
-          Chats.insert({scope: "Rooms:"+newRoomId, messages: []});
-          // update the building
-          Buildings.update(building._id, {$set: {underConstruction: false, data: {id: newRoomId, x: buildingType.insideLocation.x, y: buildingType.insideLocation.y}}});
+          building.createRoom(character.gameId);
         }
       }
     } else {

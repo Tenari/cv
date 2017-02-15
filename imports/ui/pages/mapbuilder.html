@@ -5,14 +5,13 @@
         <div class="show-tab" data-tab="tiles">Tiles</div>
         <div class="show-tab" data-tab="buildings">Buildings</div>
         <div class="show-tab" data-tab="obstacles">Obstacles</div>
-      </div>
-
-      <div>
-        <input type="number" class="rows" value="4"/>
-        <input type="number" class="cols" value="4"/>
-        <button class="export">Export</button>
-        <input class="import" type="text"/><button class="import-btn">Import</button>
-        <span>[{{currentX}}, {{currentY}}]</span>
+        <div>
+          <input type="number" class="rows" value="4"/>
+          <input type="number" class="cols" value="4"/>
+          <button class="export">Export</button>
+          <input class="import" type="text"/><button class="import-btn">Import</button>
+          <span>[{{currentX}}, {{currentY}}]</span>
+        </div>
       </div>
 
       {{#if tabIs 'tiles'}}
@@ -24,6 +23,7 @@
       {{/if}}
 
       {{#if tabIs 'buildings'}}
+        sale cost: <input type="number" class="sale-cost"/> (blank is not for sale)
         <div class="buildings g-row">
           {{#each buildings}}
             <div class="g-col building i-{{image}} {{buildingSelected key}}" data-key="{{key}}"></div>
@@ -32,9 +32,10 @@
       {{/if}}
 
       {{#if tabIs 'obstacles'}}
+        data: <input type="string" class="obstacle-data" value="{{obstacleData}}"/>
         <div class="obstacles g-row">
           {{#each obstacles}}
-            <div class="g-col obstacle i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
+            <div class="g-col obstacle {{image}} {{obstacleSelected key}}" data-key="{{key}}"></div>
           {{/each}}
         </div>
       {{/if}}
@@ -62,7 +63,10 @@
             {{#each tile in row}}
               <div class="g-col i-{{tile.type}}" data-index="{{@index}}">
                 {{#if buildingAt @index y}}
-                  <div class="obstacle {{buildingImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
+                  <div class="building obstacle {{buildingImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
+                {{/if}}
+                {{#if obstacleAt @index y}}
+                  <div class="obstacle {{obstacleImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
                 {{/if}}
               </div>
             {{/each}}

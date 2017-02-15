@@ -10,7 +10,10 @@ export const obstaclesConfig = {
         type: 'treeStump',
         data: {},
       })
-    }
+    },
+    defaultData: {
+      resources:{type:"wood",amount:10}
+    },
   },
   tree2: {
     key: 'tree2',
@@ -23,7 +26,10 @@ export const obstaclesConfig = {
         type: 'treeStump2',
         data: {},
       })
-    }
+    },
+    defaultData: {
+      resources:{type:"wood",amount:10}
+    },
   },
   tree3: {
     key: 'tree3',
@@ -36,7 +42,10 @@ export const obstaclesConfig = {
         type: 'treeStump3',
         data: {},
       })
-    }
+    },
+    defaultData: {
+      resources:{type:"wood",amount:10}
+    },
   },
   treeStump: {
     key: 'treeStump',
@@ -80,7 +89,7 @@ export const obstaclesConfig = {
   },
 };
 
-export function importRoomObstacles(roomDefinition, roomId, gameId, Obstacles, Rooms){
+export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, Obstacles, Rooms, Buildings){
   _.each(roomDefinition.doors, function(door){
     Obstacles.insert({
       location: {
@@ -109,5 +118,28 @@ export function importRoomObstacles(roomDefinition, roomId, gameId, Obstacles, R
       type: obstacle.type,
       data: obstacle.data,
     })
+  })
+  _.each(roomDefinition.buildings, function(building){
+    const bid = Buildings.insert({
+      type: building.type,
+      location: {
+        roomId: roomId,
+        x: building.location.x,
+        y: building.location.y,
+      },
+      underConstruction: false,
+      sale: building.sale,
+      resources: {
+        wood: 0,
+        hide: 0,
+        leather: 0,
+        ore: 0,
+        metal: 0,
+      }
+    })
+    const buildingObject = Buildings.findOne(bid);
+    if (typeof buildingObject.typeObj().interior === 'function') {
+      buildingObject.createRoom(gameId);
+    }
   })
 }

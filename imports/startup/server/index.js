@@ -33,7 +33,7 @@ import  '../../api/notifications/methods.js';
 import  '../../api/missions/publications.js';
 import  '../../api/missions/methods.js';
 
-import { importRoomObstacles } from '../../configs/obstacles.js';
+import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();
@@ -69,30 +69,9 @@ Meteor.startup(function (){
     const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
     const landId = Rooms.upsert({name : "land-sale"}, { $set : land}).insertedId;
 
-    importRoomObstacles(romeDefinition, romeId, gameId, Obstacles, Rooms);
-    importRoomObstacles(tokyoDefinition, tokyoId, gameId, Obstacles, Rooms);
-    importRoomObstacles(landDefinition, landId, gameId, Obstacles, Rooms);
-
-    Buildings.insert({
-      type: "open",
-      location: {
-        roomId: landId,
-        x:1,
-        y:0,
-      },
-      underConstruction: false,
-      sale: {
-        available: true,
-        cost: 100,
-      },
-      resources: {
-        wood: 0,
-        hide: 0,
-        leather: 0,
-        ore: 0,
-        metal: 0,
-      }
-    })
+    importRoomObstaclesAndBuildings(romeDefinition, romeId, gameId, Obstacles, Rooms, Buildings);
+    importRoomObstaclesAndBuildings(tokyoDefinition, tokyoId, gameId, Obstacles, Rooms, Buildings);
+    importRoomObstaclesAndBuildings(landDefinition, landId, gameId, Obstacles, Rooms, Buildings);
 
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});

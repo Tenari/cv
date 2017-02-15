@@ -12,14 +12,17 @@
       }
     }
   }
-  .tiles, .buildings {
+  .obstacles, .tiles, .buildings {
     overflow-y: scroll;
     padding-top: 10px;
     padding-bottom: 20px;
     .g-col {
       &.selected, &:hover {
         border: 2px solid blue;
+        margin: -2px;
       }
+      &.obstacle {position:static;}
+      &.obstacle-2x1 {width: 60px; background-size: 60px;}
     }
   }
   .map {

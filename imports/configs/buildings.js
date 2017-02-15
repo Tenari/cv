@@ -54,7 +54,7 @@ export const buildingConfig = {
       };
     },
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
-    insideLocation: {x: 3, y: 4}, //relative to the top left corner
+    insideLocation: {x: 4, y: 4}, //relative to the top left corner
   },
   workshop: {
     key: 'workshop',

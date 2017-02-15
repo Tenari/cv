@@ -2,9 +2,12 @@ import { Mongo } from 'meteor/mongo';
 
 import { Characters } from '../characters/characters.js';
 import { Rooms } from '../rooms/rooms.js';
+import { Obstacles } from '../obstacles/obstacles.js';
+import { Chats } from '../chats/chats.js';
 
 import { buildingConfig } from '../../configs/buildings.js';
 import { teamConfigs } from '../../configs/ranks.js';
+import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
 
 export const Buildings = new Mongo.Collection('buildings');
 
@@ -145,4 +148,14 @@ Buildings.helpers({
     }
     return false;
   },
+  createRoom(gameId){
+    const newRoomName = this.type+":"+this._id;
+    const interior = buildingConfig[this.type].interior(gameId, newRoomName, this)
+    const newRoomId = Rooms.insert(interior.room);
+    importRoomObstaclesAndBuildings(interior, newRoomId, gameId, Obstacles, Rooms, Buildings);
+    // create the chat
+    Chats.insert({scope: "Rooms:"+newRoomId, messages: []});
+    // update the building
+    Buildings.update(this._id, {$set: {interiorRoomId: newRoomId, underConstruction: false, data: {id: newRoomId, x: buildingConfig[this.type].insideLocation.x, y: buildingConfig[this.type].insideLocation.y}}});
+  }
 })
