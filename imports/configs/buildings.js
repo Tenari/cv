@@ -49,8 +49,41 @@ export const buildingConfig = {
             [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
           ] 
         },
-        doors: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
-        generics: [],
+        obstacles: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
+      };
+    },
+    doorLocation: {x: 2, y: 2}, //relative to the top left corner
+    insideLocation: {x: 4, y: 4}, //relative to the top left corner
+  },
+  bar: {
+    key: 'bar',
+    label: 'Bar',
+    imageClass: 'obstacle-3x3 i-bar-big',
+    underConstructionImageClass: 'obstacle-3x3 i-house-in-progress',
+    cost: [{resource: resourceConfig.wood.key, amount: 10, has: 0}],
+    description: 'A place to drink, make friends, and make enemies.',
+    interior: function(gameId, name, building){
+      const exit = {
+        id: building.location.roomId,
+        y: building.location.y + building.height(),
+        x: building.location.x + 2,
+      }
+      return {
+        room:{
+          gameId: gameId,
+          name: name,
+          width: 6,
+          height: 6,
+          map:[
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
+          ] 
+        },
+        obstacles: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"},{type:"woodenBar",location:{x:0,y:1}},{type:"barrel",location:{x:5,y:0}},{type:"barrel",location:{x:5,y:1}},{type:"stool",location:{x:0,y:2}},{type:"stool",location:{x:2,y:2}}],
       };
     },
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
@@ -60,32 +93,31 @@ export const buildingConfig = {
     key: 'workshop',
     label: 'Wood workshop',
     image: '/images/workbench-left.png',
-    cost: [{resource: resourceConfig.wood.key, amount: 10}],//, {resource: resourceConfig.metal.key, amount: 5}],
+    imageClass: 'obstacle-3x3 i-woodworkshop-big',
+    cost: [{resource: resourceConfig.wood.key, amount: 10}],
     description: 'Lets you build wooden items, and store resources and items. You can enable building trade if you hire a shopkeeper.',
-    getTileTypes: function(dimensions, x, y) {
-      var tileTypes = [
-        ['full-building-wall','full-building-wall','H'],
-        ['full-building-wall','full-building-wall','H'],
-        ['building-front-wall','door','2'],
-      ];
-      const relativeX = x - dimensions.topLeft.x;
-      const relativeY = y - dimensions.topLeft.y;
-      return tileTypes[relativeY][relativeX];
-    },
-    interior: function(gameId, name, entrance){
+    interior: function(gameId, name, building){
+      const exit = {
+        id: building.location.roomId,
+        y: building.location.y + building.height(),
+        x: building.location.x + 2,
+      }
       return {
-        gameId: gameId,
-        name: name,
-        width: 6,
-        height: 6,
-        map:[
-          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-          [tiles.floor,tiles.floor,tiles.floor,tiles['workbench-left'],tiles["workbench-right"],tiles.floor],
-          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-          [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-          [tiles.floor,tiles.floor,{type: "mat", data: entrance},{type: "mat", data: entrance},tiles.floor,tiles.floor]
-        ] 
+        room: {
+          gameId: gameId,
+          name: name,
+          width: 6,
+          height: 6,
+          map:[
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+          ] 
+        },
+        obstacles: [{location:{x:2,y:5},data: exit,type:"mat"},{location:{x:3,y:5},data: exit,type:"mat"},{type:'workbench',data:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},location:{x:3, y:1}}]
       };
     },
     doorLocation: {x: 1, y: 2}, //relative to the top left corner

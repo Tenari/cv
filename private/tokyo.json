@@ -12,6 +12,5 @@
      [{"type":"vt-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}, {"type":"hz-fence"}]
    ]
 },
-"doors": [{"location":{"x":0,"y":3},"data":{"name":"rome","x":1,"y":0},"type":"door"}],
-"generics": [{"type":"workbench","location":{"x":4, "y":1},"data":{"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}}}]
+"obstacles": [{"location":{"x":0,"y":3},"data":{"name":"rome","x":1,"y":0},"type":"door"},{"type":"workbench","location":{"x":4, "y":1},"data":{"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}}}]
 }

@@ -68,47 +68,64 @@ export const obstaclesConfig = {
     image: '/images/oaktree3cut.png',
     imageClass: 'i-oaktree3cut',
   },
+  fountain: {
+    key: 'fountain',
+    passable: false,
+    imageClass: 'i-fountain',
+  },
+  barrel: {
+    key: 'barrel',
+    passable: false,
+    imageClass: 'i-barrel',
+  },
+  stool: {
+    key: 'stool',
+    passable: true,
+    imageClass: 'i-stool',
+  },
+  woodenBar: {
+    key: 'woodenBar',
+    passable: false,
+    imageClass: 'obstacle-3x1 i-wooden-bar1',
+    width: 3,
+  },
   door: {
     key: 'door',
     passable: true,
     imageClass: 'i-door',
     isDoor: true,
+    defaultData: {name: "roomname", x:0, y: 0},
   },
   mat: {
     key: 'mat',
     passable: true,
     imageClass: 'i-mat',
     isDoor: true,
+    defaultData: {name: "roomname", x:0, y: 0},
   },
   workbench: {
     key: 'workbench',
     passable: false,
     imageClass: 'obstacle-2x1 i-workbench',
     width: 2,
+    defaultData:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
     //"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}
   },
 };
 
 export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, Obstacles, Rooms, Buildings){
-  _.each(roomDefinition.doors, function(door){
-    Obstacles.insert({
-      location: {
-        roomId: roomId,
-        x: door.location.x,
-        y: door.location.y,
-      },
-      type: door.type,
-      data: {
-        id: door.data.id || Rooms.findOne({name: door.data.name, gameId: gameId})._id,
-        x: door.data.x,
-        y: door.data.y,
-        lock: door.data.lock,
-        stats: door.data.stats,
-        buildingResources: door.data.buildingResources,
-      },
-    })
-  })
-  _.each(roomDefinition.generics, function(obstacle){
+  _.each(roomDefinition.obstacles, function(obstacle){
+    let data = obstacle.data;
+    if (obstaclesConfig[obstacle.type].isDoor) {
+      data = {
+        id: obstacle.data.id || Rooms.findOne({name: obstacle.data.name, gameId: gameId})._id,
+        x: obstacle.data.x,
+        y: obstacle.data.y,
+        lock: obstacle.data.lock,
+        stats: obstacle.data.stats,
+        buildingResources: obstacle.data.buildingResources,
+      };
+    }
     Obstacles.insert({
       location: {
         roomId: roomId,
@@ -116,7 +133,7 @@ export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, 
         y: obstacle.location.y,
       },
       type: obstacle.type,
-      data: obstacle.data,
+      data: data,
     })
   })
   _.each(roomDefinition.buildings, function(building){

@@ -17,8 +17,12 @@
   width: 60px;
   background-size: 60px;
   &.obstacle-2x1 {
-    width: 120px;
-    background-size: 120px 60px;
+    width: 2*@size;
+    background-size: 2*@size @size;
+  }
+  &.obstacle-3x1 {
+    width: 3*@size;
+    background-size: 3*@size @size;
   }
   &.obstacle-3x3 {
     width: 180px;

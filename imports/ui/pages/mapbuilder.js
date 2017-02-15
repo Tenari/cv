@@ -136,8 +136,7 @@ Template.mapbuilder.events({
         height: instance.dimensions.get('rows'),
         map: instance.map.get(),
       },
-      doors: [],
-      generics: [],
+      obstacles: instance.obstacles.get(),
       buildings: instance.buildings.get(),
     }));
   },
@@ -186,6 +185,12 @@ Template.mapbuilder.events({
     const row = $(e.currentTarget).data('y');
     const col = $(e.currentTarget).data('x');
     instance.buildings.set(_.reject(instance.buildings.get(), function(b){return b.location.x == col && b.location.y == row}));
+  },
+  'click .map .g-col .obstacle-only'(e, instance){
+    e.stopPropagation();
+    const row = $(e.currentTarget).data('y');
+    const col = $(e.currentTarget).data('x');
+    instance.obstacles.set(_.reject(instance.obstacles.get(), function(b){return b.location.x == col && b.location.y == row}));
   },
   'click .tabs .show-tab'(e, instance) {
     instance.tab.set($(e.currentTarget).data('tab'));
