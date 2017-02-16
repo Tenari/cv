@@ -82,6 +82,7 @@ export const obstaclesConfig = {
     key: 'stool',
     passable: true,
     imageClass: 'i-stool',
+    moveCost: 1,
   },
   woodenBar: {
     key: 'woodenBar',
@@ -111,6 +112,16 @@ export const obstaclesConfig = {
     defaultData:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
     //"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}
   },
+  verticalWall: {
+    key: 'verticalWall',
+    passable: false,
+    imageClass: 'i-vt-fence',
+  },
+  horizontalWall: {
+    key: 'horizontalWall',
+    passable: false,
+    imageClass: 'i-hz-fence',
+  },
 };
 
 export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, Obstacles, Rooms, Buildings){
@@ -133,7 +144,7 @@ export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, 
         y: obstacle.location.y,
       },
       type: obstacle.type,
-      data: data,
+      data: data || {},
     })
   })
   _.each(roomDefinition.buildings, function(building){

@@ -10,16 +10,6 @@ export const buildingConfig = {
     cost: [],
     energyCost: 1000,
     description: 'Can be built up into a functioning building, or sold as is.',
-    getTileTypes: function(dimensions, x, y) {
-      var tileTypes = [
-        ['fence-top-left-corner','fence-horizontal','fence-top-right-corner'],
-        ['fence-vertical','grass','fence-vertical'],
-        ['fence-bottom-left-corner','fence-sign','fence-bottom-right-corner'],
-      ];
-      const relativeX = x - dimensions.topLeft.x;
-      const relativeY = y - dimensions.topLeft.y;
-      return tileTypes[relativeY][relativeX];
-    },
   },
   house: {
     key: 'house',

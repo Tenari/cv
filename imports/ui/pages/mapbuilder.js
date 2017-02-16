@@ -102,6 +102,9 @@ Template.mapbuilder.helpers({
     const b = _.find(Template.instance().obstacles.get(), function(building){return building.location.x == x && building.location.y == y;});
     return b && obstaclesConfig[b.type].imageClass;
   },
+  width(){
+    return Template.instance().dimensions.get('cols') * 60;
+  },
 });
 
 Template.mapbuilder.events({
@@ -223,6 +226,7 @@ Template.mapbuilder.events({
     instance.dimensions.set('rows', big.room.height);
     instance.dimensions.set('cols', big.room.width);
     instance.buildings.set(big.buildings);
+    instance.obstacles.set(big.obstacles);
   },
   'mouseenter .map .g-col'(e, instance){
     const row = $(e.currentTarget).closest('.g-row').data('index');

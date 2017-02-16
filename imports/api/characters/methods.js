@@ -30,10 +30,10 @@ Meteor.methods({
         'You already have a character, bro');
     }
 
-    const room = Rooms.findOne({name: 'tokyo'});
+    const room = Rooms.findOne({name: 'asdf'});
     const location = {
-      x: 3,
-      y: 5,
+      x: 60,
+      y: 50,
       direction: 1,
       classId: teamConfigs[obj.team].startingCharacterCode,
       roomId: room._id,

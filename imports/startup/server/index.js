@@ -58,24 +58,29 @@ Meteor.startup(function (){
     var romeDefinition = EJSON.parse(Assets.getText('rome.json'));
     var tokyoDefinition = EJSON.parse(Assets.getText('tokyo.json'));
     var landDefinition = EJSON.parse(Assets.getText('land-sale.json'));
+    var bigRomeDefinition = EJSON.parse(Assets.getText('full-rome.json'));
     var rome = EJSON.parse(Assets.getText('rome.json')).room;
     var tokyo = EJSON.parse(Assets.getText('tokyo.json')).room;
     var land = EJSON.parse(Assets.getText('land-sale.json')).room;
     rome.gameId = gameId;
     tokyo.gameId = gameId;
     land.gameId = gameId;
+    bigRomeDefinition.room.gameId = gameId;
 
     const romeId = Rooms.upsert({name : "rome"}, { $set : rome}).insertedId;
     const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
     const landId = Rooms.upsert({name : "land-sale"}, { $set : land}).insertedId;
+    const bigRomeId = Rooms.upsert({name : "full-rome"}, { $set : bigRomeDefinition.room}).insertedId;
 
     importRoomObstaclesAndBuildings(romeDefinition, romeId, gameId, Obstacles, Rooms, Buildings);
     importRoomObstaclesAndBuildings(tokyoDefinition, tokyoId, gameId, Obstacles, Rooms, Buildings);
     importRoomObstaclesAndBuildings(landDefinition, landId, gameId, Obstacles, Rooms, Buildings);
+    importRoomObstaclesAndBuildings(bigRomeDefinition, bigRomeId, gameId, Obstacles, Rooms, Buildings);
 
     Chats.insert({scope: "Rooms:"+romeId, messages: []});
     Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
     Chats.insert({scope: "Rooms:"+landId, messages: []});
+    Chats.insert({scope: "Rooms:"+bigRomeId, messages: []});
 
     Chats.insert({scope: "team:japs", messages: []});
     Chats.insert({scope: "team:romans", messages: []});
@@ -90,7 +95,7 @@ Meteor.startup(function (){
         y: 5, 
         direction: 1,
         classId: 25,
-        roomId: tokyoId,
+        roomId: bigRomeId,
         updatedAt: Date.now(),
       },
       npc: true,
@@ -109,7 +114,7 @@ Meteor.startup(function (){
     const maguffinLocation = {
       x: 8,
       y: 6,
-      roomId: romeId,
+      roomId: bigRomeId,
       updatedAt: Date.now()
     };
     Items.insert({key: 'maguffin', type: 'misc', location: maguffinLocation});

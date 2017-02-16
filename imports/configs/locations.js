@@ -1,17 +1,13 @@
 // the map of all traversable tile types and their base move cost
 export const moveCosts = {
   grass: 8,
-  door: 1,
-  mat: 1,
-  'house-9': 1,
+  dirt: 5,
   floor: 2,
-  stool: 2,
-  "tree-stump": 14,
-  'vertical-path': 5,
-  'hz-path': 5,
-  "path-inv-T": 5,
-  "path-plus": 5,
-  "path-T": 5,
+  'vertical-path': 3,
+  'hz-path': 3,
+  "path-inv-T": 3,
+  "path-plus": 3,
+  "path-T": 3,
 };
 
 export function nextSpotXY(character){
@@ -73,6 +69,7 @@ export const treeStumpTile = {type: "tree-stump"};
 export const treeTile = {type: "tree", resources: {type: "wood", amount: 10}};
 export const tiles = {
   grass: {type: 'grass'},
+  dirt: {type: 'dirt'},
   'vertical-path': {type: 'vertical-path'},
   'hz-path': {type: 'hz-path'},
   'path-inv-T': {type: 'path-inv-T'},

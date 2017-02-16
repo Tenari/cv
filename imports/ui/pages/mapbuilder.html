@@ -58,7 +58,7 @@
     <hr/>
     <div class="map">
       {{#each row in map}}
-        <div class="g-row" data-index="{{@index}}">
+        <div class="g-row" data-index="{{@index}}" style="width: {{width}}px;">
           {{#with y=@index}}
             {{#each tile in row}}
               <div class="g-col i-{{tile.type}}" data-index="{{@index}}">
