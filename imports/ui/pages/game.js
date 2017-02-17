@@ -136,8 +136,8 @@ Template.game.helpers({
       s_y = 0;
     }
 
-    const obstacles = Obstacles.find({'location.x': {$gte: s_x - 4 }, 'location.y': {$gte: s_y - 4 }}).fetch();
-    const buildings = Buildings.find({'location.x': {$gte: s_x - 4 }, 'location.y': {$gte: s_y - 4 }}).fetch();
+    const obstacles = Obstacles.find({'location.x': {$gte: s_x - 4, $lte: viewW+s_x }, 'location.y': {$gte: s_y - 4, $lte: viewH+s_y }}).fetch();
+    const buildings = Buildings.find({'location.x': {$gte: s_x - 4, $lte: viewW+s_x }, 'location.y': {$gte: s_y - 4, $lte: viewH+s_y }}).fetch();
 
     html = "";
     _.each(obstacles, function(obstacle){
@@ -217,10 +217,12 @@ Template.game.helpers({
     return obstacle && obstacle.data.resources;
   },
   resourceSource: function(){
-    return "Tree";
+    const obstacle = Template.instance().me().getFacingObstacle(Obstacles);
+    return obstacle.typeObj().resourceSource;
   },
   resourceCollectionVerb: function(){
-    return "Chop";
+    const obstacle = Template.instance().me().getFacingObstacle(Obstacles);
+    return obstacle.typeObj().resourceCollectionVerb;
   },
   character: function(){
     return Template.instance().me();

@@ -11,6 +11,8 @@ export const obstaclesConfig = {
         data: {},
       })
     },
+    resourceSource: "Tree",
+    resourceCollectionVerb: "Chop",
     defaultData: {
       resources:{type:"wood",amount:10}
     },
@@ -27,6 +29,8 @@ export const obstaclesConfig = {
         data: {},
       })
     },
+    resourceSource: "Tree",
+    resourceCollectionVerb: "Chop",
     defaultData: {
       resources:{type:"wood",amount:10}
     },
@@ -43,6 +47,8 @@ export const obstaclesConfig = {
         data: {},
       })
     },
+    resourceSource: "Tree",
+    resourceCollectionVerb: "Chop",
     defaultData: {
       resources:{type:"wood",amount:10}
     },
@@ -67,6 +73,20 @@ export const obstaclesConfig = {
     moveCost: 6,
     image: '/images/oaktree3cut.png',
     imageClass: 'i-oaktree3cut',
+  },
+  ore: {
+    key: 'ore',
+    passable: false,
+    image: '/images/ore.png',
+    imageClass: 'i-ore',
+    insertEmptyVersion: function(obstacle, Obstacles){
+      // no empty version, it just goes away
+    },
+    resourceSource: "Stone",
+    resourceCollectionVerb: "Mine",
+    defaultData: {
+      resources:{type:"ore",amount:20}
+    },
   },
   fountain: {
     key: 'fountain',

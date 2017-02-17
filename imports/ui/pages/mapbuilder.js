@@ -175,12 +175,10 @@ Template.mapbuilder.events({
       var buildings = instance.buildings.get();
       buildings.push({type: instance.selectedBuilding.get(), location: {x: col, y: row}, sale: instance.saleObject.get()});
       instance.buildings.set(buildings);
-      console.log(buildings);
     } else if (instance.tab.get() == 'obstacles') {
       var obstacles = instance.obstacles.get();
       obstacles.push({type: instance.selectedObstacle.get(), location: {x: col, y: row}, data: instance.obstacleData.get()});
       instance.obstacles.set(obstacles);
-      console.log(obstacles);
     }
   },
   'click .map .g-col .building'(e, instance){
