@@ -5,6 +5,7 @@
         <div class="show-tab" data-tab="tiles">Tiles</div>
         <div class="show-tab" data-tab="buildings">Buildings</div>
         <div class="show-tab" data-tab="obstacles">Obstacles</div>
+        <div class="show-tab" data-tab="ais">Ais</div>
         <div>
           <input type="number" class="rows" value="4"/>
           <input type="number" class="cols" value="4"/>
@@ -40,6 +41,15 @@
         </div>
       {{/if}}
 
+      {{#if tabIs 'ais'}}
+        data: <input type="string" class="ai-bounds" value="{{aiBounds}}"/>
+        <div class="ais g-row">
+          {{#each ais}}
+            <div class="g-col ai {{image}} {{aiSelected key}}" data-key="{{key}}"></div>
+          {{/each}}
+        </div>
+      {{/if}}
+
       {{#if showDoor}}
       <div class="door-data">
         Name: <input type="text" class="name"/>
@@ -67,6 +77,9 @@
                 {{/if}}
                 {{#if obstacleAt @index y}}
                   <div class="obstacle obstacle-only {{obstacleImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
+                {{/if}}
+                {{#if aiAt @index y}}
+                  <div class="character {{aiImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
                 {{/if}}
               </div>
             {{/each}}

@@ -38,6 +38,7 @@ import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
 Meteor.startup(function (){
   var game = Games.findOne();
   if ( !game ) { // ensure that there is one game with some rooms always
+    var roomList = ['rome', 'tokyo', 'land-sale', 'full-rome'];
     var gameId = Games.insert({
       createdAt: Date.now(),
       startedAt: Date.now(),
@@ -54,37 +55,28 @@ Meteor.startup(function (){
         name: 'Land of the Rising Sun',
         kills: 0,
       },
+      rooms: roomList,
     });
-    var romeDefinition = EJSON.parse(Assets.getText('rome.json'));
-    var tokyoDefinition = EJSON.parse(Assets.getText('tokyo.json'));
-    var landDefinition = EJSON.parse(Assets.getText('land-sale.json'));
-    var bigRomeDefinition = EJSON.parse(Assets.getText('full-rome.json'));
-    var rome = EJSON.parse(Assets.getText('rome.json')).room;
-    var tokyo = EJSON.parse(Assets.getText('tokyo.json')).room;
-    var land = EJSON.parse(Assets.getText('land-sale.json')).room;
-    rome.gameId = gameId;
-    tokyo.gameId = gameId;
-    land.gameId = gameId;
-    bigRomeDefinition.room.gameId = gameId;
 
-    const romeId = Rooms.upsert({name : "rome"}, { $set : rome}).insertedId;
-    const tokyoId = Rooms.upsert({name : "tokyo"}, { $set : tokyo}).insertedId;
-    const landId = Rooms.upsert({name : "land-sale"}, { $set : land}).insertedId;
-    const bigRomeId = Rooms.upsert({name : "full-rome"}, { $set : bigRomeDefinition.room}).insertedId;
+    var roomSetup = {};
+    var roomIds = {};
+    _.each(roomList, function(roomName){
+      roomSetup[roomName] = EJSON.parse(Assets.getText(roomName+'.json'));
+      roomSetup[roomName].room.gameId = gameId;
+      roomSetup[roomName].room.name = roomName;
 
-    importRoomObstaclesAndBuildings(romeDefinition, romeId, gameId, Obstacles, Rooms, Buildings);
-    importRoomObstaclesAndBuildings(tokyoDefinition, tokyoId, gameId, Obstacles, Rooms, Buildings);
-    importRoomObstaclesAndBuildings(landDefinition, landId, gameId, Obstacles, Rooms, Buildings);
-    importRoomObstaclesAndBuildings(bigRomeDefinition, bigRomeId, gameId, Obstacles, Rooms, Buildings);
-
-    Chats.insert({scope: "Rooms:"+romeId, messages: []});
-    Chats.insert({scope: "Rooms:"+tokyoId, messages: []});
-    Chats.insert({scope: "Rooms:"+landId, messages: []});
-    Chats.insert({scope: "Rooms:"+bigRomeId, messages: []});
+      roomIds[roomName] = Rooms.upsert({name : roomName}, { $set : roomSetup[roomName].room}).insertedId;
+    })
+    // these must be separate loops b/c importRoomObstaclesAndBuildings relies on the rooms ALL being created to work. (doors)
+    _.each(roomList, function(roomName){
+      importRoomObstaclesAndBuildings(roomSetup[roomName], roomIds[roomName], gameId, Obstacles, Rooms, Buildings);
+      Chats.insert({scope: "Rooms:"+roomIds[roomName], messages: []});
+    })
 
     Chats.insert({scope: "team:japs", messages: []});
     Chats.insert({scope: "team:romans", messages: []});
 
+    const bigRomeId = roomIds['full-rome'];
     // insert NPCs
     const marcoPoloId = Characters.insert({
       gameId: gameId,
@@ -109,7 +101,6 @@ Meteor.startup(function (){
     })
     Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
     Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
-
 
     const maguffinLocation = {
       x: 8,

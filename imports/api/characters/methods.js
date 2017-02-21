@@ -30,7 +30,7 @@ Meteor.methods({
         'You already have a character, bro');
     }
 
-    const room = Rooms.findOne({name: 'asdf'});
+    const room = Rooms.findOne({name: 'full-rome'});
     const location = {
       x: 60,
       y: 50,

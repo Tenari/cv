@@ -13,6 +13,7 @@ import './mapbuilder.html';
 import { tiles } from '../../configs/locations.js';
 import { buildingConfig } from '../../configs/buildings.js';
 import { obstaclesConfig } from '../../configs/obstacles.js';
+import { monsterConfig } from '../../configs/ai.js';
 
 Template.mapbuilder.onCreated(function gameOnCreated() {
   let map = [[],[],[],[]];
@@ -32,6 +33,7 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
   this.selected = new ReactiveVar('grass');
   this.selectedBuilding = new ReactiveVar('open');
   this.selectedObstacle = new ReactiveVar('tree');
+  this.selectedAi = new ReactiveVar('bear');
   this.door = new ReactiveVar({name: 'tokyo', x: 3, y:5});
 
   this.currentX = new ReactiveVar(0);
@@ -44,6 +46,9 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
 
   this.obstacles = new ReactiveVar([]);
   this.obstacleData = new ReactiveVar({});
+
+  this.ais = new ReactiveVar([]);
+  this.aiBounds = new ReactiveVar({topLeft:{x:0,y:0},bottomRight:{x:0,y:0}});
 })
 
 Template.mapbuilder.helpers({
@@ -105,6 +110,22 @@ Template.mapbuilder.helpers({
   width(){
     return Template.instance().dimensions.get('cols') * 60;
   },
+  aiBounds(){
+    return JSON.stringify(Template.instance().aiBounds.get());
+  },
+  aiSelected(key){
+    return Template.instance().selectedAi.get() == key ? 'selected' : '';
+  },
+  ais(){
+    return _.map(monsterConfig, function(config){return {key: config.key, image: 'i-' + (config.classId + 2)}});
+  },
+  aiAt(x,y){
+    return _.find(Template.instance().ais.get(), function(building){return building.location.x == x && building.location.y == y;});
+  },
+  aiImageAt(x,y){
+    const b = _.find(Template.instance().ais.get(), function(building){return building.location.x == x && building.location.y == y;});
+    return b && ('i-'+ (monsterConfig[b.type].classId + 2));
+  },
 });
 
 Template.mapbuilder.events({
@@ -141,6 +162,7 @@ Template.mapbuilder.events({
       },
       obstacles: instance.obstacles.get(),
       buildings: instance.buildings.get(),
+      ai: instance.ais.get(),
     }));
   },
   'click .tiles .g-col'(e, instance){
@@ -153,6 +175,9 @@ Template.mapbuilder.events({
     instance.selectedObstacle.set($(e.target).data('key'));
     instance.obstacleData.set(obstaclesConfig[$(e.target).data('key')].defaultData);
   },
+  'click .ais .g-col'(e, instance){
+    instance.selectedAi.set($(e.target).data('key'));
+  },
   'change input.sale-cost'(e, instance){
     if ($(e.currentTarget).val() == '')
       instance.saleObject.set({available: false});
@@ -161,6 +186,9 @@ Template.mapbuilder.events({
   },
   'change input.obstacle-data'(e, instance){
     instance.obstacleData.set(JSON.parse($(e.currentTarget).val()));
+  },
+  'change input.ai-bounds'(e, instance){
+    instance.aiBounds.set(JSON.parse($(e.currentTarget).val()));
   },
   'click .map .g-col'(e, instance){
     const row = $(e.currentTarget).closest('.g-row').data('index');
@@ -179,6 +207,15 @@ Template.mapbuilder.events({
       var obstacles = instance.obstacles.get();
       obstacles.push({type: instance.selectedObstacle.get(), location: {x: col, y: row}, data: instance.obstacleData.get()});
       instance.obstacles.set(obstacles);
+    } else if (instance.tab.get() == 'ais') {
+      var ais = instance.ais.get();
+      var newAi = {type: instance.selectedAi.get(), location: {x: col, y: row}};
+      if (instance.aiBounds.get())
+        newAi.bounds = instance.aiBounds.get();
+
+      ais.push(newAi);
+      instance.ais.set(ais);
+      console.log(instance.ais.get());
     }
   },
   'click .map .g-col .building'(e, instance){
@@ -192,6 +229,12 @@ Template.mapbuilder.events({
     const row = $(e.currentTarget).data('y');
     const col = $(e.currentTarget).data('x');
     instance.obstacles.set(_.reject(instance.obstacles.get(), function(b){return b.location.x == col && b.location.y == row}));
+  },
+  'click .map .g-col .character'(e, instance){
+    e.stopPropagation();
+    const row = $(e.currentTarget).data('y');
+    const col = $(e.currentTarget).data('x');
+    instance.ais.set(_.reject(instance.ais.get(), function(b){return b.location.x == col && b.location.y == row}));
   },
   'click .tabs .show-tab'(e, instance) {
     instance.tab.set($(e.currentTarget).data('tab'));
@@ -225,6 +268,7 @@ Template.mapbuilder.events({
     instance.dimensions.set('cols', big.room.width);
     instance.buildings.set(big.buildings);
     instance.obstacles.set(big.obstacles);
+    instance.ais.set(big.ai);
   },
   'mouseenter .map .g-col'(e, instance){
     const row = $(e.currentTarget).closest('.g-row').data('index');

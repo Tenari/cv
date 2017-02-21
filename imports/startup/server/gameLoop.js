@@ -24,7 +24,7 @@ SyncedCron.add({
   },
   job: aiSpawnLoop,
 })
-/*
+aiSpawnLoop();
 SyncedCron.add({
   name: 'aiAct',
   schedule: function(parser) {
@@ -32,6 +32,7 @@ SyncedCron.add({
   },
   job: aiActLoop,
 })
+/*
 SyncedCron.add({
   name: 'maguffin point-tick',
   schedule: function(parser){

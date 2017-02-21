@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { _ } from 'meteor/underscore';
+import { EJSON } from 'meteor/ejson';
 
 import { Games } from '../../api/games/games.js';
 import { Rooms } from '../../api/rooms/rooms.js';
@@ -14,23 +15,21 @@ export function aiActLoop(){
   Characters.find({team: aiTeam}).forEach(attack);
   Characters.find({team: aiTeam, name: monsterConfig.bear.name}).forEach(monsterConfig.bear.move);
   Characters.find({team: aiTeam, name: monsterConfig.squirrel.name}).forEach(monsterConfig.squirrel.move);
+  Characters.find({team: aiTeam, name: monsterConfig.fox.name}).forEach(monsterConfig.fox.move);
 }
 
 export function aiSpawnLoop(){
   Games.find().forEach(function(game){
-    const totalBears = Characters.find({team: aiTeam, name: monsterConfig.bear.name, 'stats.hp': {$gt: 0}}).count();
-    const bearsToSpawn = monsterConfig.bear.maxPerGame - totalBears;
-    for (let i = 0; i < bearsToSpawn; i++){
-      const room = Rooms.findOne({gameId: game._id, name: 'rome'})
-      monsterConfig.bear.spawn(room, Characters);
-    }
-
-    const totalSquirrels = Characters.find({team: aiTeam, name: monsterConfig.squirrel.name, 'stats.hp': {$gt: 0}}).count();
-    const squirrelsToSpawn = monsterConfig.squirrel.maxPerGame - totalSquirrels;
-    for (let i = 0; i < squirrelsToSpawn; i++){
-      const room = Rooms.findOne({gameId: game._id, name: 'rome'})
-      monsterConfig.squirrel.spawn(room, Characters);
-    }
+    _.each(game.rooms, function(roomName){
+      var roomDefinition = EJSON.parse(Assets.getText(roomName+'.json'));
+      const room = Rooms.findOne({gameId: game._id, name: roomName})
+      _.each(roomDefinition.ai, function(ai, index){
+        const monster = Characters.findOne({'location.roomId':room._id, team: aiTeam, monsterKey: ai.type, 'stats.hp': {$gt: 0}, aiIndex: index});
+        if (!monster) {
+          monsterConfig[ai.type].spawn(ai, index, room, Characters);
+        }
+      })
+    })
   });
 }
 

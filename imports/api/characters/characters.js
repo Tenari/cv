@@ -139,6 +139,8 @@ Characters.schema = new SimpleSchema({
   npc: {type: Boolean, defaultValue: false},
   npcKey: {type: String, optional: true },
   monsterKey: {type: String, optional: true },
+  aiIndex: {type: Number, optional: true }, // referrs to the index in the room config for which this ai should be spawned
+  aiBounds: {type: Object, optional: true, blackbox: true},
   music: {type: Boolean, defaultValue: true},
   counts: {type: CountsSchema},
 });
@@ -227,5 +229,26 @@ Characters.helpers({
   },
   getCurrentTileObstacle(Obstacles) {
     return Obstacles.findOne({'location.roomId': this.location.roomId, 'location.x': this.location.x, 'location.y': this.location.y});
+  },
+  limitBounds(){
+    if (this.aiBounds) {
+      const bounds = this.aiBounds;
+      const updatedChar = Characters.findOne(this._id);
+      let setObj = {};
+      if (updatedChar.location.x > bounds.bottomRight.x) {
+        setObj['location.x'] = bounds.bottomRight.x;
+      }
+      if (updatedChar.location.x < bounds.topLeft.x) {
+        setObj['location.x'] = bounds.topLeft.x;
+      }
+      if (updatedChar.location.y > bounds.bottomRight.y) {
+        setObj['location.y'] = bounds.bottomRight.y;
+      }
+      if (updatedChar.location.y < bounds.topLeft.y) {
+        setObj['location.y'] = bounds.topLeft.y;
+      }
+      if (_.keys(setObj).length > 0)
+        Characters.update(this._id, {$set: setObj});
+    }
   },
 })
