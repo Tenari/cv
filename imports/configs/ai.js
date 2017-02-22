@@ -82,7 +82,7 @@ export const monsterConfig = {
     move: function(bear){
       // this function can get more complicated if we want bears to move in a non-random drift pattern
       moveCharacter(bear, _.random(1,4));
-      character.limitBounds();
+      bear.limitBounds();
     },
     setFightStrategy: function(fight, bear, Fights){
       // just maintains the current attack-mode and auto-readies

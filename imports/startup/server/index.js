@@ -38,7 +38,7 @@ import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
 Meteor.startup(function (){
   var game = Games.findOne();
   if ( !game ) { // ensure that there is one game with some rooms always
-    var roomList = ['rome', 'tokyo', 'land-sale', 'full-rome'];
+    var roomList = ['rome', 'tokyo', 'land-sale', 'full-rome', 'east-roman-plains', 'north-east-roman-plains'];
     var gameId = Games.insert({
       createdAt: Date.now(),
       startedAt: Date.now(),
