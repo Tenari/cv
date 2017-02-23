@@ -9,24 +9,26 @@ import { Trades } from '../trades/trades.js';
 import { Items } from '../items/items.js';
 import { Obstacles } from '../obstacles/obstacles.js';
 import { Buildings } from '../buildings/buildings.js';
+import { Chats } from '../chats/chats.js';
 import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, nextSpotXY } from '../../configs/locations.js';
 import { aiTeam } from '../../configs/ai.js';
 import { getCharacter } from '../../configs/game.js';
 import { teamConfigs } from '../../configs/ranks.js';
+import { generateNewTutorial } from '../../configs/tutorial.js';
 
 Meteor.methods({
   'characters.insert'(obj) {
     if (!this.userId) {
-      throw new Meteor.Error('todos.insert.accessDenied',
+      throw new Meteor.Error('characters.insert.accessDenied',
         'Gotta be logged in to create a character');
     }
 
     const character = Characters.findOne({userId: this.userId, 'stats.hp': {$gt: 0}});
 
     if (character) {
-      throw new Meteor.Error('todos.insert.alreadyThere',
+      throw new Meteor.Error('characters.insert.alreadyThere',
         'You already have a character, bro');
     }
 
@@ -128,6 +130,35 @@ Meteor.methods({
         name: obj.name,
       };
     });
+  },
+  'characters.tutorial'(characterData){
+    if (!this.userId) throw new Meteor.Error('characters.insert.accessDenied', 'Gotta be logged in to create a character');
+
+    const character = Characters.findOne({userId: this.userId, 'stats.hp': {$gt: 0}});
+
+    if (character) throw new Meteor.Error('characters.insert.alreadyThere', 'You already have a character, bro');
+
+    const firstRoomId = generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats);
+    const room = Rooms.findOne({name: 'full-rome'});
+    const location = {
+      x: 60,
+      y: 50,
+      direction: 1,
+      classId: teamConfigs[obj.team].startingCharacterCode,
+      roomId: room._id,
+      updatedAt: Date.now(),
+    };
+
+    obj.gameId = obj.gameId || Games.findOne({})._id;
+    obj.userId = this.userId;
+    obj.location = location;
+
+    const id = Characters.insert(obj);
+
+    Items.insert({key: 'rustySword', type: 'weapon', ownerId: id, condition: 100});
+    Items.insert({key: 'chickenLeg', type: 'consumable', ownerId: id});
+
+    return obj.gameId; //return the gameId so the ui knows what url to go to
   },
 });
 

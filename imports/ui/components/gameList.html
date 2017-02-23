@@ -1,0 +1,32 @@
+<template name="gameList">
+  <div class="game-list-container">
+    {{#if selectedGameId}}
+      <p>You selected:</p>
+      {{> gameCard selectedGame}}
+    {{else}}
+      <p>Choose a game to join:</p>
+      {{#each game in games}}
+        {{> gameCard game}}
+      {{/each}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="gameCard">
+  <div class="game-card" data-id="{{_id}}">
+    <div class="game-score">
+      <div class="romans">
+        <div class="team-name">{{romans.name}}</div>
+        <div class="team-score">{{romans.score}}</div>
+      </div>
+      <div class="japs">
+        <div class="team-name">{{japs.name}}</div>
+        <div class="team-score">{{japs.score}}</div>
+      </div>
+    </div>
+    <div class="game-info">
+      <div class="game-name">{{name}}</div>
+      <div class="time-left-wrapper">Time left: {{> gameTimeLeft .}}</div>
+    </div>
+  </div>
+</template>

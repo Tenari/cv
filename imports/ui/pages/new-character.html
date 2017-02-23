@@ -1,23 +1,29 @@
 <template name="newCharacter">
   <h1>Create a character</h1>
   <div class="character-creation-form">
-    <p>What is your name? <input type="text" id="change-name"/></p>
+    {{#if shouldShowGameList}}
+      {{> gameList}}
+    {{/if}}
+
     {{#momentum plugin='fade'}}
-      {{#if named}}
-        <div class="step2">
-          <p>Alright, {{name}}. What team do you want to join?</p>
-          <div class="center-text">
-            <img src="images/22.png" class="join-img" data-team="romans"/>
-            <span>or</span>
-            <img src="images/32.png" class="join-img" data-team="japs"/>
+      {{#if shouldAskForName}}
+        <p class="name-prompt">What is your name? <input type="text" id="change-name"/></p>
+        {{#if named}}
+          <div class="step2">
+            <p>Alright, {{name}}. What team do you want to join?</p>
+            <div class="center-text">
+              <img src="images/22.png" class="join-img {{teamSelected 'romans'}}" data-team="romans"/>
+              <span>or</span>
+              <img src="images/32.png" class="join-img {{teamSelected 'japs'}}" data-team="japs"/>
+            </div>
           </div>
-        </div>
-      {{/if}}
-      {{#if team}}
-        <div class="step3">
-          <p>Now, do you want to do the tutorial?</p>
-          <p class="choices"><a href="#" class="tutorial">Yes, teach me</a> <a href="#" class="game">No, I know how to play.</a></p>
-        </div>
+        {{/if}}
+        {{#if team}}
+          <div class="step3">
+            <p>Now, do you want to do the tutorial?</p>
+            <p class="choices"><a href="#" class="tutorial">Yes, teach me</a> <a href="#" class="game">No, I know how to play.</a></p>
+          </div>
+        {{/if}}
       {{/if}}
     {{/momentum}}
   </div>

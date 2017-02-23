@@ -56,6 +56,7 @@ Meteor.startup(function (){
         kills: 0,
       },
       rooms: roomList,
+      name: 'The quest for the macGuffin',
     });
 
     var roomSetup = {};
@@ -73,8 +74,8 @@ Meteor.startup(function (){
       Chats.insert({scope: "Rooms:"+roomIds[roomName], messages: []});
     })
 
-    Chats.insert({scope: "team:japs", messages: []});
-    Chats.insert({scope: "team:romans", messages: []});
+    Chats.insert({scope: "team:japs:"+gameId, messages: []});
+    Chats.insert({scope: "team:romans:"+gameId, messages: []});
 
     const bigRomeId = roomIds['full-rome'];
     // insert NPCs

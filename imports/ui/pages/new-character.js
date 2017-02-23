@@ -3,10 +3,13 @@ import { Template } from 'meteor/templating';
 import { Mongo } from 'meteor/mongo';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Session } from 'meteor/session';
 
 import { Characters } from '../../api/characters/characters.js';
+import { Games } from '../../api/games/games.js';
 import '../../api/characters/methods.js';
 
+import '../components/gameList.js';
 import './new-character.html';
 
 Template.newCharacter.onCreated(function newCharacterOnCreated() {
@@ -17,6 +20,7 @@ Template.newCharacter.onCreated(function newCharacterOnCreated() {
     team: null,
   });
   this.subscribe('characters.own');
+  this.subscribe('games');
 });
 
 Template.newCharacter.helpers({
@@ -28,6 +32,18 @@ Template.newCharacter.helpers({
   },
   team() {
     return Template.instance().state.get('team');
+  },
+  game() {
+    return Session.get('selectedGameId');
+  },
+  shouldShowGameList() {
+    return Games.find().count() > 1;
+  },
+  shouldAskForName(){
+    return (Games.find().count() > 1 && Session.get('selectedGameId')) || Games.find().count() == 1;
+  },
+  teamSelected(key){
+    return Template.instance().state.get('team') == key ? 'selected' : false;
   },
 });
 

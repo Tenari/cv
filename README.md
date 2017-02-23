@@ -52,6 +52,7 @@ _(in no particular order)_
     - character item equips
     - [teams](#teams)
     - game-wide events/plot (find the [MacGuffin](http://tvtropes.org/pmwiki/pmwiki.php/Main/MacGuffin), then fight over it/steal it for your team)
+    - [tutorial](#tutorial)
 - account + character management screens
 - pay to play past your first game/character
 
@@ -107,3 +108,25 @@ Rules:
   - finding the maguffin
   - holding the maguffin
   - building the monument and using the maguffin
+
+## Tutorial
+
+Tutorial is a series of auto-generated rooms that are in their own game, created when someone wants to do the tutorial, and deleted as they progress. This way, everyone gets their own tutorial, unencumbered by other noobs.
+
+Order of things to learn:
+
+- movement
+  - first tutorial is just, "walk across this room, around some obstacles"
+- interacting with others
+  - talk to an NPC
+  - trade with an NPC
+  - fight an NPC
+- resources and items
+  - chop a tree
+  - make a helmet
+  - equip the helmet
+- team explanation
+  - how rank works
+  - accept a mission
+  - turn it in
+  - go to the real world

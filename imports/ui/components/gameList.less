@@ -1,0 +1,62 @@
+@import '../stylesheets/variables.less';
+
+.game-list-container {
+  border: 3px solid black;
+  border-radius: 5px;
+  background-color: @color-primary-muted;
+  padding: 10px;
+
+  p {
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+  }
+
+  .game-card {
+    display: flex;
+    background-color: white;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0px 0px 2px 1px #777;
+    }
+
+    .game-score {
+      font-size: 12px;
+      .romans, .japs {
+        display: flex;
+        flex-grow: 2;
+        border-right: 2px solid black;
+        .team-name {
+          padding: 10px;
+          width: 100%;
+          border-right: 1px solid black;
+        }
+        .team-score {
+          padding: 10px;
+        }
+      }
+      .romans {
+        border-bottom: 1px solid black;
+        .team-name {
+          background-color: @color-contrast;
+        }
+      }
+      .japs {
+        .team-name {
+          background-color: @color-tertiary;
+        }
+      }
+    }
+    .game-info {
+      padding: 10px;
+      .time-left-wrapper {
+        display: flex;
+        .time-left{
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}
