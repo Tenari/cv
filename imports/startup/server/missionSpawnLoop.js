@@ -9,7 +9,7 @@ import { missionsConfig } from '../../configs/missions.js';
 import { npcConfig } from '../../configs/ai.js';
 
 export function missionSpawnLoop(){
-  Games.find().forEach(function (game){
+  Games.find({tutorial: {$exists: false}}).forEach(function (game){
     _.each(playerTeamKeys, function(key) {
       const missionCount = Missions.find({gameId: game._id, team: key, creatorId: {$exists: false}, completed: false}).count();
       const neededMissionCount = 5 - missionCount;

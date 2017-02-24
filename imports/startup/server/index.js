@@ -6,7 +6,6 @@ import { Chats } from '../../api/chats/chats.js';
 import { Characters } from '../../api/characters/characters.js';
 import { Buildings } from '../../api/buildings/buildings.js';
 import { Items } from '../../api/items/items.js';
-import { Notifications } from '../../api/notifications/notifications.js';
 import { Missions } from '../../api/missions/missions.js';
 import { Obstacles } from '../../api/obstacles/obstacles.js';
 

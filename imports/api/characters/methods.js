@@ -16,7 +16,7 @@ import { doorIsLocked, moveCost, nextSpotXY } from '../../configs/locations.js';
 import { aiTeam } from '../../configs/ai.js';
 import { getCharacter } from '../../configs/game.js';
 import { teamConfigs } from '../../configs/ranks.js';
-import { generateNewTutorial } from '../../configs/tutorial.js';
+import { generateNewTutorial, openSquirrel } from '../../configs/tutorial.js';
 
 Meteor.methods({
   'characters.insert'(obj) {
@@ -101,6 +101,9 @@ Meteor.methods({
         incObj['stats.resources.'+getting.resource] = -1 * Math.abs(getting.amount);
         Characters.update(npcId, {$inc: incObj });
       } else if (getting.type == 'item') {
+        if (Games.findOne(character.gameId).tutorial) {
+          openSquirrel(character, Rooms, Obstacles);
+        }
         Items.update(getting.itemId, {$set: {ownerId: characterId}});
       }
     } else if (getting.type == 'money') {
@@ -138,27 +141,26 @@ Meteor.methods({
 
     if (character) throw new Meteor.Error('characters.insert.alreadyThere', 'You already have a character, bro');
 
-    const firstRoomId = generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats);
-    const room = Rooms.findOne({name: 'full-rome'});
+    const firstRoomId = generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items);
+    const firstRoom = Rooms.findOne(firstRoomId);
     const location = {
-      x: 60,
-      y: 50,
+      x: 1,
+      y: 1,
       direction: 1,
-      classId: teamConfigs[obj.team].startingCharacterCode,
-      roomId: room._id,
+      classId: teamConfigs[characterData.team].startingCharacterCode,
+      roomId: firstRoomId,
       updatedAt: Date.now(),
     };
 
-    obj.gameId = obj.gameId || Games.findOne({})._id;
-    obj.userId = this.userId;
-    obj.location = location;
+    characterData.gameId = Games.findOne(firstRoom.gameId)._id;
+    characterData.userId = this.userId;
+    characterData.location = location;
 
-    const id = Characters.insert(obj);
+    const id = Characters.insert(characterData);
 
-    Items.insert({key: 'rustySword', type: 'weapon', ownerId: id, condition: 100});
     Items.insert({key: 'chickenLeg', type: 'consumable', ownerId: id});
 
-    return obj.gameId; //return the gameId so the ui knows what url to go to
+    return characterData.gameId; //return the gameId so the ui knows what url to go to
   },
 });
 

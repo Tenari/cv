@@ -63,7 +63,12 @@ Template.newCharacter.events({
   },
 
   'click a.tutorial'(e, instance){
-  
+    const team = instance.state.get('team');
+    const name = instance.state.get('name');
+
+    Meteor.call('characters.tutorial', {team: team, name: name}, function(err, gameId){
+      FlowRouter.go('game.world', {gameId: gameId});
+    });
   },
 
   'click a.game'(e, instance){
