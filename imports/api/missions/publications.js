@@ -20,5 +20,5 @@ Meteor.publish ("missions.team", function(gameId) {
   const character = getCharacter(this.userId, gameId, Characters);
   if (!character) return this.ready();
 
-  return Missions.find({team: character.team, ownerId: {$exists: false}, completed: false}, {fields: Missions.publicFields});
+  return Missions.find({gameId: gameId, team: character.team, ownerId: {$exists: false}, completed: false}, {fields: Missions.publicFields});
 });

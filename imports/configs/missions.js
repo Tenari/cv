@@ -45,7 +45,7 @@ export const missionsConfig = {
     description: function(conditions){
       return "Collect " + conditions.amount +
              "lbs of "  + conditions.resource +
-             " and bring it to " + conditions.characterName;
+             " and bring it to " + conditions.turnIn.characterName;
     },
     conditions: function(data) {
       return {

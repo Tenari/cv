@@ -4,7 +4,7 @@ import { EJSON } from 'meteor/ejson';
 import { importRoomObstaclesAndBuildings } from './obstacles.js';
 
 export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items) {
-  var roomList = ['move-tutorial', 'talk-tutorial', 'resources-tutorial'];
+  var roomList = ['move-tutorial', 'talk-tutorial', 'resources-tutorial', 'team-tutorial'];
   var gameId = Games.insert({
     createdAt: Date.now(),
     startedAt: Date.now(),
@@ -28,8 +28,9 @@ export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, C
 
   var preMessages = {
     'move-tutorial': [{content:'To move, press W, A, S, or D.', sender:'Tutorial'},{content:'Notice that your energy bar decreases as you move. If it gets to zero, you cannot move anymore until it regenerates.', sender:'Tutorial'}],
-    'talk-tutorial': [{content: 'Go stand on top of the NPC (non-player character).', sender: 'Tutorial'},{content: 'Once you buy a sword from him, you will be able to fight the squirrel.', sender: 'Tutorial'}],
+    'talk-tutorial': [{content: 'Go stand on top of the NPC (non-player character), and buy a sword from him.', sender: 'Tutorial'}],
     'resources-tutorial': [{content: 'Face the tree to chop it down', sender: 'Tutorial'}],
+    'team-tutorial': [{content: 'This game is all about teamwork. Explore the "Team" page, and accept a mission.', sender: 'Tutorial'}],
   };
   var roomSetup = {};
   var roomIds = {};
@@ -38,7 +39,7 @@ export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, C
     roomSetup[roomName].room.gameId = gameId;
     roomSetup[roomName].room.name = roomName;
 
-    roomIds[roomName] = Rooms.upsert({name : roomName}, { $set : roomSetup[roomName].room}).insertedId;
+    roomIds[roomName] = Rooms.insert(roomSetup[roomName].room);
   })
   // these must be separate loops b/c importRoomObstaclesAndBuildings relies on the rooms ALL being created to work. (doors)
   _.each(roomList, function(roomName){
@@ -72,6 +73,28 @@ export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, C
     }
   })
   Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
+
+  Characters.insert({
+    gameId: gameId,
+    name: 'Marco Polo',
+    team: 'romans',
+    location: {
+      x: 1,
+      y: 3, 
+      direction: 3,
+      classId: 25,
+      roomId: roomIds['team-tutorial'],
+      updatedAt: Date.now(),
+    },
+    npc: true,
+    npcKey: 'marcoPolo',
+    stats: {
+      money: 10000,
+      resources: {
+        metal: 5,
+      }
+    }
+  })
   /*
   Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
 
@@ -86,7 +109,48 @@ export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, C
   return roomIds['move-tutorial'];
 }
 
-export function openSquirrel(character, Rooms, Obstacles){
+export function openSquirrel(character, Rooms, Obstacles, Chats){
+  Chats.update({scope: "Rooms:"+character.location.roomId}, {$push: {messages: {content: 'You\'ll want to equip your sword before you fight the squirrel. Click "Stats" in the top menu, then "Items", then click the sword, and select "EQUIP"', sender: 'Tutorial'}}});
   const room = Rooms.findOne(character.location.roomId);
   Obstacles.remove({'location.x':6, 'location.y':2, 'location.roomId':room._id});
+}
+
+export function craftedItem(character, Obstacles, Chats, Rooms){
+  const data = {
+    id: Rooms.findOne({name: 'team-tutorial', gameId: character.gameId})._id,
+    x: 0,
+    y: 0,
+  };
+  Obstacles.insert({
+    type: 'mat',
+    location: {
+      roomId: character.location.roomId,
+      x: 2,
+      y: 12,
+    },
+    data: data,
+  });
+  Obstacles.insert({
+    type: 'mat',
+    location: {
+      roomId: character.location.roomId,
+      x: 3,
+      y: 12,
+    },
+    data: data,
+  });
+  Chats.update({scope: "Rooms:"+character.location.roomId}, {$push:{messages: {content: "Congrats, you may now move to the final stage.", sender: "Tutorial"}}});
+}
+
+export function finishTutorial(character, Characters, Rooms, Obstacles, Notifications){
+  const gameId = character.gameId;
+  const newRoom = Rooms.findOne({name: 'full-rome'});
+  Characters.update(character._id, {$set: {gameId: newRoom.gameId, 'location.x': 60, 'location.y':50, 'location.roomId': newRoom._id}});
+  Characters.remove({gameId: gameId});
+  Rooms.find({gameId: gameId}).forEach(function(room){
+    Obstacles.remove({'location.roomId': room._id});
+  })
+  Rooms.remove({gameId: gameId});
+
+  Notifications.insert({title: 'Congratulations', message: 'You finished the tutorial! If you still need help, read the manual.', characterId: character._id});
 }

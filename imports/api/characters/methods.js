@@ -102,7 +102,7 @@ Meteor.methods({
         Characters.update(npcId, {$inc: incObj });
       } else if (getting.type == 'item') {
         if (Games.findOne(character.gameId).tutorial) {
-          openSquirrel(character, Rooms, Obstacles);
+          openSquirrel(character, Rooms, Obstacles, Chats);
         }
         Items.update(getting.itemId, {$set: {ownerId: characterId}});
       }

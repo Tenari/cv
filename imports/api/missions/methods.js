@@ -3,10 +3,16 @@ import { _ } from 'meteor/underscore';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 import { Missions } from './missions.js';
+import { Games } from '../games/games.js';
 import { Characters } from '../characters/characters.js';
+import { Rooms } from '../rooms/rooms.js';
+import { Obstacles } from '../obstacles/obstacles.js';
+import { Notifications } from '../notifications/notifications.js';
+
 import { getCharacter } from '../../configs/game.js'
 import { ranksConfig } from '../../configs/ranks.js';
 import { missionsConfig } from '../../configs/missions.js';
+import { finishTutorial } from '../../configs/tutorial.js';
 
 Meteor.methods({
   'missions.accept'(gameId, id) {
@@ -39,6 +45,10 @@ Meteor.methods({
       let gainResource = {};
       gainResource['stats.resources.'+mission.conditions.resource] = mission.conditions.amount;
       Characters.update(mission.conditions.turnIn.characterId, {$inc: gainResource});
+
+      if (Games.findOne(character.gameId).tutorial) {
+        finishTutorial(character, Characters, Rooms, Obstacles, Notifications);
+      }
     }
   },
   'missions.create'(gameId, data){

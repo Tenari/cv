@@ -32,6 +32,10 @@ Meteor.methods({
         // remove the obstacle and turn it into it's empty version (tree into treeStump
         obstacle.insertEmptyVersion();
         Obstacles.remove(obstacle._id);
+        if (room.name == 'resources-tutorial') {
+          Obstacles.remove({'location.x':2, 'location.y': 5, 'location.roomId': room._id});
+          Chats.update({scope: "Rooms:"+room._id}, {$push: {messages: {content: 'Now, go craft an item at the workbench.', sender: 'Tutorial'}}});
+        }
       } else {
         // update the obstacle
         Obstacles.update(obstacle._id, {$set: {'data.resources.amount': obstacle.data.resources.amount}})

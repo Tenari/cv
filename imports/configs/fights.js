@@ -3,6 +3,7 @@ import { _ } from 'meteor/underscore';
 import { SyncedCron } from 'meteor/percolate:synced-cron';
 
 import { Games } from '../api/games/games.js';
+import { Obstacles } from '../api/obstacles/obstacles.js';
 import { Fights } from '../api/fights/fights.js';
 import { Items } from '../api/items/items.js';
 import { Characters } from '../api/characters/characters.js';
@@ -167,6 +168,7 @@ function endFight(fight, first, last) {
     }
     if (first.team == aiTeam) {
       updateKillMissions(last, first);
+      handleTutorialKill(last);
     }
     if (first.team != aiTeam) updateKillPlayerMissions(last, first);
 
@@ -185,6 +187,7 @@ function endFight(fight, first, last) {
     }
     if (last.team == aiTeam) {
       updateKillMissions(first, last);
+      handleTutorialKill(first);
     }
     if (last.team != aiTeam) updateKillPlayerMissions(first, last);
 
@@ -213,6 +216,13 @@ function updateKillPlayerMissions(killer, target) {
   missions.forEach(function(mission){
     mission.finish(killer);
   })
+}
+
+function handleTutorialKill(character){
+  const game = Games.findOne(character.gameId);
+  if (game.tutorial) {
+    Obstacles.remove({'location.x':10, 'location.y': 2, 'location.roomId': character.location.roomId});
+  }
 }
 
 function combatOrder(fight, a, b, aW, bW) {

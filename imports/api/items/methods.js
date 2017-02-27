@@ -6,10 +6,14 @@ import { Games } from '../games/games.js';
 import { Effects } from '../effects/effects.js';
 import { Characters } from '../characters/characters.js';
 import { Notifications } from '../notifications/notifications.js';
+import { Obstacles } from '../obstacles/obstacles.js';
+import { Chats } from '../chats/chats.js';
+import { Rooms } from '../rooms/rooms.js';
 import { Items } from './items.js';
 import { itemConfigs } from '../../configs/items.js'
 import { recalculateStats, getCharacter } from '../../configs/game.js'
 import { playerTeamKeys, teamConfigs } from '../../configs/ranks.js'
+import { craftedItem } from '../../configs/tutorial.js'
 
 Meteor.methods({
   'items.equip'(id) {
@@ -106,9 +110,8 @@ Meteor.methods({
     }
   },
   'items.create'(characterId, type, key){
-    if (!this.userId) {
-      throw new Meteor.Error('items.craft.accessDenied', 'Gotta be logged in to craft an item');
-    }
+    if (!this.userId) throw new Meteor.Error('items.craft.accessDenied', 'Gotta be logged in to craft an item');
+
     let character = Characters.findOne(characterId);
     const item = itemConfigs[type][key];
     for(var i = 0; i < _.keys(item.cost).length; i++) {
@@ -126,6 +129,10 @@ Meteor.methods({
         }
         character.stats.resources[thisResource] -= thisCost;
       }
+    }
+
+    if (Games.findOne(character.gameId).tutorial) {
+      craftedItem(character, Obstacles, Chats, Rooms);
     }
 
     Items.insert({key: key, type: type, ownerId: character._id, condition: 100});
