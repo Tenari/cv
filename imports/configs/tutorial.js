@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 
 import { importRoomObstaclesAndBuildings } from './obstacles.js';
+import { importRoomNpcs } from './ai.js';
 
 export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items) {
   var roomList = ['move-tutorial', 'talk-tutorial', 'resources-tutorial', 'team-tutorial'];
@@ -44,60 +45,13 @@ export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, C
   // these must be separate loops b/c importRoomObstaclesAndBuildings relies on the rooms ALL being created to work. (doors)
   _.each(roomList, function(roomName){
     importRoomObstaclesAndBuildings(roomSetup[roomName], roomIds[roomName], gameId, Obstacles, Rooms, Buildings);
+    importRoomNpcs(roomSetup[roomName], roomIds[roomName], gameId, Characters, Items);
     Chats.insert({scope: "Rooms:"+roomIds[roomName], messages: preMessages[roomName]});
   })
 
   Chats.insert({scope: "team:japs:"+gameId, messages: []});
   Chats.insert({scope: "team:romans:"+gameId, messages: []});
-
-  // insert NPCs
-  const marcoPoloId = Characters.insert({
-    gameId: gameId,
-    name: 'Marco Polo',
-    team: 'romans',
-    location: {
-      x: 3,
-      y: 3, 
-      direction: 1,
-      classId: 25,
-      roomId: roomIds['talk-tutorial'],
-      updatedAt: Date.now(),
-    },
-    npc: true,
-    npcKey: 'marcoPolo',
-    stats: {
-      money: 10000,
-      resources: {
-        metal: 5,
-      }
-    }
-  })
-  Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
-
-  Characters.insert({
-    gameId: gameId,
-    name: 'Marco Polo',
-    team: 'romans',
-    location: {
-      x: 1,
-      y: 3, 
-      direction: 3,
-      classId: 25,
-      roomId: roomIds['team-tutorial'],
-      updatedAt: Date.now(),
-    },
-    npc: true,
-    npcKey: 'marcoPolo',
-    stats: {
-      money: 10000,
-      resources: {
-        metal: 5,
-      }
-    }
-  })
   /*
-  Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
-
   const maguffinLocation = {
     x: 8,
     y: 6,
@@ -142,10 +96,22 @@ export function craftedItem(character, Obstacles, Chats, Rooms){
   Chats.update({scope: "Rooms:"+character.location.roomId}, {$push:{messages: {content: "Congrats, you may now move to the final stage.", sender: "Tutorial"}}});
 }
 
-export function finishTutorial(character, Characters, Rooms, Obstacles, Notifications){
+export function finishTutorial(character, Characters, Rooms, Obstacles, Notifications, Items){
   const gameId = character.gameId;
   const newRoom = Rooms.findOne({name: 'full-rome'});
-  Characters.update(character._id, {$set: {gameId: newRoom.gameId, 'location.x': 60, 'location.y':50, 'location.roomId': newRoom._id}});
+  // reset their character
+  Characters.update(character._id, {$set: {
+    gameId: newRoom.gameId,
+    'location.x': 60,
+    'location.y':50,
+    'location.roomId': newRoom._id,
+    'stats.hp': character.stats.hpBase,
+    'stats.energy': character.stats.energyBase,
+    'stats.resources.wood': 0,
+  }});
+  Items.remove({ownerId: character._id});
+
+  // delete the tutorial
   Characters.remove({gameId: gameId});
   Rooms.find({gameId: gameId}).forEach(function(room){
     Obstacles.remove({'location.roomId': room._id});

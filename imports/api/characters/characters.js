@@ -21,7 +21,7 @@ const LocationSchema = new SimpleSchema({
   direction: {type: Number},
   classId: {type: Number},
   roomId: { type: String, regEx: SimpleSchema.RegEx.Id },
-  updatedAt: { type: Number },
+  updatedAt: { type: Number, autoValue: function() { return Date.now(); } },
 });
 
 const WeaponStatsSchema = new SimpleSchema({

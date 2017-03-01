@@ -13,7 +13,7 @@ import './mapbuilder.html';
 import { tiles } from '../../configs/locations.js';
 import { buildingConfig } from '../../configs/buildings.js';
 import { obstaclesConfig } from '../../configs/obstacles.js';
-import { monsterConfig } from '../../configs/ai.js';
+import { npcConfig, monsterConfig } from '../../configs/ai.js';
 
 Template.mapbuilder.onCreated(function gameOnCreated() {
   let map = [[],[],[],[]];
@@ -34,7 +34,7 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
   this.selectedBuilding = new ReactiveVar('open');
   this.selectedObstacle = new ReactiveVar('tree');
   this.selectedAi = new ReactiveVar('bear');
-  this.door = new ReactiveVar({name: 'tokyo', x: 3, y:5});
+  this.selectedNpc = new ReactiveVar('genericRomanTownsPerson');
 
   this.currentX = new ReactiveVar(0);
   this.currentY = new ReactiveVar(0);
@@ -49,6 +49,8 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
 
   this.ais = new ReactiveVar([]);
   this.aiBounds = new ReactiveVar({topLeft:{x:0,y:0},bottomRight:{x:0,y:0}});
+
+  this.npcs = new ReactiveVar([]);
 })
 
 Template.mapbuilder.helpers({
@@ -77,9 +79,6 @@ Template.mapbuilder.helpers({
   },
   obstacleSelected(key){
     return Template.instance().selectedObstacle.get() == key ? 'selected' : '';
-  },
-  showDoor(){
-    return tiles[Template.instance().selected.get()].data;
   },
   hasDimensions(){
     return tiles[Template.instance().selected.get()].dimensions;
@@ -126,6 +125,19 @@ Template.mapbuilder.helpers({
     const b = _.find(Template.instance().ais.get(), function(building){return building.location.x == x && building.location.y == y;});
     return b && ('i-'+ (monsterConfig[b.type].classId + 2));
   },
+  npcSelected(key){
+    return Template.instance().selectedNpc.get() == key ? 'selected' : '';
+  },
+  npcs(){
+    return _.map(npcConfig, function(config){return {key: config.key, image: 'i-' + (config.classId + 2)}});
+  },
+  npcAt(x,y){
+    return _.find(Template.instance().npcs.get(), function(character){return character.location.x == x && character.location.y == y;});
+  },
+  npcImageAt(x,y){
+    const b = _.find(Template.instance().npcs.get(), function(character){return character.location.x == x && character.location.y == y;});
+    return b && ('i-'+ (npcConfig[b.type].classId + 2));
+  },
 });
 
 Template.mapbuilder.events({
@@ -163,6 +175,7 @@ Template.mapbuilder.events({
       obstacles: instance.obstacles.get(),
       buildings: instance.buildings.get(),
       ai: instance.ais.get(),
+      npcs: instance.npcs.get(),
     }));
   },
   'click .tiles .g-col'(e, instance){
@@ -177,6 +190,9 @@ Template.mapbuilder.events({
   },
   'click .ais .g-col'(e, instance){
     instance.selectedAi.set($(e.target).data('key'));
+  },
+  'click .npcs .g-col'(e, instance){
+    instance.selectedNpc.set($(e.target).data('key'));
   },
   'change input.sale-cost'(e, instance){
     if ($(e.currentTarget).val() == '')
@@ -215,7 +231,12 @@ Template.mapbuilder.events({
 
       ais.push(newAi);
       instance.ais.set(ais);
-      console.log(instance.ais.get());
+    } else if (instance.tab.get() == 'npcs') {
+      var npcs = instance.npcs.get();
+      var newNpc = {type: instance.selectedNpc.get(), location: {x: col, y: row}};
+      npcs.push(newNpc);
+      instance.npcs.set(npcs);
+      console.log(instance.npcs.get());
     }
   },
   'click .map .g-col .building'(e, instance){
@@ -230,29 +251,20 @@ Template.mapbuilder.events({
     const col = $(e.currentTarget).data('x');
     instance.obstacles.set(_.reject(instance.obstacles.get(), function(b){return b.location.x == col && b.location.y == row}));
   },
-  'click .map .g-col .character'(e, instance){
+  'click .map .g-col .monster.character'(e, instance){
     e.stopPropagation();
     const row = $(e.currentTarget).data('y');
     const col = $(e.currentTarget).data('x');
     instance.ais.set(_.reject(instance.ais.get(), function(b){return b.location.x == col && b.location.y == row}));
   },
+  'click .map .g-col .npc.character'(e, instance){
+    e.stopPropagation();
+    const row = $(e.currentTarget).data('y');
+    const col = $(e.currentTarget).data('x');
+    instance.npcs.set(_.reject(instance.npcs.get(), function(b){return b.location.x == col && b.location.y == row}));
+  },
   'click .tabs .show-tab'(e, instance) {
     instance.tab.set($(e.currentTarget).data('tab'));
-  },
-  'change .door-data input.name'(e, instance) {
-    let doorData = instance.door.get();
-    doorData.name = $(e.currentTarget).val();
-    instance.door.set(doorData)
-  },
-  'change .door-data input.x'(e, instance) {
-    let doorData = instance.door.get();
-    doorData.x = parseInt($(e.currentTarget).val());
-    instance.door.set(doorData)
-  },
-  'change .door-data input.y'(e, instance) {
-    let doorData = instance.door.get();
-    doorData.y = parseInt($(e.currentTarget).val());
-    instance.door.set(doorData)
   },
   'change .dimensions .dimension-input'(e, instance) {
     const coord = $(e.target).attr('data-coord');
@@ -269,6 +281,7 @@ Template.mapbuilder.events({
     instance.buildings.set(big.buildings);
     instance.obstacles.set(big.obstacles);
     instance.ais.set(big.ai);
+    instance.npcs.set(big.npcs || []);
   },
   'mouseenter .map .g-col'(e, instance){
     const row = $(e.currentTarget).closest('.g-row').data('index');

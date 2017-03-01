@@ -1,0 +1,22 @@
+{
+  "text": "Hail, friend. What do you need?",
+  "options": [
+    {
+      "option": "Trade",
+      "action": "npc trade"
+    },
+    {
+      "option": "I need a job",
+      "action": "dialog",
+      "dialog": {
+        "text": "Don't we all. If you could bring me some wood, I'd pay you for it.",
+        "options": [
+          {
+            "option": "OK",
+            "action": "cancel"
+          }
+        ]
+      }
+    }
+  ]
+}

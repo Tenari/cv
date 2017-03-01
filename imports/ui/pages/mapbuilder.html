@@ -6,6 +6,7 @@
         <div class="show-tab" data-tab="buildings">Buildings</div>
         <div class="show-tab" data-tab="obstacles">Obstacles</div>
         <div class="show-tab" data-tab="ais">Ais</div>
+        <div class="show-tab" data-tab="npcs">Npcs</div>
         <div>
           <input type="number" class="rows" value="4"/>
           <input type="number" class="cols" value="4"/>
@@ -50,12 +51,12 @@
         </div>
       {{/if}}
 
-      {{#if showDoor}}
-      <div class="door-data">
-        Name: <input type="text" class="name"/>
-        x: <input type="number" class="x"/>
-        y: <input type="number" class="y"/>
-      </div>
+      {{#if tabIs 'npcs'}}
+        <div class="npcs g-row">
+          {{#each npcs}}
+            <div class="g-col npc {{image}} {{npcSelected key}}" data-key="{{key}}"></div>
+          {{/each}}
+        </div>
       {{/if}}
 
       {{#if hasDimensions}}
@@ -79,7 +80,11 @@
                   <div class="obstacle obstacle-only {{obstacleImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
                 {{/if}}
                 {{#if aiAt @index y}}
-                  <div class="character {{aiImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
+                  <div class="monster character {{aiImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
+                {{/if}}
+
+                {{#if npcAt @index y}}
+                  <div class="npc character {{npcImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
                 {{/if}}
               </div>
             {{/each}}

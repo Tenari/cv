@@ -56,7 +56,7 @@ Template.game.onCreated(function gameOnCreated() {
     if (myself.ready()) {
       this.subscribe('room.obstacles', this.getRoomId());
       this.subscribe('room.buildings', this.getRoomId());
-      if (Characters.find().count() == 0) {
+      if (Characters.find().count() == 0 || that.me() == undefined) {
         FlowRouter.go('/');
       } else {
         this.subscribe('characters.room', this.getRoomId());

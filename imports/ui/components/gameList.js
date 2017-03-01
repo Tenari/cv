@@ -9,7 +9,7 @@ import '../components/gameTimeLeft.js';
 import './gameList.html';
 
 Template.gameList.onCreated(function () {
-  this.subscribe('games');
+  this.subscribe('games', true);
 })
 
 Template.gameList.helpers({

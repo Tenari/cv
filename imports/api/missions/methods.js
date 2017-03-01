@@ -7,6 +7,7 @@ import { Games } from '../games/games.js';
 import { Characters } from '../characters/characters.js';
 import { Rooms } from '../rooms/rooms.js';
 import { Obstacles } from '../obstacles/obstacles.js';
+import { Items } from '../items/items.js';
 import { Notifications } from '../notifications/notifications.js';
 
 import { getCharacter } from '../../configs/game.js'
@@ -47,7 +48,7 @@ Meteor.methods({
       Characters.update(mission.conditions.turnIn.characterId, {$inc: gainResource});
 
       if (Games.findOne(character.gameId).tutorial) {
-        finishTutorial(character, Characters, Rooms, Obstacles, Notifications);
+        finishTutorial(character, Characters, Rooms, Obstacles, Notifications, Items);
       }
     }
   },

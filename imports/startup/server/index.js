@@ -33,6 +33,7 @@ import  '../../api/missions/publications.js';
 import  '../../api/missions/methods.js';
 
 import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
+import { importRoomNpcs } from '../../configs/ai.js';
 
 Meteor.startup(function (){
   var game = Games.findOne();
@@ -70,6 +71,7 @@ Meteor.startup(function (){
     // these must be separate loops b/c importRoomObstaclesAndBuildings relies on the rooms ALL being created to work. (doors)
     _.each(roomList, function(roomName){
       importRoomObstaclesAndBuildings(roomSetup[roomName], roomIds[roomName], gameId, Obstacles, Rooms, Buildings);
+      importRoomNpcs(roomSetup[roomName], roomIds[roomName], gameId, Characters, Items);
       Chats.insert({scope: "Rooms:"+roomIds[roomName], messages: []});
     })
 
@@ -77,30 +79,6 @@ Meteor.startup(function (){
     Chats.insert({scope: "team:romans:"+gameId, messages: []});
 
     const bigRomeId = roomIds['full-rome'];
-    // insert NPCs
-    const marcoPoloId = Characters.insert({
-      gameId: gameId,
-      name: 'Marco Polo',
-      team: 'romans',
-      location: {
-        x: 3,
-        y: 5, 
-        direction: 1,
-        classId: 25,
-        roomId: bigRomeId,
-        updatedAt: Date.now(),
-      },
-      npc: true,
-      npcKey: 'marcoPolo',
-      stats: {
-        money: 10000,
-        resources: {
-          metal: 5,
-        }
-      }
-    })
-    Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
-    Items.insert({key: 'rustySword', type: 'weapon', ownerId: marcoPoloId, condition: 100});
 
     const maguffinLocation = {
       x: 8,

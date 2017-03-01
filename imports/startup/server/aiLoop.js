@@ -23,6 +23,7 @@ export function aiSpawnLoop(){
     _.each(game.rooms, function(roomName){
       var roomDefinition = EJSON.parse(Assets.getText(roomName+'.json'));
       const room = Rooms.findOne({gameId: game._id, name: roomName})
+      if (!room) return false;
       _.each(roomDefinition.ai, function(ai, index){
         const monster = Characters.findOne({'location.roomId':room._id, team: aiTeam, monsterKey: ai.type, 'stats.hp': {$gt: 0}, aiIndex: index});
         if (!monster) {
