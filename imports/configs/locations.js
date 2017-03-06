@@ -33,6 +33,17 @@ export function nextSpotXY(character){
   return {x: x, y: y, moveObject : moveObject};
 }
 
+export function directionToAFromB(start, goal){
+  if (start.y > goal.y)
+    return 1;
+  if (start.y < goal.y)
+    return 2;
+  if (start.x < goal.x)
+    return 3;
+  if (start.x > goal.x)
+    return 4;
+}
+
 export function moveCost(character, weight, terrain, obstacle) {
   let baseCost = moveCosts[terrain] || 10;
   if (obstacle)

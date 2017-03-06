@@ -14,6 +14,7 @@ import { equipSlots } from './items.js';
 import { aiTeam, monsterConfig } from './ai.js';
 import { ranksConfig } from './ranks.js';
 import { missionsConfig } from './missions.js';
+import { obstaclesConfig } from './obstacles.js';
 
 export function countDownToRound(fightId){
   const fight = Fights.findOne(fightId)
@@ -169,6 +170,7 @@ function endFight(fight, first, last) {
     if (first.team == aiTeam) {
       updateKillMissions(last, first);
       handleTutorialKill(last);
+      createCorpse(first);
     }
     if (first.team != aiTeam) updateKillPlayerMissions(last, first);
 
@@ -188,6 +190,7 @@ function endFight(fight, first, last) {
     if (last.team == aiTeam) {
       updateKillMissions(first, last);
       handleTutorialKill(first);
+      createCorpse(last);
     }
     if (last.team != aiTeam) updateKillPlayerMissions(first, last);
 
@@ -222,6 +225,20 @@ function handleTutorialKill(character){
   const game = Games.findOne(character.gameId);
   if (game.tutorial) {
     Obstacles.remove({'location.x':10, 'location.y': 2, 'location.roomId': character.location.roomId});
+  }
+}
+
+function createCorpse(character) {
+  if (character.monsterKey && monsterConfig[character.monsterKey].createsCorpse) {
+    Obstacles.insert({
+      location: {
+        x: character.location.x,
+        y: character.location.y,
+        roomId: character.location.roomId,
+      },
+      type: character.monsterKey + 'Dead',
+      data: obstaclesConfig[character.monsterKey + 'Dead'].defaultData
+    })
   }
 }
 

@@ -88,6 +88,66 @@ export const obstaclesConfig = {
       resources:{type:"ore",amount:20}
     },
   },
+  bearDead: {
+    key: 'bearDead',
+    passable: true,
+    moveCost: 2,
+    image: '/images/dead-squirrel.png',
+    imageClass: 'i-dead-squirrel',
+    insertEmptyVersion: function(obstacle, Obstacles){
+      // no empty version, it just goes away
+    },
+    resourceSource: "Fresh kill",
+    resourceCollectionVerb: "Harvest",
+    defaultData: {
+      resources:{type:"leather",amount:5}
+    },
+  },
+  squirrelDead: {
+    key: 'squirrelDead',
+    passable: true,
+    moveCost: 2,
+    image: '/images/dead-squirrel.png',
+    imageClass: 'i-dead-squirrel',
+    insertEmptyVersion: function(obstacle, Obstacles){
+      // no empty version, it just goes away
+    },
+    resourceSource: "Fresh kill",
+    resourceCollectionVerb: "Harvest",
+    defaultData: {
+      resources:{type:"leather",amount:2}
+    },
+  },
+  foxDead: {
+    key: 'foxDead',
+    passable: true,
+    moveCost: 2,
+    image: '/images/dead-squirrel.png',
+    imageClass: 'i-dead-squirrel',
+    insertEmptyVersion: function(obstacle, Obstacles){
+      // no empty version, it just goes away
+    },
+    resourceSource: "Fresh kill",
+    resourceCollectionVerb: "Harvest",
+    defaultData: {
+      resources:{type:"leather",amount:3}
+    },
+  },
+  wolfDead: {
+    key: 'wolfDead',
+    passable: true,
+    moveCost: 2,
+    image: '/images/dead-squirrel.png',
+    imageClass: 'i-dead-squirrel',
+    insertEmptyVersion: function(obstacle, Obstacles){
+      // no empty version, it just goes away
+    },
+    resourceSource: "Fresh kill",
+    resourceCollectionVerb: "Harvest",
+    defaultData: {
+      resources:{type:"leather",amount:4}
+    },
+  },
   fountain: {
     key: 'fountain',
     passable: false,

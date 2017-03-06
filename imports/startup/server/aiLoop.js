@@ -7,15 +7,17 @@ import { Rooms } from '../../api/rooms/rooms.js';
 import { Items } from '../../api/items/items.js';
 import { Characters } from '../../api/characters/characters.js';
 import { Fights } from '../../api/fights/fights.js';
+import { Buildings } from '../../api/buildings/buildings.js';
+import { Obstacles } from '../../api/obstacles/obstacles.js';
 
 import { monsterConfig, aiTeam } from '../../configs/ai.js';
 import { countDownToRound } from '../../configs/fights.js';
 
 export function aiActLoop(){
-  Characters.find({team: aiTeam}).forEach(attack);
-  Characters.find({team: aiTeam, name: monsterConfig.bear.name}).forEach(monsterConfig.bear.move);
-  Characters.find({team: aiTeam, name: monsterConfig.squirrel.name}).forEach(monsterConfig.squirrel.move);
-  Characters.find({team: aiTeam, name: monsterConfig.fox.name}).forEach(monsterConfig.fox.move);
+  Characters.find({team: aiTeam, 'stats.hp': {$gt: 0}}).forEach(attack);
+  Characters.find({team: aiTeam, 'stats.hp': {$gt: 0}}).forEach(function(monster){
+    monsterConfig[monster.monsterKey].move(monster, Rooms.findOne(monster.location.roomId), Characters, Obstacles, Buildings);
+  });
 }
 
 export function aiSpawnLoop(){
@@ -27,7 +29,7 @@ export function aiSpawnLoop(){
       _.each(roomDefinition.ai, function(ai, index){
         const monster = Characters.findOne({'location.roomId':room._id, team: aiTeam, monsterKey: ai.type, 'stats.hp': {$gt: 0}, aiIndex: index});
         if (!monster) {
-          monsterConfig[ai.type].spawn(ai, index, room, Characters);
+          monsterConfig[ai.type].spawn(ai, index, room, Characters, Items);
         }
       })
     })

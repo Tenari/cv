@@ -46,11 +46,27 @@ Meteor.methods({
     return Buildings.update(building._id, {$set: {data: building.data}});
   },
   'buildings.sell'(gameId, buildingId, params){
-    // TODO security
+    if (!this.userId) throw new Meteor.Error('buildings.sell', 'not logged in');
+
+    const character = getCharacter(this.userId, gameId, Characters);
+    if (!character) throw new Meteor.Error('buildings.sell', 'character not found');
+
+    const building = Buildings.findOne(buildingId);
+    if (!building) throw new Meteor.Error('buildings.sell', 'building not found');
+    if (character._id != building.ownerId) throw new Meteor.Error('buildings.sell', 'character not building owner');
+
     return Buildings.update(buildingId, {$set: {sale: {available: true, cost: parseInt(params[0])}}});
   },
   'buildings.unsell'(gameId, buildingId) {
-    // TODO security
+    if (!this.userId) throw new Meteor.Error('buildings.unsell', 'not logged in');
+
+    const character = getCharacter(this.userId, gameId, Characters);
+    if (!character) throw new Meteor.Error('buildings.unsell', 'character not found');
+
+    const building = Buildings.findOne(buildingId);
+    if (!building) throw new Meteor.Error('buildings.unsell', 'building not found');
+    if (character._id != building.ownerId) throw new Meteor.Error('buildings.unsell', 'character not building owner');
+
     return Buildings.update(buildingId, {$set: {sale: undefined}});
   },
 })
