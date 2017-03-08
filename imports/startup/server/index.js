@@ -27,6 +27,7 @@ import  '../../api/chats/methods.js';
 import  '../../api/chats/publications.js';
 import  '../../api/buildings/publications.js';
 import  '../../api/buildings/methods.js';
+import  '../../api/obstacles/methods.js';
 import  '../../api/notifications/publications.js';
 import  '../../api/notifications/methods.js';
 import  '../../api/missions/publications.js';

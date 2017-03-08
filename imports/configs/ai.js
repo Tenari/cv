@@ -244,7 +244,6 @@ function chasePlayerMoveAlgorithm(monster, room, Characters, Obstacles, Building
       'location.y': {$gte: monster.aiBounds.topLeft.y, $lte: monster.aiBounds.bottomRight.y},
       userId: {$exists: true},
     })
-    console.log(playerToChase);
     if (playerToChase) {
       const targetXY = {x:playerToChase.location.x, y: playerToChase.location.y};
       const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();

@@ -234,6 +234,9 @@ Template.game.helpers({
     let useObj = obstacle.data.use;
     if (useObj.type == 'craft')
       useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
+    if (useObj.type == 'forge') {
+      useObj.verb = "Forge";
+    }
     return useObj;
   },
   usableBuilding: function(){
@@ -245,8 +248,8 @@ Template.game.helpers({
   notification: function(){
     return Template.instance().notification.get();
   },
-  canTrade: function(characterId){
-    return true;
+  canTrade: function(character){
+    return !opponent.monsterKey;
   },
   roomChat: function(){
     return Chats.findOne();
@@ -377,6 +380,9 @@ function handleNotification(instance) {
       Meteor.setTimeout(function(){
         instance.notification.set(null);
       }, 7777);
+    }
+    if (result) {
+      console.log(result);
     }
   }
 }

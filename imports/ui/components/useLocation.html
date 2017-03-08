@@ -2,7 +2,11 @@
   <div class="collect-resource">
     {{#if name}}
       <p>{{name}}</p>
-      <a href="{{path}}">USE</a>
+      {{#if path}}
+        <a href="{{path}}">USE</a>
+      {{else}}
+        <a href="#" class="use-space" data-action="obstacles.{{type}}">{{verb}} {{params.resource}}</a>
+      {{/if}}
     {{else}}
       <p>
         {{message}}

@@ -192,6 +192,18 @@ export const obstaclesConfig = {
     defaultData:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
     //"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}
   },
+  anvil: {
+    key: 'anvil',
+    passable: false,
+    imageClass: 'i-anvil',
+    defaultData:{use:{name:"Anvil",type:"craft",params:{resource:"metal"}}},
+  },
+  bloomery: {
+    key: 'bloomery',
+    passable: false,
+    imageClass: 'i-bloomery',
+    defaultData:{use:{name:"Bloomery",type:"forge",params:{resource:"ore"}}},
+  },
   verticalWall: {
     key: 'verticalWall',
     passable: false,
