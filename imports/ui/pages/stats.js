@@ -100,7 +100,7 @@ Template.stats.helpers({
   },
 
   collectingSkills(){
-    return ['wood', 'hide', 'leather', 'ore', 'metal'];
+    return ['wood', 'hide', 'leather', 'ore', 'metal', 'crafting'];
   },
 
   items(){

@@ -54,6 +54,8 @@ const CollectingSchema = new SimpleSchema({
   oreBase: {type: Number, defaultValue: 1, decimal: true},
   metal: {type: Number, defaultValue: 1, decimal: true},
   metalBase: {type: Number, defaultValue: 1, decimal: true},
+  crafting: {type: Number, defaultValue: 1, decimal: true},
+  craftingBase: {type: Number, defaultValue: 1, decimal: true},
 });
 
 const StatsSchema = new SimpleSchema({

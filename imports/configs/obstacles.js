@@ -100,7 +100,7 @@ export const obstaclesConfig = {
     resourceSource: "Fresh kill",
     resourceCollectionVerb: "Harvest",
     defaultData: {
-      resources:{type:"leather",amount:5}
+      resources:{type:"hide",amount:5}
     },
   },
   squirrelDead: {
@@ -115,7 +115,7 @@ export const obstaclesConfig = {
     resourceSource: "Fresh kill",
     resourceCollectionVerb: "Harvest",
     defaultData: {
-      resources:{type:"leather",amount:2}
+      resources:{type:"hide",amount:2}
     },
   },
   foxDead: {
@@ -130,7 +130,7 @@ export const obstaclesConfig = {
     resourceSource: "Fresh kill",
     resourceCollectionVerb: "Harvest",
     defaultData: {
-      resources:{type:"leather",amount:3}
+      resources:{type:"hide",amount:3}
     },
   },
   wolfDead: {
@@ -145,7 +145,7 @@ export const obstaclesConfig = {
     resourceSource: "Fresh kill",
     resourceCollectionVerb: "Harvest",
     defaultData: {
-      resources:{type:"leather",amount:4}
+      resources:{type:"hide",amount:4}
     },
   },
   fountain: {
@@ -203,6 +203,12 @@ export const obstaclesConfig = {
     passable: false,
     imageClass: 'i-bloomery',
     defaultData:{use:{name:"Bloomery",type:"forge",params:{resource:"ore"}}},
+  },
+  tanningRack: {
+    key: 'tanningRack',
+    passable: false,
+    imageClass: 'i-tanning-rack',
+    defaultData:{use:{name:"Tanning rack",type:"forge",params:{resource:"hide"}}},
   },
   verticalWall: {
     key: 'verticalWall',

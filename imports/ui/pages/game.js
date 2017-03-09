@@ -236,6 +236,8 @@ Template.game.helpers({
       useObj.path = FlowRouter.path('character.'+useObj.type, {characterId: character._id}, useObj.params);
     if (useObj.type == 'forge') {
       useObj.verb = "Forge";
+      if (useObj.params.resource == 'hide')
+        useObj.verb = "Tan";
     }
     return useObj;
   },
@@ -382,7 +384,12 @@ function handleNotification(instance) {
       }, 7777);
     }
     if (result) {
-      console.log(result);
+      if (result.message) {
+        instance.notification.set({type:'good', message: result.message});
+        Meteor.setTimeout(function(){
+          instance.notification.set(null);
+        }, 7777);
+      }
     }
   }
 }

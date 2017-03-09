@@ -22,7 +22,7 @@ Template.craft.onCreated( function craftOnCreated(){
     if(myself.ready()) {
       const character = Characters.findOne();
       rooms = this.subscribe('game.rooms', character.gameId);
-      obstacles = this.subscribe('room.obstacles', character.locations.roomId);
+      obstacles = this.subscribe('room.obstacles', character.location.roomId);
       if (rooms.ready() && obstacles.ready()) {
         const obstacle = character.getFacingObstacle(Obstacles);
         if (obstacle && obstacle.data && obstacle.data.use && obstacle.data.use.params && obstacle.data.use.params.resource == FlowRouter.getQueryParam('resource')) {
@@ -44,7 +44,13 @@ Template.craft.helpers({
   },
   craftLocationItems() {
     const itemClass = Template.instance().itemClass.get();
-    return _.map(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass], function(key){return itemConfigs[itemClass][key];});
+    const character = Characters.findOne();
+    return _.select(
+      _.map(craftingLocations[FlowRouter.getQueryParam('resource')].items[itemClass], function(key){return itemConfigs[itemClass][key];}),
+      function(item){
+        return item.minToCraft && character && item.minToCraft <= character.stats.collecting.crafting;
+      }
+    );
   },
   classExpanded(key){
     return Template.instance().itemClass.get() == key;
