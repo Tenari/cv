@@ -106,6 +106,8 @@ export function fightNextRound(fightId){
     roundLog[firstIs+'Dealt'] = damage;
     first.stats.strengthBase += powerIncreaseAmount(first.stats.strengthBase, last);
     last.stats.toughnessBase += powerIncreaseAmount(last.stats.toughnessBase, first);
+    if (firstWeapon)
+      firstWeapon.lowerCondition();
   } else { // first guy missed
     roundLog[firstIs+'Dealt'] = 0;
   }
@@ -132,6 +134,8 @@ export function fightNextRound(fightId){
     roundLog[lastIs+'Dealt'] = damage;
     last.stats.strengthBase += powerIncreaseAmount(last.stats.strengthBase, first);
     first.stats.toughnessBase += powerIncreaseAmount(first.stats.toughnessBase, last);
+    if (lastWeapon)
+      lastWeapon.lowerCondition();
   } else {
     roundLog[lastIs+'Dealt'] = 0;
   }

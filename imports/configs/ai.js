@@ -287,7 +287,7 @@ export const monsterConfig = {
         aiBounds: aiInit.bounds,
       });
       if (_.random(1,3) < 3) { // 2/3 times
-        Items.insert({key: itemConfigs.consumable.chickenLeg.key, type: itemConfigs.consumable.chickenLeg.type, ownerId: charId})
+        Items.insert({key: itemConfigs.consumable.bearMeat.key, type: itemConfigs.consumable.bearMeat.type, ownerId: charId})
       }
     },
     move: chasePlayerMoveAlgorithm,
@@ -323,7 +323,7 @@ export const monsterConfig = {
         aiBounds: aiInit.bounds,
       });
       if (_.random(1,3) < 2) { // 1/3 times
-        Items.insert({key: itemConfigs.consumable.chickenLeg.key, type: itemConfigs.consumable.chickenLeg.type, ownerId: charId})
+        Items.insert({key: itemConfigs.consumable.squirrelMeat.key, type: itemConfigs.consumable.squirrelMeat.type, ownerId: charId})
       }
     },
     move: spinnyMoveAlgorithm,
@@ -359,7 +359,7 @@ export const monsterConfig = {
         aiBounds: aiInit.bounds,
       });
       if (_.random(1,3) < 2) { // 1/3 times
-        Items.insert({key: itemConfigs.consumable.chickenLeg.key, type: itemConfigs.consumable.chickenLeg.type, ownerId: charId})
+        Items.insert({key: itemConfigs.consumable.foxMeat.key, type: itemConfigs.consumable.foxMeat.type, ownerId: charId})
       }
     },
     move: chasePlayerMoveAlgorithm,
@@ -395,7 +395,7 @@ export const monsterConfig = {
         aiBounds: aiInit.bounds,
       });
       if (_.random(1,3) < 3) { // 2/3 times
-        Items.insert({key: itemConfigs.consumable.chickenLeg.key, type: itemConfigs.consumable.chickenLeg.type, ownerId: charId})
+        Items.insert({key: itemConfigs.consumable.wolfMeat.key, type: itemConfigs.consumable.wolfMeat.type, ownerId: charId})
       }
     },
     move: spinnyMoveAlgorithm,
@@ -430,9 +430,6 @@ export const monsterConfig = {
         aiIndex: index,
         aiBounds: aiInit.bounds,
       });
-      if (_.random(1,3) < 2) { // 1/3 times
-        Items.insert({key: itemConfigs.consumable.chickenLeg.key, type: itemConfigs.consumable.chickenLeg.type, ownerId: charId})
-      }
     },
     move: spinnyMoveAlgorithm,
     setFightStrategy: doNothingFightStrategy,
@@ -465,9 +462,6 @@ export const monsterConfig = {
         aiIndex: index,
         aiBounds: aiInit.bounds,
       });
-      if (_.random(1,3) < 3) { // 2/3 times
-        Items.insert({key: itemConfigs.consumable.chickenLeg.key, type: itemConfigs.consumable.chickenLeg.type, ownerId: charId})
-      }
     },
     move: spinnyMoveAlgorithm,
     setFightStrategy: doNothingFightStrategy,

@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
+import { Notifications } from '../notifications/notifications.js';
 import { itemConfigs, effectsDescription } from '../../configs/items.js';
 
 export const Items = new Mongo.Collection('items');
@@ -78,5 +79,17 @@ Items.helpers({
   },
   effectDescription(){
     return effectsDescription(this.effects());
-  }
+  },
+  lowerCondition(){
+    if(this.condition) {
+      this.condition -= 1;
+      // condition at or below 0? item broke.
+      if (this.condition <= 0) {
+        Items.remove(this._id);
+        Notifications.insert({title: 'Item broke!', message: "Your "+itemConfigs[this.type][this.key].name + " has worn out.", characterId: this.ownerId})
+      } else {
+        Items.update(this._id, {$set: {condition: this.condition}});
+      }
+    }
+  },
 })

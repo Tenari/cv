@@ -291,7 +291,71 @@ export const itemConfigs = {
       }],
       npcSellFactor: 0.1,
       npcBuyFactor: 0.08,
-    }
+    },
+    squirrelMeat: {
+      key: 'squirrelMeat',
+      type: 'consumable',
+      name: 'Squirrel meat',
+      img: '/images/squirrel-meat.png',
+      weight: 1,
+      effects: [{
+        type: 'stats.hp',
+        amount: 2,
+      },{
+        type: 'stats.energy',
+        amount: -17,
+      }],
+      npcSellFactor: 0.09,
+      npcBuyFactor: 0.07,
+    },
+    bearMeat: {
+      key: 'bearMeat',
+      type: 'consumable',
+      name: 'Bear meat',
+      img: '/images/bear-meat.png',
+      weight: 1,
+      effects: [{
+        type: 'stats.hp',
+        amount: 5,
+      },{
+        type: 'stats.energy',
+        amount: -20,
+      }],
+      npcSellFactor: 0.13,
+      npcBuyFactor: 0.1,
+    },
+    wolfMeat: {
+      key: 'wolfMeat',
+      type: 'consumable',
+      name: 'Wolf meat',
+      img: '/images/wolf-meat.png',
+      weight: 1,
+      effects: [{
+        type: 'stats.hp',
+        amount: 4,
+      },{
+        type: 'stats.energy',
+        amount: -18,
+      }],
+      npcSellFactor: 0.12,
+      npcBuyFactor: 0.09,
+    },
+    foxMeat: {
+      key: 'foxMeat',
+      type: 'consumable',
+      name: 'Fox meat',
+      img: '/images/fox-meat.png',
+      weight: 1,
+      effects: [{
+        type: 'stats.hp',
+        amount: 2,
+      },{
+        type: 'stats.energy',
+        amount: -17,
+      }],
+      npcSellFactor: 0.09,
+      npcBuyFactor: 0.07,
+    },
   },
   misc: {
     maguffin: {

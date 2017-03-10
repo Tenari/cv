@@ -136,22 +136,31 @@ Template.game.helpers({
       s_y = 0;
     }
 
-    const obstacles = Obstacles.find({'location.x': {$gte: s_x - 4, $lte: viewW+s_x }, 'location.y': {$gte: s_y - 4, $lte: viewH+s_y }}).fetch();
-    const buildings = Buildings.find({'location.x': {$gte: s_x - 4, $lte: viewW+s_x }, 'location.y': {$gte: s_y - 4, $lte: viewH+s_y }}).fetch();
+    const obstacles = Obstacles.find({'location.x': {$gte: s_x - 4, $lte: viewW+s_x }, 'location.y': {$gte: s_y - 4, $lte: viewH+s_y }});
+    const buildings = Buildings.find({'location.x': {$gte: s_x - 4, $lte: viewW+s_x }, 'location.y': {$gte: s_y - 4, $lte: viewH+s_y }});
 
+    // indexing by location for rendering speed-boost at cost of (slight) memory inefficiency
+    let indexedObstacles = {};
     html = "";
-    _.each(obstacles, function(obstacle){
+    obstacles.forEach(function(obstacle){
+      indexedObstacles[obstacle.location.x+":"+obstacle.location.y] = obstacle;
+
       if(obstacle.location.x < s_x || obstacle.location.y < s_y) {
         // need to render the shifted image
         html += "<div class='obstacle shift-x"+(obstacle.location.x - s_x)+" shift-y"+(obstacle.location.y - s_y)+" "+obstacle.imageClass()+"'></div>";
       }
     })
-    _.each(buildings, function(building){
+
+    let indexedBuildings = {};
+    buildings.forEach(function(building){
+      indexedBuildings[building.location.x+":"+building.location.y] = building;
+
       if(building.location.x < s_x || building.location.y < s_y) {
         // need to render the shifted image
         html += "<div class='obstacle shift-x"+(building.location.x - s_x)+" shift-y"+(building.location.y - s_y)+" "+building.imageClass()+"'></div>";
       }
     })
+
     for(i = 0; i < viewH; i++){
       html += "<div class='g-row'>";
       for (j = 0; j < viewW; j++){
@@ -161,8 +170,8 @@ Template.game.helpers({
           tile = undefined;
 
         var otherUser = _.find(users, function(user){return user.location.y == i+s_y && user.location.x == j+s_x;});
-        var obstacle = _.find(obstacles, function(obstacle) {return obstacle.location.y == i+s_y && obstacle.location.x == j+s_x});
-        var building = _.find(buildings, function(building) {return building.location.y == i+s_y && building.location.x == j+s_x});
+        var obstacle = indexedObstacles[(j+s_x)+":"+(i+s_y)];
+        var building = indexedBuildings[(j+s_x)+":"+(i+s_y)];
 
         if (tile == undefined)
           html += "<div class='g-col i-blank'></div>";

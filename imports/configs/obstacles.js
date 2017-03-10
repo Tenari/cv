@@ -184,13 +184,19 @@ export const obstaclesConfig = {
     isDoor: true,
     defaultData: {name: "roomname", x:0, y: 0},
   },
+  bed: {
+    key: 'bed',
+    passable: false,
+    imageClass: 'obstacle-2x1 i-bed',
+    width: 2,
+    defaultData:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
+  },
   workbench: {
     key: 'workbench',
     passable: false,
     imageClass: 'obstacle-2x1 i-workbench',
     width: 2,
-    defaultData:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
-    //"use":{"name":"Wood-working bench","type":"craft","params":{"resource":"wood"}}
+    defaultData:{use:{name:"Bed",type:"sleep"}},
   },
   anvil: {
     key: 'anvil',

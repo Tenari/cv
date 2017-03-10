@@ -43,6 +43,8 @@ export function recalculateStats(character) {
     const effectBuff = (byPath[statKey] && byPath[statKey].amount) || 0;
     character.stats[statKey] = character.stats[statKey+'Base'] + effectBuff;
   })
+
+  character.stats.collecting.crafting = character.stats.collecting.craftingBase;
   return character;
 }
 
@@ -115,4 +117,8 @@ export const resourceConfig = {
 
 export function collectingSkillGrowthAmount(stat) {
   return 0.1;
+}
+
+export function craftingSkillGrowthAmount(stat, item) {
+  return (50 - stat) * 0.01 * item.minToCraft;
 }

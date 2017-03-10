@@ -11,7 +11,7 @@ import { Chats } from '../chats/chats.js';
 import { Rooms } from '../rooms/rooms.js';
 import { Items } from './items.js';
 import { itemConfigs } from '../../configs/items.js'
-import { recalculateStats, getCharacter } from '../../configs/game.js'
+import { recalculateStats, getCharacter, craftingSkillGrowthAmount } from '../../configs/game.js'
 import { playerTeamKeys, teamConfigs } from '../../configs/ranks.js'
 import { craftedItem } from '../../configs/tutorial.js'
 
@@ -119,23 +119,24 @@ Meteor.methods({
       const thisCost = item.cost[thisResource];
       
       if (thisResource == 'energy') {
-        if (character.stats.energy < thisCost) {
-          throw new Meteor.Error('items.craft.notEnough', 'Gotta have resources to craft an item');
-        }
+        if (character.stats.energy < thisCost) throw new Meteor.Error('items.craft.notEnough', 'Gotta have resources to craft an item');
+
         character.stats[thisResource] -= thisCost;
       } else {
-        if (character.stats.resources[thisResource] < thisCost) {
-          throw new Meteor.Error('items.craft.notEnough', 'Gotta have resources to craft an item');
-        }
+        if (character.stats.resources[thisResource] < thisCost) throw new Meteor.Error('items.craft.notEnough', 'Gotta have resources to craft an item');
+
         character.stats.resources[thisResource] -= thisCost;
       }
     }
+    
+    character.stats.collecting.craftingBase += craftingSkillGrowthAmount(character.stats.collecting.craftingBase, item);
+    const newStats = recalculateStats(character).stats;
 
     if (Games.findOne(character.gameId).tutorial) {
       craftedItem(character, Obstacles, Chats, Rooms);
     }
 
     Items.insert({key: key, type: type, ownerId: character._id, condition: 100});
-    return Characters.update(character._id, {$set: { 'stats': character.stats }});
+    return Characters.update(character._id, {$set: { 'stats': newStats }});
   }
 });

@@ -160,6 +160,9 @@
               <h3>{{selectedItem.name}}</h3>
               <p>Weight: {{selectedItem.weight}}lbs</p>
               <p>Type: {{selectedItem.type}}</p>
+              {{#if selectedItem.condition}}
+                <p>Condition: {{selectedItem.condition}}</p>
+              {{/if}}
               {{#if itemDescription}}
                 <p>{{itemDescription}}</p>
               {{/if}}
