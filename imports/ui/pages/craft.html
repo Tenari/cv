@@ -21,6 +21,8 @@
             {{#if classExpanded type.key}}
               {{#each item in craftLocationItems}}
                 <li class="item-selector" data-key="{{item.key}}"><i class="fa fa-caret-right"></i> {{item.name}}</li>
+              {{else}}
+                <li>Sorry, there is nothing you are qualified to make here</li>
               {{/each}}
             {{/if}}
           {{/each}}

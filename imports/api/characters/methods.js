@@ -175,7 +175,8 @@ export function moveCharacter(character, directionInt) {
     return false;
 
   const weight = character.carriedWeight();
-  const terrain = room.map[character.location.y][character.location.x].type;
+  const terrain = room.map[character.location.y] && room.map[character.location.y][character.location.x].type;
+  if (!terrain) return false;
   const currentObstacle = character.getCurrentTileObstacle(Obstacles);
   const newEnergy = character.stats.energy - moveCost(character, weight, terrain, currentObstacle);
   const newEndurance = character.stats.endurance + (0.01 * weight / character.maxWeight());

@@ -3,6 +3,9 @@ import { moveCharacter } from '../api/characters/methods.js';
 import { itemConfigs } from './items.js';
 import { directionToAFromB } from './locations.js';
 
+import { Obstacles } from '../api/obstacles/obstacles.js';
+import { Buildings } from '../api/buildings/buildings.js';
+
 export const aiTeam = 'nature';
 
 export const npcConfig = {
@@ -177,7 +180,9 @@ function spinnyMoveAlgorithm(character){
   if (_.random(1,2) > 1) { // then just spin
     moveCharacter(character, ((character.location.direction + 1) % 4) || 4);
   } else {
-    moveCharacter(character, character.location.direction);
+    if (!(character.getFacingObstacle(Obstacles) || character.getFacingBuilding(Buildings))) {
+      moveCharacter(character, character.location.direction);
+    }
   }
   character.limitBounds();
 }

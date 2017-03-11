@@ -1,4 +1,5 @@
 import { resourceConfig } from './game.js';
+import { obstaclesConfig } from './obstacles.js';
 import { tiles } from './locations.js';
 
 export const buildingConfig = {
@@ -39,7 +40,7 @@ export const buildingConfig = {
             [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
           ] 
         },
-        obstacles: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
+        obstacles: [{location:{x:0,y:0},type:"bed",data: obstaclesConfig.bed.defaultData},{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
       };
     },
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
@@ -84,6 +85,7 @@ export const buildingConfig = {
     label: 'Wood workshop',
     image: '/images/workbench-left.png',
     imageClass: 'obstacle-3x3 i-woodworkshop-big',
+    underConstructionImageClass: 'obstacle-3x3 i-house-in-progress',
     cost: [{resource: resourceConfig.wood.key, amount: 10}],
     description: 'Lets you build wooden items, and store resources and items. You can enable building trade if you hire a shopkeeper.',
     interior: function(gameId, name, building){
@@ -107,11 +109,11 @@ export const buildingConfig = {
             [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
           ] 
         },
-        obstacles: [{location:{x:2,y:5},data: exit,type:"mat"},{location:{x:3,y:5},data: exit,type:"mat"},{type:'workbench',data:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},location:{x:3, y:1}}]
+        obstacles: [{location:{x:2,y:5},data: exit,type:"mat"},{location:{x:3,y:5},data: exit,type:"mat"},{type:'workbench',data:obstaclesConfig.workbench.defaultData,location:{x:3, y:1}}]
       };
     },
     doorLocation: {x: 1, y: 2}, //relative to the top left corner
-    entry: {x: 2, y: 4},
+    insideLocation: {x: 2, y: 4},
   },
 //    smithy: 2,
 //    farm: 3,

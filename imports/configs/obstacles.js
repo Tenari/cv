@@ -189,14 +189,14 @@ export const obstaclesConfig = {
     passable: false,
     imageClass: 'obstacle-2x1 i-bed',
     width: 2,
-    defaultData:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
+    defaultData:{use:{name:"Bed",type:"sleep"}},
   },
   workbench: {
     key: 'workbench',
     passable: false,
     imageClass: 'obstacle-2x1 i-workbench',
     width: 2,
-    defaultData:{use:{name:"Bed",type:"sleep"}},
+    defaultData:{use:{name:"Wood-working bench",type:"craft",params:{resource:"wood"}}},
   },
   anvil: {
     key: 'anvil',

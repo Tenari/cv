@@ -32,6 +32,60 @@ export const itemConfigs = {
       npcSellFactor: 0.2,
       npcBuyFactor: 0.18,
     },
+    standardHelmet: {
+      key: 'standardHelmet',
+      type: 'armor',
+      name: 'Helm',
+      img: '/images/standard-helmet.png',
+      weight: 6,
+      equipSlot: equipSlots.head,
+      effects: [{
+        type: 'damageTaken',
+        amount: -2,
+      }],
+      cost: {
+        metal: 6, energy: 40, leather: 1
+      },
+      minToCraft: 3,
+      npcSellFactor: 0.4,
+      npcBuyFactor: 0.35,
+    },
+    romanHelmet: {
+      key: 'romanHelmet',
+      type: 'armor',
+      name: 'Roman Helm',
+      img: '/images/rom_metal_helm.png',
+      weight: 7,
+      equipSlot: equipSlots.head,
+      effects: [{
+        type: 'damageTaken',
+        amount: -3,
+      }],
+      cost: {
+        metal: 8, energy: 60, leather: 1
+      },
+      minToCraft: 3,
+      npcSellFactor: 0.5,
+      npcBuyFactor: 0.40,
+    },
+    japaneseHelmet: {
+      key: 'japaneseHelmet',
+      type: 'armor',
+      name: 'Samurai Helm',
+      img: '/images/samurai.png',
+      weight: 7,
+      equipSlot: equipSlots.head,
+      effects: [{
+        type: 'damageTaken',
+        amount: -3,
+      }],
+      cost: {
+        metal: 8, energy: 60, leather: 1
+      },
+      minToCraft: 3,
+      npcSellFactor: 0.5,
+      npcBuyFactor: 0.40,
+    },
     woodenSheild: {
       key: 'woodenSheild',
       type: 'armor',
@@ -393,6 +447,7 @@ export const craftingLocations = {
   metal: {
     name: 'Anvil',
     items: {
+      armor: ['standardHelmet', 'romanHelmet', 'japaneseHelmet'],
       weapon: ['standardSword', 'romanSword', 'japaneseSword', 'foldedSword', 'masterSword', 'standardDagger', 'romanDagger', 'japaneseDagger', 'foldedDagger', 'masterDagger']
     }
   },

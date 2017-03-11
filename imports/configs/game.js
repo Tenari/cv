@@ -69,6 +69,7 @@ export const statDescriptions = {
     leather: 'Improves how much leather you make from hide.',
     ore: 'Improves how much energy you spend to mine ore from rocks.',
     metal: 'Improves how much metal you get from refining ore.',
+    crafting: 'The higher the level, the better the items you can make',
   },
 };
 
