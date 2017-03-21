@@ -3,6 +3,10 @@ import { moveCharacter } from '../api/characters/methods.js';
 import { itemConfigs } from './items.js';
 import { directionToAFromB } from './locations.js';
 
+import { Games } from '../api/games/games.js';
+import { Rooms } from '../api/rooms/rooms.js';
+import { Items } from '../api/items/items.js';
+import { Characters } from '../api/characters/characters.js';
 import { Obstacles } from '../api/obstacles/obstacles.js';
 import { Buildings } from '../api/buildings/buildings.js';
 
@@ -265,6 +269,22 @@ function chasePlayerMoveAlgorithm(monster, room, Characters, Obstacles, Building
     }
     monster.limitBounds();
   }
+}
+
+export function aiSpawnLoop(){
+  Games.find().forEach(function(game){
+    _.each(game.rooms, function(roomName){
+      var roomDefinition = EJSON.parse(Assets.getText(roomName+'.json'));
+      const room = Rooms.findOne({gameId: game._id, name: roomName})
+      if (!roomDefinition || !room) return false;
+      _.each(roomDefinition.ai, function(ai, index){
+        const monster = Characters.findOne({'location.roomId':room._id, team: aiTeam, monsterKey: ai.type, 'stats.hp': {$gt: 0}, aiIndex: index});
+        if (!monster) {
+          monsterConfig[ai.type].spawn(ai, index, room, Characters, Items);
+        }
+      })
+    })
+  });
 }
 
 export const monsterConfig = {

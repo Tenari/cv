@@ -20,23 +20,6 @@ export function aiActLoop(){
   });
 }
 
-export function aiSpawnLoop(){
-  Games.find().forEach(function(game){
-    _.each(game.rooms, function(roomName){
-      var roomDefinition = EJSON.parse(Assets.getText(roomName+'.json'));
-      const room = Rooms.findOne({gameId: game._id, name: roomName})
-      if (!room) return false;
-      _.each(roomDefinition.ai, function(ai, index){
-        const monster = Characters.findOne({'location.roomId':room._id, team: aiTeam, monsterKey: ai.type, 'stats.hp': {$gt: 0}, aiIndex: index});
-        if (!monster) {
-          monsterConfig[ai.type].spawn(ai, index, room, Characters, Items);
-        }
-      })
-    })
-  });
-}
-
-
 function attack(ai){
   if (Fights.find({$or:[{attackerId: ai._id},{defenderId: ai._id}]}).count() > 0) return;
   const defender = Characters.findOne({gameId: ai.gameId, 'location.roomId': ai.location.roomId, 'location.x': ai.location.x, 'location.y': ai.location.y, team: {$not: {$eq: aiTeam}}})

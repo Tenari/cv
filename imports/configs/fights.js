@@ -94,8 +94,8 @@ export function fightNextRound(fightId){
   if (fight[firstIs+'Style'] != 'flee' && first.stats.energy >= 0) {
     firstHit = rollToHit(first, last, firstWeapon);
     first.stats.accuracyBase += skillIncreaseAmount(first.stats.accuracyBase, last);
-    if (firstWeapon)
-      first.stats.weapon[firstWeapon.weaponType()+'Base'] += skillIncreaseAmount(first.stats.weapon[firstWeapon.weaponType()+'Base'], last);
+    const weaponType = firstWeapon ? firstWeapon.weaponType() : 'hands';
+    first.stats.weapon[weaponType+'Base'] += skillIncreaseAmount(first.stats.weapon[weaponType+'Base'], last);
     last.stats.agilityBase += skillIncreaseAmount(last.stats.agilityBase, first);
   }
   roundLog[firstIs+'Hit'] = firstHit;
@@ -122,8 +122,8 @@ export function fightNextRound(fightId){
   if (fight[lastIs+'Style'] != 'flee' && last.stats.energy >= 0) {
     lastHit = rollToHit(last, first, lastWeapon, firstHit);
     last.stats.accuracyBase += skillIncreaseAmount(last.stats.accuracyBase, first);
-    if (lastWeapon)
-      last.stats.weapon[lastWeapon.weaponType()+'Base'] += skillIncreaseAmount(last.stats.weapon[lastWeapon.weaponType()+'Base'], last);
+    const weaponType = lastWeapon ? lastWeapon.weaponType() : 'hands';
+    last.stats.weapon[weaponType+'Base'] += skillIncreaseAmount(last.stats.weapon[weaponType+'Base'], first);
     first.stats.agilityBase += skillIncreaseAmount(first.stats.agilityBase, last);
   }
   roundLog[lastIs+'Hit'] = lastHit;

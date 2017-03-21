@@ -5,7 +5,7 @@
       {{#if price}}
         <span class="price">${{price}}</span>
       {{/if}}
-      <h3>{{name}}</h3>
+      <h3>{{name}} {{#if condition}}({{condition}}){{/if}}</h3>
       {{#if equipped}}
         <p>Equipped</p>
       {{else}}

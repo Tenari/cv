@@ -10,6 +10,7 @@ import { Items } from '../items/items.js';
 import { Obstacles } from '../obstacles/obstacles.js';
 import { Buildings } from '../buildings/buildings.js';
 import { Chats } from '../chats/chats.js';
+import { Missions } from '../missions/missions.js';
 import { Characters } from './characters.js';
 
 import { doorIsLocked, moveCost, nextSpotXY } from '../../configs/locations.js';
@@ -141,7 +142,7 @@ Meteor.methods({
 
     if (character) throw new Meteor.Error('characters.insert.alreadyThere', 'You already have a character, bro');
 
-    const firstRoomId = generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items);
+    const firstRoomId = generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items, Missions);
     const firstRoom = Rooms.findOne(firstRoomId);
     const location = {
       x: 1,

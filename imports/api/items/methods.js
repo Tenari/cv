@@ -16,10 +16,13 @@ import { playerTeamKeys, teamConfigs } from '../../configs/ranks.js'
 import { craftedItem } from '../../configs/tutorial.js'
 
 Meteor.methods({
-  'items.equip'(id) {
-    if (!this.userId) {
-      throw new Meteor.Error('items.equip.accessDenied',
-        'Gotta be logged in to equip an item');
+  'items.equip'(id, gameId) {
+    if (!this.userId) throw new Meteor.Error('items.equip.accessDenied', 'Gotta be logged in to equip an item');
+
+    const item = Items.findOne(id);
+    if (item.type == 'weapon') { // automatically un-equip other weapons
+      const character = getCharacter(this.userId, gameId, Characters);
+      Items.update({ownerId: character._id, type: 'weapon'}, {$set: {equipped: false}}, {multi: true});
     }
 
     Items.update(id, {$set: {equipped: true}});

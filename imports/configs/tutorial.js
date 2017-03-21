@@ -1,10 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 
+import { playerTeamKeys } from './ranks.js';
 import { importRoomObstaclesAndBuildings } from './obstacles.js';
-import { importRoomNpcs } from './ai.js';
+import { npcConfig, importRoomNpcs, aiSpawnLoop } from './ai.js';
 
-export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items) {
+export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items, Missions) {
   var roomList = ['move-tutorial', 'talk-tutorial', 'resources-tutorial', 'team-tutorial'];
   var gameId = Games.insert({
     createdAt: Date.now(),
@@ -60,6 +61,33 @@ export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, C
   };
   Items.insert({key: 'maguffin', type: 'misc', location: maguffinLocation});
   */
+  aiSpawnLoop();
+
+  _.each(playerTeamKeys, function(key) {
+    const missionCount = Missions.find({gameId: gameId, team: key, creatorId: {$exists: false}, completed: false}).count();
+    const neededMissionCount = 1 - missionCount;
+    const room = Rooms.findOne({gameId: gameId, name: 'team-tutorial'});
+    if(!room) return false;
+    const marcoPolo = Characters.findOne({npc: true, gameId: gameId, 'location.roomId': room._id, npcKey: npcConfig.marcoPolo.key});
+    for (var i=0; i < neededMissionCount; i++) {
+      Missions.insert({
+        gameId: gameId,
+        type: 'collectResources',
+        rankPoints: 48,
+        team: key,
+        conditions: {
+          resource: 'wood',
+          amount: 5,
+          turnIn: {
+            characterId: marcoPolo._id,
+            characterName: marcoPolo.name,
+          }
+        },
+        createdAt: Date.now(),
+      });
+    }
+  })
+
   return roomIds['move-tutorial'];
 }
 

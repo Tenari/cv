@@ -34,30 +34,4 @@ export function missionSpawnLoop(){
       }
     })
   })
-  Games.find({tutorial: true}).forEach(function (game){
-    _.each(playerTeamKeys, function(key) {
-      const missionCount = Missions.find({gameId: game._id, team: key, creatorId: {$exists: false}, completed: false}).count();
-      const neededMissionCount = 1 - missionCount;
-      const room = Rooms.findOne({gameId: game._id, name: 'team-tutorial'});
-      if(!room) return false;
-      const marcoPolo = Characters.findOne({npc: true, gameId: game._id, 'location.roomId': room._id, npcKey: npcConfig.marcoPolo.key});
-      for (var i=0; i < neededMissionCount; i++) {
-        Missions.insert({
-          gameId: game._id,
-          type: 'collectResources',
-          rankPoints: 48,
-          team: key,
-          conditions: {
-            resource: 'wood',
-            amount: 5,
-            turnIn: {
-              characterId: marcoPolo._id,
-              characterName: marcoPolo.name,
-            }
-          },
-          createdAt: Date.now(),
-        });
-      }
-    })
-  })
 }

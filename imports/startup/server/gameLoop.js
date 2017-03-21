@@ -8,7 +8,8 @@ import { itemConfigs } from '../../configs/items.js';
 
 import { regenLoop } from './regenLoop.js';
 import { missionSpawnLoop } from './missionSpawnLoop.js';
-import { aiActLoop, aiSpawnLoop } from './aiLoop.js';
+import { aiActLoop } from './aiLoop.js';
+import { aiSpawnLoop } from '../../configs/ai.js';
 
 SyncedCron.add({
   name: 'regenEnergy/HP',
@@ -48,6 +49,7 @@ SyncedCron.add({
     });
   }
 });
+*/
 SyncedCron.add({
   name: 'team auto-generate missions',
   schedule: function(parser){
@@ -55,6 +57,4 @@ SyncedCron.add({
   },
   job: missionSpawnLoop,
 });
-*/
-Meteor.setTimeout(missionSpawnLoop, 2000);
 SyncedCron.start();
