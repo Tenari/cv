@@ -46,6 +46,40 @@ export const buildingConfig = {
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
     insideLocation: {x: 4, y: 4}, //relative to the top left corner
   },
+  japaneseHouse: {
+    key: 'japaneseHouse',
+    label: 'House',
+    imageClass: 'obstacle-3x3 i-japanese-house-big',
+    underConstructionImageClass: 'obstacle-3x3 i-house-in-progress',
+    cost: [{resource: resourceConfig.wood.key, amount: 10, has: 0}],
+    description: 'A safe place to sleep at night, and store your junk',
+    interior: function(gameId, name, building){
+      const exit = {
+        id: building.location.roomId,
+        y: building.location.y + building.height(),
+        x: building.location.x + 2,
+      }
+      return {
+        room:{
+          gameId: gameId,
+          name: name,
+          width: 6,
+          height: 6,
+          map:[
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
+          ] 
+        },
+        obstacles: [{location:{x:0,y:0},type:"bed",data: obstaclesConfig.bed.defaultData},{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
+      };
+    },
+    doorLocation: {x: 2, y: 2}, //relative to the top left corner
+    insideLocation: {x: 4, y: 4}, //relative to the top left corner
+  },
   bar: {
     key: 'bar',
     label: 'Bar',

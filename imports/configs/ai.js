@@ -86,7 +86,80 @@ export const npcConfig = {
           return "Laelius Livius";
       }
     },
-    classId: 35,
+    classId: 40,
+    defaultStats: function(){
+      switch(_.random(1,4)){
+        case 1:
+          return {
+            money: 200,
+            resources: {
+              leather: 1
+            }
+          };
+        case 2:
+          return {
+            money: 100,
+            resources: {
+              leather: 2
+            }
+          };
+        case 3:
+          return {
+            money: 50,
+            resources: {
+              wood: 1
+            }
+          };
+        case 4:
+        default:
+          return {
+            money: 150,
+            resources: {
+              metal: 1
+            }
+          };
+      }
+    },
+    dialog: {
+      "text": "Hail, friend. What do you need?",
+      "options": [
+        {
+          "option": "Trade",
+          "action": "npc trade"
+        },
+        {
+          "option": "I need a job",
+          "action": "dialog",
+          "dialog": {
+            "text": "Don't we all. If you could bring me some wood, I'd pay you for it.",
+            "options": [
+              {
+                "option": "OK",
+                "action": "cancel"
+              }
+            ]
+          }
+        }
+      ]
+    },
+  },
+  genericJapaneseTownsPerson: {
+    key: 'genericJapaneseTownsPerson',
+    team: 'japs',
+    name: function(){
+      switch(_.random(1,4)){
+        case 1:
+          return "Bunta";
+        case 2:
+          return "Akira";
+        case 3:
+          return "Daichi";
+        case 4:
+        default:
+          return "Hayato";
+      }
+    },
+    classId: 45,
     defaultStats: function(){
       switch(_.random(1,4)){
         case 1:
