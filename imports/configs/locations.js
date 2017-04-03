@@ -3,6 +3,7 @@ export const moveCosts = {
   grass: 8,
   dirt: 5,
   floor: 2,
+  'brick-road': 2,
   'vertical-path': 3,
   'hz-path': 3,
   "path-inv-T": 3,
@@ -87,4 +88,5 @@ export const tiles = {
   'path-plus': {type: 'path-plus'},
   'path-T': {type: 'path-T'},
   'floor': {type: 'floor'},
+  'brick-road': {type: 'brick-road'},
 };

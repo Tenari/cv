@@ -43,7 +43,9 @@
                       <span>--</span>
                     {{/if}}
                   {{else}}
-                    <button class="fight" data-id="{{opponent._id}}">Fight</button>
+                    {{#if canFight opponent}}
+                      <button class="fight" data-id="{{opponent._id}}">Fight</button>
+                    {{/if}}
                     {{#if canTrade opponent}}
                       <button class="trade" data-id="{{opponent._id}}">Trade</button>
                     {{/if}}

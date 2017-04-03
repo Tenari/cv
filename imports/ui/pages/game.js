@@ -260,7 +260,16 @@ Template.game.helpers({
     return Template.instance().notification.get();
   },
   canTrade: function(character){
-    return !opponent.monsterKey;
+    return !character.monsterKey;
+  },
+  canFight: function(character){
+    var user = Template.instance().me();
+    if (!user) return false;
+    var room = Rooms.findOne(Template.instance().getRoomId());
+    if (user.team == 'romans') {
+      return !(character.team == 'romans' && room.name == 'full-rome');
+    } else
+      return !(character.team == 'japs' && room.name == 'full-tokyo');
   },
   roomChat: function(){
     return Chats.findOne();
@@ -309,13 +318,13 @@ Template.game.rendered = function() {
       if( Date.now() <= character.location.updatedAt + 300)
         return;
       if (e.charCode == 119 || e.charCode == 87) {        // 'W' pressed
-        Meteor.call('characters.move', 1);
+        move(1)();
       } else if (e.charCode == 97 || e.charCode == 65) {  // 'A'
-        Meteor.call('characters.move', 4);
+        move(4)();
       } else if (e.charCode == 115 || e.charCode == 83) { // 'S'
-        Meteor.call('characters.move', 2);
+        move(2)();
       } else if (e.charCode == 100 || e.charCode == 68) { // 'D'
-        Meteor.call('characters.move', 3);
+        move(3)();
       }
     }
   });
