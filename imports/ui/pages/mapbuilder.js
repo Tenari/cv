@@ -5,12 +5,12 @@ import { ReactiveDict } from 'meteor/reactive-dict'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { _ } from 'meteor/underscore';
 
-import { Rooms } from '../../api/rooms/rooms.js'
-import '../../api/rooms/methods.js'
+import { Rooms } from '../../api/rooms/rooms.js';
+import '../../api/rooms/methods.js';
 
 import './mapbuilder.html';
 
-import { tiles } from '../../configs/locations.js';
+import { terrain } from '../../configs/locations.js';
 import { buildingConfig } from '../../configs/buildings.js';
 import { obstaclesConfig } from '../../configs/obstacles.js';
 import { npcConfig, monsterConfig } from '../../configs/ai.js';
@@ -18,10 +18,11 @@ import { npcConfig, monsterConfig } from '../../configs/ai.js';
 Template.mapbuilder.onCreated(function gameOnCreated() {
   let map = [[],[],[],[]];
   for(let i = 0; i< map.length; i++){
-    map[i].push(_.clone(tiles.grass));
-    map[i].push(_.clone(tiles.grass));
-    map[i].push(_.clone(tiles.grass));
-    map[i].push(_.clone(tiles.grass));
+    var grass = {type: terrain.grass.type, imageClass: terrain.grass.classes[0]};
+    map[i].push(_.clone(grass));
+    map[i].push(_.clone(grass));
+    map[i].push(_.clone(grass));
+    map[i].push(_.clone(grass));
   }
   this.map = new ReactiveVar(map);
   this.dimensions = new ReactiveDict();
@@ -30,7 +31,8 @@ Template.mapbuilder.onCreated(function gameOnCreated() {
     cols: 4,
   });
 
-  this.selected = new ReactiveVar('grass');
+  this.selectedTileType = new ReactiveVar('grass');
+  this.selectedTile = new ReactiveVar(0);
   this.selectedBuilding = new ReactiveVar('open');
   this.selectedObstacle = new ReactiveVar('tree');
   this.selectedAi = new ReactiveVar('bear');
@@ -58,12 +60,16 @@ Template.mapbuilder.helpers({
    return Template.instance().map.get();
   },
   tiles: function(){
-    var arr = [];
-    for (var key in tiles) arr.push({key: key, value: tiles[key]});
-    return arr;
+    return _.keys(terrain);
   },
-  tileSelected(key){
-    return Template.instance().selected.get() == key ? 'selected' : '';
+  tileTypeSelected(key){
+    return Template.instance().selectedTileType.get() == key;
+  },
+  specificTiles() {
+    return terrain[Template.instance().selectedTileType.get()].classes;
+  },
+  specificTileSelected(key){
+    return Template.instance().selectedTile.get() == key ? 'selected' : '';
   },
   tabIs(tab) {
     return Template.instance().tab.get() == tab;
@@ -79,9 +85,6 @@ Template.mapbuilder.helpers({
   },
   obstacleSelected(key){
     return Template.instance().selectedObstacle.get() == key ? 'selected' : '';
-  },
-  hasDimensions(){
-    return tiles[Template.instance().selected.get()].dimensions;
   },
   currentX(){
     return Template.instance().currentX.get();
@@ -147,7 +150,8 @@ Template.mapbuilder.events({
     for(let i = 0; i< map.length; i++){
       map[i] = [];
       for(let j = 0; j < instance.dimensions.get('cols'); j++) {
-        map[i].push(_.clone(tiles[instance.selected.get()]));
+        var tile = {type: terrain[instance.selectedTileType.get()].type, imageClass: terrain[instance.selectedTileType.get()].classes[instance.selectedTile.get()]};
+        map[i].push(tile);
       }
     }
     instance.map.set(map);
@@ -158,7 +162,8 @@ Template.mapbuilder.events({
     for(let i = 0; i< map.length; i++){
       map[i] = [];
       for(let j = 0; j < $(e.target).val(); j++) {
-        map[i].push(_.clone(tiles[instance.selected.get()]));
+        var tile = {type: terrain[instance.selectedTileType.get()].type, imageClass: terrain[instance.selectedTileType.get()].classes[instance.selectedTile.get()]};
+        map[i].push(tile);
       }
     }
     instance.map.set(map);
@@ -178,8 +183,11 @@ Template.mapbuilder.events({
       npcs: instance.npcs.get(),
     }));
   },
+  'click .tiles .tile-type'(e, instance){
+    instance.selectedTileType.set($(e.target).data('key'));
+  },
   'click .tiles .g-col'(e, instance){
-    instance.selected.set($(e.target).data('key'));
+    instance.selectedTile.set(parseInt($(e.target).data('index')));
   },
   'click .buildings .g-col'(e, instance){
     instance.selectedBuilding.set($(e.target).data('key'));
@@ -210,9 +218,11 @@ Template.mapbuilder.events({
     const row = $(e.currentTarget).closest('.g-row').data('index');
     const col = $(e.currentTarget).data('index');
     if (instance.tab.get() == 'tiles') {
-      let newTile = _.clone(tiles[instance.selected.get()]);
+      let newTile = {type: terrain[instance.selectedTileType.get()].type, imageClass: terrain[instance.selectedTileType.get()].classes[instance.selectedTile.get()]};
+      console.log(instance.selectedTile.get(), newTile);
       let map = instance.map.get();
       map[row][col] = newTile;
+      console.log(map);
       instance.map.set(map);
       instance.dimensions.set('rows', map.length);
     } else if (instance.tab.get() == 'buildings' && instance.saleObject.get()) {

@@ -1,16 +1,3 @@
-// the map of all traversable tile types and their base move cost
-export const moveCosts = {
-  grass: 8,
-  dirt: 5,
-  floor: 2,
-  'brick-road': 2,
-  'vertical-path': 3,
-  'hz-path': 3,
-  "path-inv-T": 3,
-  "path-plus": 3,
-  "path-T": 3,
-};
-
 export function nextSpotXY(character){
   let x = character.location.x;
   let y = character.location.y-1;
@@ -45,8 +32,8 @@ export function directionToAFromB(start, goal){
     return 4;
 }
 
-export function moveCost(character, weight, terrain, obstacle) {
-  let baseCost = moveCosts[terrain] || 10;
+export function moveCost(character, weight, terrainType, obstacle) {
+  let baseCost = (terrain[terrainType] && terrain[terrainType].moveCost) || 10;
   if (obstacle)
     baseCost += obstacle.moveCost();
   return Math.max( 1, Math.round( baseCost * (2 * weight / character.maxWeight()) ) );
@@ -76,17 +63,30 @@ export function doorIsLocked(obstacle, character){
   return locked;
 }
 
-// objects representing individual tiles which you can _.clone() into a room.map
-export const treeStumpTile = {type: "tree-stump"};
-export const treeTile = {type: "tree", resources: {type: "wood", amount: 10}};
-export const tiles = {
-  grass: {type: 'grass'},
-  dirt: {type: 'dirt'},
-  'vertical-path': {type: 'vertical-path'},
-  'hz-path': {type: 'hz-path'},
-  'path-inv-T': {type: 'path-inv-T'},
-  'path-plus': {type: 'path-plus'},
-  'path-T': {type: 'path-T'},
-  'floor': {type: 'floor'},
-  'brick-road': {type: 'brick-road'},
+export const terrain = {
+  grass: {
+    moveCost: 8,
+    type: 'grass',
+    classes: ['i-terrain-grassv1', 'i-terrain-grassv2', 'i-terrain-grassv3', 'i-terrain-grassv4'],
+  },
+  road: {
+    type: 'road',
+    moveCost: 3,
+    classes: ['i-terrain-roadv1', 'i-terrain-roadv2', 'i-terrain-roadv3', 'i-terrain-roadv4', 'i-terrain-roadev1', 'i-terrain-roadev2', 'i-terrain-roadev3', 'i-terrain-roadev4', 'i-terrain-roadnv1', 'i-terrain-roadnv2', 'i-terrain-roadnv3', 'i-terrain-roadnv4', 'i-terrain-roadnev1', 'i-terrain-roadnev2', 'i-terrain-roadnev3', 'i-terrain-roadnev4', 'i-terrain-roadnsv1', 'i-terrain-roadnsv2', 'i-terrain-roadnsv3', 'i-terrain-roadnsv4', 'i-terrain-roadnwv1', 'i-terrain-roadnwv2', 'i-terrain-roadnwv3', 'i-terrain-roadnwv4', 'i-terrain-roadsv1', 'i-terrain-roadsv2', 'i-terrain-roadsv3', 'i-terrain-roadsv4', 'i-terrain-roadsev1', 'i-terrain-roadsev2', 'i-terrain-roadsev3', 'i-terrain-roadsev4', 'i-terrain-roadswv1', 'i-terrain-roadswv2', 'i-terrain-roadswv3', 'i-terrain-roadswv4', 'i-terrain-roadw4', 'i-terrain-roadwv1', 'i-terrain-roadwv2', 'i-terrain-roadwv3', 'i-terrain-roadwev1', 'i-terrain-roadwev2', 'i-terrain-roadwev3', 'i-terrain-roadwev4']
+  },
+  dirt: {
+    type: 'dirt',
+    moveCost: 5,
+    classes: ['i-dirt']
+  },
+  floor: {
+    type: 'floor',
+    moveCost: 2,
+    classes: ['i-floor'],
+  },
+  brickRoad: {
+    type: 'brickRoad',
+    moveCost: 2,
+    classes: ['i-brick-road'],
+  }
 };

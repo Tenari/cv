@@ -18,8 +18,13 @@
 
       {{#if tabIs 'tiles'}}
         <div class="tiles g-row">
-          {{#each tiles}}
-            <div class="g-col i-{{value.type}} {{tileSelected key}}" data-key="{{key}}"></div>
+          {{#each tile in tiles}}
+            <span class="tile-type" data-key="{{tile}}">{{tile}}</span>
+            {{#if tileTypeSelected tile}}
+              {{#each imageClass in specificTiles}}
+                <div class="g-col {{imageClass}} {{specificTileSelected @index}}" data-index="{{@index}}"></div>
+              {{/each}}
+            {{/if}}
           {{/each}}
         </div>
       {{/if}}
@@ -59,12 +64,6 @@
         </div>
       {{/if}}
 
-      {{#if hasDimensions}}
-        <div class="dimensions">
-          topLeft: x<input type="number" class="dimension-input" data-coord="topLeft" data-part="x"/> y<input type="number" class="dimension-input" data-coord="topLeft" data-part="y"/>
-          bottomRight: x<input type="number" class="dimension-input" data-coord="bottomRight" data-part="x"/> y<input type="number" class="dimension-input" data-coord="bottomRight" data-part="y"/>
-        </div>
-      {{/if}}
     </div>
     <hr/>
     <div class="map">
@@ -72,7 +71,7 @@
         <div class="g-row" data-index="{{@index}}" style="width: {{width}}px;">
           {{#with y=@index}}
             {{#each tile in row}}
-              <div class="g-col i-{{tile.type}}" data-index="{{@index}}">
+              <div class="g-col {{tile.imageClass}}" data-index="{{@index}}">
                 {{#if buildingAt @index y}}
                   <div class="building obstacle {{buildingImageAt @index y}}" data-y="{{y}}" data-x="{{@index}}"></div>
                 {{/if}}

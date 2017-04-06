@@ -176,7 +176,7 @@ Template.game.helpers({
         if (tile == undefined)
           html += "<div class='g-col i-blank'></div>";
         else {
-          html += "<div class='g-col i-"+tile.type+"'>";
+          html += "<div class='g-col "+(tile.imageClass ? tile.imageClass : ('i-'+tile.type))+"'>";
           if (obstacle)
             html += "<div class='obstacle "+obstacle.imageClass()+"'></div>";
           if (building)
