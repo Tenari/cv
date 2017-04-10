@@ -11,6 +11,7 @@ import { missionSpawnLoop } from './missionSpawnLoop.js';
 import { aiActLoop } from './aiLoop.js';
 import { aiSpawnLoop } from '../../configs/ai.js';
 
+/*
 SyncedCron.add({
   name: 'regenEnergy/HP',
   schedule: function(parser) {
@@ -33,7 +34,6 @@ SyncedCron.add({
   },
   job: aiActLoop,
 })
-/*
 SyncedCron.add({
   name: 'maguffin point-tick',
   schedule: function(parser){

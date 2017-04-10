@@ -219,10 +219,8 @@ Template.mapbuilder.events({
     const col = $(e.currentTarget).data('index');
     if (instance.tab.get() == 'tiles') {
       let newTile = {type: terrain[instance.selectedTileType.get()].type, imageClass: terrain[instance.selectedTileType.get()].classes[instance.selectedTile.get()]};
-      console.log(instance.selectedTile.get(), newTile);
       let map = instance.map.get();
       map[row][col] = newTile;
-      console.log(map);
       instance.map.set(map);
       instance.dimensions.set('rows', map.length);
     } else if (instance.tab.get() == 'buildings' && instance.saleObject.get()) {
@@ -246,7 +244,6 @@ Template.mapbuilder.events({
       var newNpc = {type: instance.selectedNpc.get(), location: {x: col, y: row}};
       npcs.push(newNpc);
       instance.npcs.set(npcs);
-      console.log(instance.npcs.get());
     }
   },
   'click .map .g-col .building'(e, instance){
