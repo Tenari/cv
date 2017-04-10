@@ -1,7 +1,7 @@
 import { resourceConfig } from './game.js';
 import { obstaclesConfig } from './obstacles.js';
-import { tiles } from './locations.js';
 
+const floorTile = {type: "floor", imageClass:'i-floor'};
 export const buildingConfig = {
   open: {
     key: 'open',
@@ -32,12 +32,12 @@ export const buildingConfig = {
           width: 6,
           height: 6,
           map:[
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile]
           ] 
         },
         obstacles: [{location:{x:0,y:0},type:"bed",data: obstaclesConfig.bed.defaultData},{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
@@ -66,12 +66,12 @@ export const buildingConfig = {
           width: 6,
           height: 6,
           map:[
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile]
           ] 
         },
         obstacles: [{location:{x:0,y:0},type:"bed",data: obstaclesConfig.bed.defaultData},{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
@@ -100,12 +100,12 @@ export const buildingConfig = {
           width: 6,
           height: 6,
           map:[
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor]
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile]
           ] 
         },
         obstacles: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"},{type:"woodenBar",location:{x:0,y:1}},{type:"barrel",location:{x:5,y:0}},{type:"barrel",location:{x:5,y:1}},{type:"stool",location:{x:0,y:2}},{type:"stool",location:{x:2,y:2}}],
@@ -135,12 +135,12 @@ export const buildingConfig = {
           width: 6,
           height: 6,
           map:[
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
-            [tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor,tiles.floor],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
           ] 
         },
         obstacles: [{location:{x:2,y:5},data: exit,type:"mat"},{location:{x:3,y:5},data: exit,type:"mat"},{type:'workbench',data:obstaclesConfig.workbench.defaultData,location:{x:3, y:1}}]
