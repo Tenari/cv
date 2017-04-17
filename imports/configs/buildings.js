@@ -114,6 +114,40 @@ export const buildingConfig = {
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
     insideLocation: {x: 4, y: 4}, //relative to the top left corner
   },
+  japaneseBar: {
+    key: 'japaneseBar',
+    label: 'Bar',
+    imageClass: 'obstacle-3x3 i-japanese-bar-big',
+    underConstructionImageClass: 'obstacle-3x3 i-house-in-progress',
+    cost: [{resource: resourceConfig.wood.key, amount: 10, has: 0}],
+    description: 'A place to drink, make friends, and make enemies.',
+    interior: function(gameId, name, building){
+      const exit = {
+        id: building.location.roomId,
+        y: building.location.y + building.height(),
+        x: building.location.x + 2,
+      }
+      return {
+        room:{
+          gameId: gameId,
+          name: name,
+          width: 6,
+          height: 6,
+          map:[
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile]
+          ] 
+        },
+        obstacles: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"},{type:"woodenBar",location:{x:0,y:1}},{type:"barrel",location:{x:5,y:0}},{type:"barrel",location:{x:5,y:1}},{type:"stool",location:{x:0,y:2}},{type:"stool",location:{x:2,y:2}}],
+      };
+    },
+    doorLocation: {x: 2, y: 2}, //relative to the top left corner
+    insideLocation: {x: 4, y: 4}, //relative to the top left corner
+  },
   workshop: {
     key: 'workshop',
     label: 'Wood workshop',
