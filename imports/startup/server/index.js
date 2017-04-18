@@ -39,7 +39,10 @@ import { importRoomNpcs } from '../../configs/ai.js';
 Meteor.startup(function (){
   var game = Games.findOne();
   if ( !game ) { // ensure that there is one game with some rooms always
-    var roomList = ['full-rome', 'east-roman-plains', 'north-east-roman-plains', 'north-roman-plains', 'south-roman-plains', 'south-east-roman-plains', 'roman-forest', 'lower-ore-mining'];
+    var roomList = [
+      'full-rome', 'east-roman-plains', 'north-east-roman-plains', 'north-roman-plains', 'south-roman-plains', 'south-east-roman-plains', 'roman-forest', 'lower-ore-mining',
+      'full-tokyo', 'west-jap-plains', 'north-west-jap-plains', 'north-jap-plains', 'south-jap-plains', 'jap-forest'
+    ];
     var gameId = Games.insert({
       createdAt: Date.now(),
       startedAt: Date.now(),

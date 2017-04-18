@@ -33,7 +33,11 @@ Meteor.methods({
         'You already have a character, bro');
     }
 
-    const room = Rooms.findOne({name: 'full-rome'});
+    let room = Rooms.findOne({name: 'full-rome'});
+    if (obj.team != 'roman') {
+      room = Rooms.findOne({name: 'full-tokyo'});
+    }
+
     const location = {
       x: 60,
       y: 50,
