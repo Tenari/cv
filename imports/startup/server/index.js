@@ -41,7 +41,8 @@ Meteor.startup(function (){
   if ( !game ) { // ensure that there is one game with some rooms always
     var roomList = [
       'full-rome', 'east-roman-plains', 'north-east-roman-plains', 'north-roman-plains', 'south-roman-plains', 'south-east-roman-plains', 'roman-forest', 'lower-ore-mining',
-      'full-tokyo', 'west-jap-plains', 'north-west-jap-plains', 'north-jap-plains', 'south-jap-plains', 'jap-forest'
+      'full-tokyo', 'west-jap-plains', 'north-west-jap-plains', 'north-jap-plains', 'south-jap-plains', 'south-west-jap-plains', 'jap-forest', 'upper-ore-mining',
+      'wildi'
     ];
     var gameId = Games.insert({
       createdAt: Date.now(),
