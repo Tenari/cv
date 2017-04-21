@@ -33,7 +33,7 @@ import  '../../api/notifications/methods.js';
 import  '../../api/missions/publications.js';
 import  '../../api/missions/methods.js';
 
-import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
+import { importRoomObstaclesAndBuildings } from '../../configs/buildings.js';
 import { importRoomNpcs } from '../../configs/ai.js';
 
 Meteor.startup(function (){
@@ -42,7 +42,7 @@ Meteor.startup(function (){
     var roomList = [
       'full-rome', 'east-roman-plains', 'north-east-roman-plains', 'north-roman-plains', 'south-roman-plains', 'south-east-roman-plains', 'roman-forest', 'lower-ore-mining',
       'full-tokyo', 'west-jap-plains', 'north-west-jap-plains', 'north-jap-plains', 'south-jap-plains', 'south-west-jap-plains', 'jap-forest', 'upper-ore-mining',
-      'wildi'
+      'wildi', 'dungeon-1'
     ];
     var gameId = Games.insert({
       createdAt: Date.now(),
@@ -75,7 +75,7 @@ Meteor.startup(function (){
     })
     // these must be separate loops b/c importRoomObstaclesAndBuildings relies on the rooms ALL being created to work. (doors)
     _.each(roomList, function(roomName){
-      importRoomObstaclesAndBuildings(roomSetup[roomName], roomIds[roomName], gameId, Obstacles, Rooms, Buildings);
+      importRoomObstaclesAndBuildings(roomSetup[roomName], roomIds[roomName], gameId, Obstacles, Rooms, Buildings, Characters, Items);
       importRoomNpcs(roomSetup[roomName], roomIds[roomName], gameId, Characters, Items);
       Chats.insert({scope: "Rooms:"+roomIds[roomName], messages: []});
     })
@@ -83,12 +83,10 @@ Meteor.startup(function (){
     Chats.insert({scope: "team:japs:"+gameId, messages: []});
     Chats.insert({scope: "team:romans:"+gameId, messages: []});
 
-    const bigRomeId = roomIds['full-rome'];
-
     const maguffinLocation = {
-      x: 8,
-      y: 6,
-      roomId: bigRomeId,
+      x: 21,
+      y: 0,
+      roomId: roomIds['dungeon-1'],
       updatedAt: Date.now()
     };
     Items.insert({key: 'maguffin', type: 'misc', location: maguffinLocation});

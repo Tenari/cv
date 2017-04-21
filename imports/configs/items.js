@@ -410,6 +410,22 @@ export const itemConfigs = {
       npcSellFactor: 0.09,
       npcBuyFactor: 0.07,
     },
+    beer: {
+      key: 'beer',
+      type: 'consumable',
+      name: 'Beer',
+      img: '/images/beer.png',
+      weight: 1,
+      effects: [{
+        type: 'stats.energy',
+        amount: 100,
+      },{
+        type: 'stats.hp',
+        amount: -1,
+      }],
+      npcSellFactor: 0.09,
+      npcBuyFactor: 0.07,
+    },
   },
   misc: {
     maguffin: {

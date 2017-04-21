@@ -34,7 +34,7 @@ Meteor.methods({
     }
 
     let room = Rooms.findOne({name: 'full-rome'});
-    if (obj.team != 'roman') {
+    if (obj.team != 'romans') {
       room = Rooms.findOne({name: 'full-tokyo'});
     }
 

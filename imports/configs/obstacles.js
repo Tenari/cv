@@ -184,6 +184,14 @@ export const obstaclesConfig = {
     isDoor: true,
     defaultData: {name: "roomname", x:0, y: 0},
   },
+  stairs: {
+    key: 'stairs',
+    passable: true,
+    imageClass: 'obstacle-2x1 i-stairs',
+    isDoor: true,
+    width: 2,
+    defaultData: {name: "roomname", x:0, y: 0},
+  },
   bed: {
     key: 'bed',
     passable: false,
@@ -227,51 +235,3 @@ export const obstaclesConfig = {
     imageClass: 'i-hz-fence',
   },
 };
-
-export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, Obstacles, Rooms, Buildings){
-  _.each(roomDefinition.obstacles, function(obstacle){
-    let data = obstacle.data;
-    if (obstaclesConfig[obstacle.type].isDoor) {
-      data = {
-        id: obstacle.data.id || Rooms.findOne({name: obstacle.data.name, gameId: gameId})._id,
-        x: obstacle.data.x,
-        y: obstacle.data.y,
-        lock: obstacle.data.lock,
-        stats: obstacle.data.stats,
-        buildingResources: obstacle.data.buildingResources,
-      };
-    }
-    Obstacles.insert({
-      location: {
-        roomId: roomId,
-        x: obstacle.location.x,
-        y: obstacle.location.y,
-      },
-      type: obstacle.type,
-      data: data || {},
-    })
-  })
-  _.each(roomDefinition.buildings, function(building){
-    const bid = Buildings.insert({
-      type: building.type,
-      location: {
-        roomId: roomId,
-        x: building.location.x,
-        y: building.location.y,
-      },
-      underConstruction: false,
-      sale: building.sale,
-      resources: {
-        wood: 0,
-        hide: 0,
-        leather: 0,
-        ore: 0,
-        metal: 0,
-      }
-    })
-    const buildingObject = Buildings.findOne(bid);
-    if (typeof buildingObject.typeObj().interior === 'function') {
-      buildingObject.createRoom(gameId);
-    }
-  })
-}

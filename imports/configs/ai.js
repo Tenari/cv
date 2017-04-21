@@ -13,6 +13,39 @@ import { Buildings } from '../api/buildings/buildings.js';
 export const aiTeam = 'nature';
 
 export const npcConfig = {
+  romanBartender: {
+    key: 'romanBartender',
+    team: 'romans',
+    name: 'Bartender',
+    classId: 50,
+    defaultStats: {
+      money: 10000,
+      resources: {
+      }
+    },
+    dialog: {
+      "text": "Welcome to my pub. How can I help you?",
+      "options": [
+        {
+          "option": "Trade",
+          "action": "npc trade"
+        }
+      ]
+    },
+    items: [
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+    ],
+    act: function(npc, Items){
+      const myBeers = Items.find({key: 'beer', ownerId: npc._id}).count();
+      if (myBeers < 5) {
+        Items.insert({key: 'beer', type: 'consumable', ownerId: npc._id, condition: 100});
+      }
+    },
+  },
   marcoPolo: {
     key: 'marcoPolo',
     team: 'romans',

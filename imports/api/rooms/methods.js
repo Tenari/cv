@@ -10,7 +10,6 @@ import { Chats } from '../chats/chats.js';
 import { nextSpotXY, doorConfig } from '../../configs/locations.js';
 import { getCharacter, doorAttackEnergyCost, resourceConfig, collectingSkillGrowthAmount } from '../../configs/game.js';
 import { buildingConfig } from '../../configs/buildings.js';
-import { importRoomObstaclesAndBuildings } from '../../configs/obstacles.js';
 
 Meteor.methods({
   'rooms.collect'(gameId){

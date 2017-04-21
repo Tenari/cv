@@ -1,3 +1,4 @@
+import { importRoomNpcs } from './ai.js';
 import { resourceConfig } from './game.js';
 import { obstaclesConfig } from './obstacles.js';
 
@@ -111,6 +112,7 @@ export const buildingConfig = {
         obstacles: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"},{type:"woodenBar",location:{x:0,y:1}},{type:"barrel",location:{x:5,y:0}},{type:"barrel",location:{x:5,y:1}},{type:"stool",location:{x:0,y:2}},{type:"stool",location:{x:2,y:2}}],
       };
     },
+    npcs: [{type: 'romanBartender', location: {x:0, y:0}}],
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
     insideLocation: {x: 4, y: 4}, //relative to the top left corner
   },
@@ -186,4 +188,55 @@ export const buildingConfig = {
 //    smithy: 2,
 //    farm: 3,
 //    tannery: 4,
+}
+
+export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, Obstacles, Rooms, Buildings, Characters, Items){
+  _.each(roomDefinition.obstacles, function(obstacle){
+    let data = obstacle.data;
+    if (obstaclesConfig[obstacle.type].isDoor) {
+      data = {
+        id: obstacle.data.id || Rooms.findOne({name: obstacle.data.name, gameId: gameId})._id,
+        x: obstacle.data.x,
+        y: obstacle.data.y,
+        lock: obstacle.data.lock,
+        stats: obstacle.data.stats,
+        buildingResources: obstacle.data.buildingResources,
+      };
+    }
+    Obstacles.insert({
+      location: {
+        roomId: roomId,
+        x: obstacle.location.x,
+        y: obstacle.location.y,
+      },
+      type: obstacle.type,
+      data: data || {},
+    })
+  })
+  _.each(roomDefinition.buildings, function(building){
+    const bid = Buildings.insert({
+      type: building.type,
+      location: {
+        roomId: roomId,
+        x: building.location.x,
+        y: building.location.y,
+      },
+      underConstruction: false,
+      sale: building.sale,
+      resources: {
+        wood: 0,
+        hide: 0,
+        leather: 0,
+        ore: 0,
+        metal: 0,
+      }
+    })
+    const buildingObject = Buildings.findOne(bid);
+    if (typeof buildingObject.typeObj().interior === 'function') {
+      const newRoomId = buildingObject.createRoom(gameId);
+      if (!(buildingObject.sale && buildingObject.sale > 0) && buildingConfig[building.type].npcs) {
+        importRoomNpcs(buildingConfig[building.type], newRoomId, gameId, Characters, Items);
+      }
+    }
+  })
 };

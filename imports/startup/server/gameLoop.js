@@ -9,6 +9,7 @@ import { itemConfigs } from '../../configs/items.js';
 import { regenLoop } from './regenLoop.js';
 import { missionSpawnLoop } from './missionSpawnLoop.js';
 import { aiActLoop } from './aiLoop.js';
+import { npcActLoop } from './npcLoop.js';
 import { aiSpawnLoop } from '../../configs/ai.js';
 
 /*
@@ -50,6 +51,13 @@ SyncedCron.add({
   }
 });
 */
+SyncedCron.add({
+  name: 'npcAct',
+  schedule: function(parser) {
+    return parser.text('every 10 seconds')
+  },
+  job: npcActLoop,
+})
 SyncedCron.add({
   name: 'team auto-generate missions',
   schedule: function(parser){

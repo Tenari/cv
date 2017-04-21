@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 
 import { playerTeamKeys } from './ranks.js';
-import { importRoomObstaclesAndBuildings } from './obstacles.js';
+import { importRoomObstaclesAndBuildings } from './buildings.js';
 import { npcConfig, importRoomNpcs, aiSpawnLoop } from './ai.js';
 
 export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, Characters, Items, Missions) {
@@ -45,7 +45,7 @@ export function generateNewTutorial(Games, Rooms, Obstacles, Buildings, Chats, C
   })
   // these must be separate loops b/c importRoomObstaclesAndBuildings relies on the rooms ALL being created to work. (doors)
   _.each(roomList, function(roomName){
-    importRoomObstaclesAndBuildings(roomSetup[roomName], roomIds[roomName], gameId, Obstacles, Rooms, Buildings);
+    importRoomObstaclesAndBuildings(roomSetup[roomName], roomIds[roomName], gameId, Obstacles, Rooms, Buildings, Characters, Items);
     importRoomNpcs(roomSetup[roomName], roomIds[roomName], gameId, Characters, Items);
     Chats.insert({scope: "Rooms:"+roomIds[roomName], messages: preMessages[roomName]});
   })
