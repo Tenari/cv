@@ -46,6 +46,39 @@ export const npcConfig = {
       }
     },
   },
+  japaneseBartender: {
+    key: 'japaneseBartender',
+    team: 'japs',
+    name: 'Bartender',
+    classId: 55,
+    defaultStats: {
+      money: 10000,
+      resources: {
+      }
+    },
+    dialog: {
+      "text": "Welcome to my pub. How can I help you?",
+      "options": [
+        {
+          "option": "Trade",
+          "action": "npc trade"
+        }
+      ]
+    },
+    items: [
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+      {key: 'beer', type: 'consumable'},
+    ],
+    act: function(npc, Items){
+      const myBeers = Items.find({key: 'beer', ownerId: npc._id}).count();
+      if (myBeers < 5) {
+        Items.insert({key: 'beer', type: 'consumable', ownerId: npc._id, condition: 100});
+      }
+    },
+  },
   marcoPolo: {
     key: 'marcoPolo',
     team: 'romans',

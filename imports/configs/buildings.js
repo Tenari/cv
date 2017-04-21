@@ -46,6 +46,7 @@ export const buildingConfig = {
     },
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
     insideLocation: {x: 4, y: 4}, //relative to the top left corner
+    npcs: [{type: 'genericRomanTownsPerson', location: {x:1, y:1}}],
   },
   japaneseHouse: {
     key: 'japaneseHouse',
@@ -80,6 +81,7 @@ export const buildingConfig = {
     },
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
     insideLocation: {x: 4, y: 4}, //relative to the top left corner
+    npcs: [{type: 'genericJapaneseTownsPerson', location: {x:1, y:1}}],
   },
   bar: {
     key: 'bar',
@@ -147,6 +149,7 @@ export const buildingConfig = {
         obstacles: [{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"},{type:"woodenBar",location:{x:0,y:1}},{type:"barrel",location:{x:5,y:0}},{type:"barrel",location:{x:5,y:1}},{type:"stool",location:{x:0,y:2}},{type:"stool",location:{x:2,y:2}}],
       };
     },
+    npcs: [{type: 'japaneseBartender', location: {x:0, y:0}}],
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
     insideLocation: {x: 4, y: 4}, //relative to the top left corner
   },
@@ -234,7 +237,7 @@ export function importRoomObstaclesAndBuildings(roomDefinition, roomId, gameId, 
     const buildingObject = Buildings.findOne(bid);
     if (typeof buildingObject.typeObj().interior === 'function') {
       const newRoomId = buildingObject.createRoom(gameId);
-      if (!(buildingObject.sale && buildingObject.sale > 0) && buildingConfig[building.type].npcs) {
+      if (!(buildingObject.ownerId && buildingObject.sale && buildingObject.sale > 0) && buildingConfig[building.type].npcs) {
         importRoomNpcs(buildingConfig[building.type], newRoomId, gameId, Characters, Items);
       }
     }
