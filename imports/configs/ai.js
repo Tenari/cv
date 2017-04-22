@@ -208,6 +208,20 @@ export const npcConfig = {
         }
       ]
     },
+    act: function(npc, Items, Rooms, Obstacles, Buildings, Characters) {
+      const room = Rooms.findOne(npc.location.roomId);
+      if (room.name.split(":")[0] == 'house') {
+        const otherCharacter = Characters.findOne({_id: {$ne: npc._id}, 'location.x': npc.location.x, 'location.y': npc.location.y, 'location.roomId': room._id});
+        console.log(otherCharacter);
+        if (!otherCharacter) {
+          const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
+          const buildings = Buildings.find({'location.roomId':room._id}).fetch();
+          paceMoveAlgorithm({x:1,y:1},{x:2, y:4}, npc, room, obstacles, buildings);
+        }
+      } else {
+        //stand still for now
+      }
+    },
   },
   genericJapaneseTownsPerson: {
     key: 'genericJapaneseTownsPerson',
@@ -281,7 +295,35 @@ export const npcConfig = {
         }
       ]
     },
+    act: function(npc, Items, Rooms, Obstacles, Buildings, Characters) {
+      const room = Rooms.findOne(npc.location.roomId);
+      if (room.name.split(":")[0] == 'house') {
+        const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
+        const buildings = Buildings.find({'location.roomId':room._id}).fetch();
+        paceMoveAlgorithm({x:1,y:1},{x:2, y:4}, npc, room, obstacles, buildings);
+      } else {
+        //stand still for now
+      }
+    },
   }
+}
+
+function paceMoveAlgorithm(pointA, pointB, character, room, obstacles, buildings){
+  if (Date.now() % 100000 > 50000) { // go to point A for 50 seconds
+    moveToLocationViaAStar(character, pointA, room, obstacles, buildings);
+  } else {  // go to point B for 50 seconds
+    moveToLocationViaAStar(character, pointB, room, obstacles, buildings);
+  }
+}
+
+function moveToLocationViaAStar(character, targetXY, room, obstacles, buildings) {
+  let aStarResults = aStar(character, targetXY, room, obstacles, buildings)
+  let last = aStarResults.finalNode;
+  while (last && last.previous && last.previous.previous) {
+    last = last.previous;
+  }
+  if (directionToAFromB(character.location, last))
+    moveCharacter(character, directionToAFromB(character.location, last));
 }
 
 export function importRoomNpcs(roomDefinition, roomId, gameId, Characters, Items) {
@@ -396,13 +438,7 @@ function chasePlayerMoveAlgorithm(monster, room, Characters, Obstacles, Building
       const targetXY = {x:playerToChase.location.x, y: playerToChase.location.y};
       const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
       const buildings = Buildings.find({'location.roomId':room._id}).fetch();
-      let aStarResults = aStar(monster, targetXY, room, obstacles, buildings)
-      let last = aStarResults.finalNode;
-      while (last && last.previous && last.previous.previous) {
-        last = last.previous;
-      }
-      if (directionToAFromB(monster.location, last))
-        moveCharacter(monster, directionToAFromB(monster.location, last));
+      moveToLocationViaAStar(monster, targetXY, room, obstacles, buildings);
     } else {
       moveCharacter(monster, _.random(1,4));
     }
