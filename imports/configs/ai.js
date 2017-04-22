@@ -208,20 +208,7 @@ export const npcConfig = {
         }
       ]
     },
-    act: function(npc, Items, Rooms, Obstacles, Buildings, Characters) {
-      const room = Rooms.findOne(npc.location.roomId);
-      if (room.name.split(":")[0] == 'house') {
-        const otherCharacter = Characters.findOne({_id: {$ne: npc._id}, 'location.x': npc.location.x, 'location.y': npc.location.y, 'location.roomId': room._id});
-        console.log(otherCharacter);
-        if (!otherCharacter) {
-          const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
-          const buildings = Buildings.find({'location.roomId':room._id}).fetch();
-          paceMoveAlgorithm({x:1,y:1},{x:2, y:4}, npc, room, obstacles, buildings);
-        }
-      } else {
-        //stand still for now
-      }
-    },
+    act: genericTownsPersonAct,
   },
   genericJapaneseTownsPerson: {
     key: 'genericJapaneseTownsPerson',
@@ -274,7 +261,7 @@ export const npcConfig = {
       }
     },
     dialog: {
-      "text": "Hail, friend. What do you need?",
+      "text": "Greetings, sir. What do you need?",
       "options": [
         {
           "option": "Trade",
@@ -295,16 +282,21 @@ export const npcConfig = {
         }
       ]
     },
-    act: function(npc, Items, Rooms, Obstacles, Buildings, Characters) {
-      const room = Rooms.findOne(npc.location.roomId);
-      if (room.name.split(":")[0] == 'house') {
-        const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
-        const buildings = Buildings.find({'location.roomId':room._id}).fetch();
-        paceMoveAlgorithm({x:1,y:1},{x:2, y:4}, npc, room, obstacles, buildings);
-      } else {
-        //stand still for now
-      }
-    },
+    act: genericTownsPersonAct,
+  }
+}
+
+function genericTownsPersonAct(npc, Items, Rooms, Obstacles, Buildings, Characters) {
+  const room = Rooms.findOne(npc.location.roomId);
+  if (room.name.split(":")[0] == 'house') {
+    const otherCharacter = Characters.findOne({_id: {$ne: npc._id}, 'location.x': npc.location.x, 'location.y': npc.location.y, 'location.roomId': room._id});
+    if (!otherCharacter) {
+      const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
+      const buildings = Buildings.find({'location.roomId':room._id}).fetch();
+      paceMoveAlgorithm({x:1,y:1},{x:2, y:4}, npc, room, obstacles, buildings);
+    }
+  } else {
+    //stand still for now
   }
 }
 
