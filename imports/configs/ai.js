@@ -1,7 +1,7 @@
 import { EJSON } from 'meteor/ejson';
 import { moveCharacter } from '../api/characters/methods.js';
 import { itemConfigs } from './items.js';
-import { directionToAFromB } from './locations.js';
+import { directionToAFromB, nextSpotXY, terrain } from './locations.js';
 
 import { Games } from '../api/games/games.js';
 import { Rooms } from '../api/rooms/rooms.js';
@@ -288,16 +288,32 @@ export const npcConfig = {
 
 function genericTownsPersonAct(npc, Items, Rooms, Obstacles, Buildings, Characters) {
   const room = Rooms.findOne(npc.location.roomId);
+  const otherCharacter = Characters.findOne({_id: {$ne: npc._id}, userId: {$exists: true}, 'location.x': npc.location.x, 'location.y': npc.location.y, 'location.roomId': room._id});
+  if (otherCharacter) return false;
   if (room.name.split(":")[0] == 'house') {
-    const otherCharacter = Characters.findOne({_id: {$ne: npc._id}, 'location.x': npc.location.x, 'location.y': npc.location.y, 'location.roomId': room._id});
-    if (!otherCharacter) {
-      const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
-      const buildings = Buildings.find({'location.roomId':room._id}).fetch();
-      paceMoveAlgorithm({x:1,y:1},{x:2, y:4}, npc, room, obstacles, buildings);
-    }
+    const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
+    const buildings = Buildings.find({'location.roomId':room._id}).fetch();
+    paceMoveAlgorithm({x:1,y:1},{x:2, y:4}, npc, room, obstacles, buildings);
   } else {
-    //stand still for now
+    followRoadsDontGoThroughDoors(npc, room, Obstacles, Buildings);
   }
+}
+
+function followRoadsDontGoThroughDoors(character, room, Obstacles, Buildings) {
+  const obstacle = character.getFacingObstacle(Obstacles);
+  const building = character.getFacingBuilding(Buildings);
+  if (obstacle || building) { // never walk into an obstacle or a building
+    moveCharacter(character, ((character.location.direction + 1) % 4) || 4); // this just spins the character
+  } else {
+    const xy = nextSpotXY(character);
+    const tile = room.map[xy.y] && room.map[xy.y][xy.x];
+    if (tile && tile.type && tile.type == terrain.road.type) { // nextSpot is a road of some kind
+      moveCharacter(character, character.location.direction); // go forward
+    } else {
+      moveCharacter(character, ((character.location.direction + 1) % 4) || 4); // this just spins the character
+    }
+  }
+  
 }
 
 function paceMoveAlgorithm(pointA, pointB, character, room, obstacles, buildings){
