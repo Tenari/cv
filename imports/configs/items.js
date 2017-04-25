@@ -410,6 +410,22 @@ export const itemConfigs = {
       npcSellFactor: 0.09,
       npcBuyFactor: 0.07,
     },
+    veggies: {
+      key: 'veggies',
+      type: 'consumable',
+      name: 'Veggies',
+      img: '/images/veggies.png',
+      weight: 1,
+      effects: [{
+        type: 'stats.hp',
+        amount: 4,
+      },{
+        type: 'stats.energy',
+        amount: -20,
+      }],
+      npcSellFactor: 0.11,
+      npcBuyFactor: 0.09,
+    },
     beer: {
       key: 'beer',
       type: 'consumable',

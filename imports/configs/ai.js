@@ -12,73 +12,7 @@ import { Buildings } from '../api/buildings/buildings.js';
 
 export const aiTeam = 'nature';
 
-export const npcConfig = {
-  romanBartender: {
-    key: 'romanBartender',
-    team: 'romans',
-    name: 'Bartender',
-    classId: 50,
-    defaultStats: {
-      money: 10000,
-      resources: {
-      }
-    },
-    dialog: {
-      "text": "Welcome to my pub. How can I help you?",
-      "options": [
-        {
-          "option": "Trade",
-          "action": "npc trade"
-        }
-      ]
-    },
-    items: [
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-    ],
-    act: function(npc, Items){
-      const myBeers = Items.find({key: 'beer', ownerId: npc._id}).count();
-      if (myBeers < 5) {
-        Items.insert({key: 'beer', type: 'consumable', ownerId: npc._id, condition: 100});
-      }
-    },
-  },
-  japaneseBartender: {
-    key: 'japaneseBartender',
-    team: 'japs',
-    name: 'Bartender',
-    classId: 55,
-    defaultStats: {
-      money: 10000,
-      resources: {
-      }
-    },
-    dialog: {
-      "text": "Welcome to my pub. How can I help you?",
-      "options": [
-        {
-          "option": "Trade",
-          "action": "npc trade"
-        }
-      ]
-    },
-    items: [
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-      {key: 'beer', type: 'consumable'},
-    ],
-    act: function(npc, Items){
-      const myBeers = Items.find({key: 'beer', ownerId: npc._id}).count();
-      if (myBeers < 5) {
-        Items.insert({key: 'beer', type: 'consumable', ownerId: npc._id, condition: 100});
-      }
-    },
-  },
+let npcConfig = {
   marcoPolo: {
     key: 'marcoPolo',
     team: 'romans',
@@ -284,7 +218,79 @@ export const npcConfig = {
     },
     act: genericTownsPersonAct,
   }
-}
+};
+_.each({
+'Farmer':{
+  classId: 60,
+  dialog: {
+    "text": "Welcome to my farm. Do you need something to eat?",
+    "options": [
+      {
+        "option": "Trade",
+        "action": "npc trade"
+      }
+    ]
+  },
+  items: [
+    {key: 'veggies', type: 'consumable'},
+    {key: 'veggies', type: 'consumable'},
+    {key: 'veggies', type: 'consumable'},
+    {key: 'chickenLeg', type: 'consumable'},
+    {key: 'chickenLeg', type: 'consumable'},
+    {key: 'chickenLeg', type: 'consumable'},
+  ],
+  act: function(npc, Items){
+    const myVeggies = Items.find({key: 'veggies', ownerId: npc._id}).count();
+    if (myVeggies < 3) {
+      Items.insert({key: 'veggies', type: 'consumable', ownerId: npc._id, condition: 100});
+    }
+    const myChicken = Items.find({key: 'chickenLeg', ownerId: npc._id}).count();
+    if (myChicken < 3) {
+      Items.insert({key: 'chickenLeg', type: 'consumable', ownerId: npc._id, condition: 100});
+    }
+  },
+},
+'Bartender':{
+  classId: 50,
+  dialog: {
+    "text": "Welcome to my pub. How can I help you?",
+    "options": [
+      {
+        "option": "Trade",
+        "action": "npc trade"
+      }
+    ]
+  },
+  items: [
+    {key: 'beer', type: 'consumable'},
+    {key: 'beer', type: 'consumable'},
+    {key: 'beer', type: 'consumable'},
+    {key: 'beer', type: 'consumable'},
+    {key: 'beer', type: 'consumable'},
+  ],
+  act: function(npc, Items){
+    const myBeers = Items.find({key: 'beer', ownerId: npc._id}).count();
+    if (myBeers < 5) {
+      Items.insert({key: 'beer', type: 'consumable', ownerId: npc._id, condition: 100});
+    }
+  },
+},
+}, function(obj, key){
+  _.each(['romans','japs'], function(team, index){
+    var realKey = team.substring(0,team.length-1)+key;
+    npcConfig[realKey] = {
+      key: realKey,
+      team: team,
+      name: key,
+      classId: obj.classId + (5*index),
+      defaultStats: {money:1000, resources:{}},
+      dialog: obj.dialog,
+      items: obj.items,
+      act: obj.act,
+    };
+  });
+});
+export { npcConfig };
 
 function genericTownsPersonAct(npc, Items, Rooms, Obstacles, Buildings, Characters) {
   const room = Rooms.findOne(npc.location.roomId);
