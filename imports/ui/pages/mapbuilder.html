@@ -48,7 +48,7 @@
       {{/if}}
 
       {{#if tabIs 'ais'}}
-        data: <input type="string" class="ai-bounds" value="{{aiBounds}}"/>
+        bounds: <input type="string" class="ai-bounds" value="{{aiBounds}}"/>
         <div class="ais g-row">
           {{#each ais}}
             <div class="g-col ai {{image}} {{aiSelected key}}" data-key="{{key}}"></div>
@@ -57,6 +57,7 @@
       {{/if}}
 
       {{#if tabIs 'npcs'}}
+        bounds: <input type="string" class="ai-bounds" value="{{aiBounds}}"/>
         <div class="npcs g-row">
           {{#each npcs}}
             <div class="g-col npc {{image}} {{npcSelected key}}" data-key="{{key}}"></div>

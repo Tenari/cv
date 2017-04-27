@@ -242,6 +242,8 @@ Template.mapbuilder.events({
     } else if (instance.tab.get() == 'npcs') {
       var npcs = instance.npcs.get();
       var newNpc = {type: instance.selectedNpc.get(), location: {x: col, y: row}};
+      if (instance.aiBounds.get())
+        newNpc.aiBounds = instance.aiBounds.get();
       npcs.push(newNpc);
       instance.npcs.set(npcs);
     }

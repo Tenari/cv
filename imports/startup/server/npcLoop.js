@@ -15,6 +15,6 @@ import { npcConfig } from '../../configs/ai.js';
 export function npcActLoop(){
   Characters.find({npc: true, 'stats.hp': {$gt: 0}}).forEach(function(npc){
     if (typeof npcConfig[npc.npcKey].act === 'function')
-      npcConfig[npc.npcKey].act(npc, Items, Rooms, Obstacles, Buildings, Characters);
+      npcConfig[npc.npcKey].act(npc, Items, Rooms, Obstacles, Buildings, Characters, Fights);
   });
 }

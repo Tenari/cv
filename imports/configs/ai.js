@@ -1,6 +1,7 @@
 import { EJSON } from 'meteor/ejson';
 import { moveCharacter } from '../api/characters/methods.js';
 import { itemConfigs } from './items.js';
+import { countDownToRound } from './fights.js';
 import { directionToAFromB, nextSpotXY, terrain } from './locations.js';
 
 import { Games } from '../api/games/games.js';
@@ -275,6 +276,47 @@ _.each({
     }
   },
 },
+'Guard':{
+  classId: 70,
+  dialog: {
+    "text": "Move along",
+    "options": []
+  },
+  items: [],
+  act: function(npc, Items, Rooms, Obstacles, Buildings, Characters, Fights){
+    if (Fights.find({$or:[{attackerId: npc._id},{defenderId: npc._id}]}).count() > 0) return;
+
+    const playerToChase = Characters.findOne({
+      'location.roomId': npc.location.roomId,
+      'location.x': {$gte: npc.aiBounds.topLeft.x, $lte: npc.aiBounds.bottomRight.x},
+      'location.y': {$gte: npc.aiBounds.topLeft.y, $lte: npc.aiBounds.bottomRight.y},
+      userId: {$exists: true},
+      team: {$ne: npc.team},
+    })
+    const room = Rooms.findOne(npc.location.roomId);
+    const obstacles = Obstacles.find({'location.roomId':room._id}).fetch();
+    const buildings = Buildings.find({'location.roomId':room._id}).fetch();
+    let targetXY = npc.aiBounds.post;
+    if (playerToChase) {
+      targetXY = {x: playerToChase.location.x, y: playerToChase.location.y};
+    }
+    moveToLocationViaAStar(npc, targetXY, room, obstacles, buildings);
+    npc.limitBounds();
+    const defender = Characters.findOne({gameId: npc.gameId, 'location.roomId': npc.location.roomId, 'location.x': npc.location.x, 'location.y': npc.location.y, team: {$ne: npc.team}});
+    if (defender && Date.now() > (defender.lastFightEndedAt + 10000)) { //if there is someone to fight, fight them
+      const fightId = Fights.insert({
+        attackerId: npc._id,
+        defenderId: defender._id,
+        createdAt: Date.now(),
+        round: 0,
+        rounds: [],
+        attackerStyle: npc.defaultAttackStyle,
+        defenderStyle: defender.defaultAttackStyle,
+      });
+      countDownToRound(fightId)
+    }
+  },
+},
 }, function(obj, key){
   _.each(['romans','japs'], function(team, index){
     var realKey = team.substring(0,team.length-1)+key;
@@ -319,7 +361,6 @@ function followRoadsDontGoThroughDoors(character, room, Obstacles, Buildings) {
       moveCharacter(character, ((character.location.direction + 1) % 4) || 4); // this just spins the character
     }
   }
-  
 }
 
 function paceMoveAlgorithm(pointA, pointB, character, room, obstacles, buildings){
@@ -354,7 +395,7 @@ export function importRoomNpcs(roomDefinition, roomId, gameId, Characters, Items
     } else {
       defaultStats = npcConfig[npc.type].defaultStats;
     }
-    const npcId = Characters.insert({
+    var insertObj = {
       gameId: gameId,
       name: name,
       team: npcConfig[npc.type].team,
@@ -368,7 +409,14 @@ export function importRoomNpcs(roomDefinition, roomId, gameId, Characters, Items
       npc: true,
       npcKey: npc.type,
       stats: defaultStats,
-    })
+    }
+
+    if (npc.aiBounds) {
+      insertObj.aiBounds = npc.aiBounds;
+      insertObj.aiBounds.post = _.clone(npc.location);
+    }
+
+    const npcId = Characters.insert(insertObj)
     _.each(npc.items, function(item){
       Items.insert({key: item.key, type: item.type, ownerId: npcId, condition: 100});
     })
@@ -414,7 +462,7 @@ export function aStar(npc, targetXY, room, obstacles, buildings){
         if (i == j) continue;
         if (i + j == 0) continue;
         let next = {x: current.x + i, y: current.y + j};
-        const obstacle = _.find(obstacles, function(o){ return !o.passable() && o.location.x == next.x && o.location.y == next.y})
+        const obstacle = _.find(obstacles, function(o){ return (!o.passable() || o.isDoor()) && o.location.x == next.x && o.location.y == next.y}); // go around doors and impassable objects
         const building = _.find(buildings, function(b){
           return _.find(b.locations(), function(loc){loc.x == next.x && loc.y == next.y });
         })
