@@ -249,14 +249,49 @@ export const buildingConfig = {
             [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
             [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
             [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile]
-          ] 
+          ]
         },
         obstacles: [{location:{x:5,y:0},type:"barrel"},{location:{x:1,y:1},type:"anvil",data: obstaclesConfig.anvil.defaultData},{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
       };
     },
     doorLocation: {x: 2, y: 2}, //relative to the top left corner
     insideLocation: {x: 4, y: 4}, //relative to the top left corner
-//    npcs: [{type: 'romanSmith', location: {x:3, y:1}}],
+    npcs: [{type: 'romanSmith', location: {x:3, y:1}}],
+  },
+  japSmithy: {
+    key: 'japSmithy',
+    label: 'Smithy',
+    imageClass: 'obstacle-3x3 i-jap-smithy',
+    underConstructionImageClass: 'obstacle-3x3 i-house-in-progress',
+    cost: [{resource: resourceConfig.wood.key, amount: 15, has: 0}],
+    description: 'A place to work metal.',
+    interior: function(gameId, name, building){
+      const exit = {
+        id: building.location.roomId,
+        y: building.location.y + building.height(),
+        x: building.location.x + 2,
+      }
+      return {
+        room:{
+          gameId: gameId,
+          name: name,
+          width: 6,
+          height: 6,
+          map:[
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile],
+            [floorTile,floorTile,floorTile,floorTile,floorTile,floorTile]
+          ]
+        },
+        obstacles: [{location:{x:5,y:0},type:"barrel"},{location:{x:1,y:1},type:"anvil",data: obstaclesConfig.anvil.defaultData},{location:{x:5,y:5},data: exit,type:"mat"},{location:{x:4,y:5},data: exit,type:"mat"}],
+      };
+    },
+    doorLocation: {x: 2, y: 2}, //relative to the top left corner
+    insideLocation: {x: 4, y: 4}, //relative to the top left corner
+    npcs: [{type: 'japSmith', location: {x:3, y:1}}],
   },
 //    tannery: 4,
 }

@@ -276,6 +276,35 @@ _.each({
     }
   },
 },
+'Smith':{
+  classId: 80,
+  dialog: {
+    "text": "Welcome to my smithy. Do you need a weapon?",
+    "options": [
+      {
+        "option": "Trade",
+        "action": "npc trade"
+      }
+    ]
+  },
+  items: [
+    {key: 'standardSword', type: 'weapon'},
+    {key: 'standardSword', type: 'weapon'},
+  ],
+  act: function(npc, Items){
+    const mySwords = Items.find({key: 'standardSword', ownerId: npc._id}).count();
+    if (mySwords < 2) {
+      Items.insert({key: 'standardSword', type: 'weapon', ownerId: npc._id, condition: 100});
+    }
+  },
+  defaultStats: {
+    money: 1000,
+    resources: {
+      leather: 15,
+      metal: 50,
+    }
+  },
+},
 'Guard':{
   classId: 70,
   dialog: {
@@ -325,7 +354,7 @@ _.each({
       team: team,
       name: key,
       classId: obj.classId + (5*index),
-      defaultStats: {money:1000, resources:{}},
+      defaultStats: obj.defaultStats || {money:1000, resources:{}},
       dialog: obj.dialog,
       items: obj.items,
       act: obj.act,
